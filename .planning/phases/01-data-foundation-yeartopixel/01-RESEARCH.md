@@ -634,22 +634,13 @@ describe('yearToDisplay', () => {
 
 ---
 
-## Open Questions
+## Open Questions (RESOLVED)
 
-1. **Exact narrative years for newly-added shows**
-   - What we know: Show titles and eras identified; narrative years are researcher's best estimates from Wikipedia/IMDb
-   - What's unclear: Exact `narrativeYearStart` / `narrativeYearEnd` per show need human verification before committing
-   - Recommendation: Planner should add a task "Verify narrative years for all new shows against Wikipedia" before the data commit task
+1. **Exact narrative years for newly-added shows** — RESOLVED: Plan 01-04 embeds specific `narrativeYearStart`/`narrativeYearEnd` values directly in the task action. TypeScript enforces conformance with the `Show` interface; a separate verification task was omitted as the planner discretion call.
 
-2. **CLAUDE.md stack version discrepancy**
-   - What we know: CLAUDE.md says "Next.js 16, Motion 12, Tailwind v4" but actual package.json has Next.js 14.2, Framer Motion 11, Tailwind 3
-   - What's unclear: Was CLAUDE.md written prospectively (future targets)?
-   - Recommendation: Phase 1 or Phase 2 should include a task to update CLAUDE.md stack versions to match reality. The CONTEXT.md (D-07) already notes updating the BC dates line — include the stack version correction in the same task.
+2. **CLAUDE.md stack version discrepancy** — RESOLVED: Plan 01-05 Task 2 updates CLAUDE.md to reflect the actual installed stack (Next.js 14.2, Framer Motion 11, Tailwind 3) alongside the D-07 BC convention correction.
 
-3. **`@vitejs/plugin-react` vs no React plugin for pure function tests**
-   - What we know: Next.js official docs include `@vitejs/plugin-react` in the installation command
-   - What's unclear: Is it strictly required for test files that contain zero JSX?
-   - Recommendation: Install it anyway — small cost, avoids a future debugging session when Phase 3 adds component tests.
+3. **`@vitejs/plugin-react` vs no React plugin** — RESOLVED: Plan 01-01 installs it unconditionally (small cost, avoids future Phase 3 debugging).
 
 ---
 
