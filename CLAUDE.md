@@ -4,7 +4,7 @@
 
 Interactive parallax historical timeline for discovering TV series by the era their story unfolds in. Users scroll a horizontal fresco from ~3000 BC to present and see shows anchored to their narrative period.
 
-**Stack:** Next.js 16, Motion 12 (useScroll/useTransform), Tailwind v4, next-intl, nuqs, static JSON (v1), Supabase (v2+)
+**Stack:** Next.js 14.2, Framer Motion 11 (useScroll/useTransform), Tailwind CSS 3, next-intl 3, nuqs (Phase 6+), static JSON (v1), Supabase (v2+)
 
 **Planning:** `.planning/` — PROJECT.md, REQUIREMENTS.md, ROADMAP.md, STATE.md, research/
 
@@ -31,7 +31,7 @@ or skip discussion:
 ## Critical Constraints
 
 - **yearToPixel()** is the load-bearing function — all card positions depend on it. Must be built and unit-tested in Phase 1 before any visual work.
-- **BC dates** stored as plain INTEGER (negative = BC, 0 = 1 BC). Never use JS `Date` objects or `Intl.DateTimeFormat` for historical years.
+- **BC dates** stored as plain INTEGER (negative = BC, direct negation: -52 = 52 BC, -1 = 1 BC). Never use JS `Date` objects or `Intl.DateTimeFormat` for historical years. Year 0 is a display-only edge case handled in `yearToDisplay()` — do not store 0 in show data.
 - **RSC/client boundary** — show card *content* must be in SSR HTML (Server Component); parallax *transforms* live in a `'use client'` wrapper. Googlebot must see card content.
 - **GPU layer budget** — never apply `will-change: transform` to all 100+ cards simultaneously. Only apply to currently-animated cards.
 - **touch-action: pan-x** — required on the scroll container for iOS Safari. Invisible in DevTools emulation, only caught on physical hardware.
