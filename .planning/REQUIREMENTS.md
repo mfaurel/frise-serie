@@ -91,37 +91,35 @@
 
 ## Traceability
 
-*Populated during roadmap creation.*
-
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| TL-01 | — | Pending |
-| TL-02 | — | Pending |
-| TL-03 | — | Pending |
-| TL-04 | — | Pending |
-| SC-01 | — | Pending |
-| SC-02 | — | Pending |
-| SC-03 | — | Pending |
-| SC-04 | — | Pending |
-| DP-01 | — | Pending |
-| DP-02 | — | Pending |
-| DP-03 | — | Pending |
-| FS-01 | — | Pending |
-| FS-02 | — | Pending |
-| FS-03 | — | Pending |
-| FS-04 | — | Pending |
-| FS-05 | — | Pending |
-| DT-01 | — | Pending |
-| UX-01 | — | Pending |
-| UX-02 | — | Pending |
-| UX-03 | — | Pending |
-| UX-04 | — | Pending |
+| TL-01 | Phase 2 | Pending |
+| TL-02 | Phase 1 | Pending |
+| TL-03 | Phase 2 | Pending |
+| TL-04 | Phase 4 | Pending |
+| SC-01 | Phase 3 | Pending |
+| SC-02 | Phase 3 | Pending |
+| SC-03 | Phase 3 | Pending |
+| SC-04 | Phase 4 | Pending |
+| DP-01 | Phase 5 | Pending |
+| DP-02 | Phase 5 | Pending |
+| DP-03 | Phase 5 | Pending |
+| FS-01 | Phase 6 | Pending |
+| FS-02 | Phase 6 | Pending |
+| FS-03 | Phase 6 | Pending |
+| FS-04 | Phase 6 | Pending |
+| FS-05 | Phase 6 | Pending |
+| DT-01 | Phase 9 | Pending |
+| UX-01 | Phase 7 | Pending |
+| UX-02 | Phase 8 | Pending |
+| UX-03 | Phase 8 | Pending |
+| UX-04 | Phase 2 | Pending |
 
 **Coverage:**
 - v1 requirements: 21 total
-- Mapped to phases: 0 (pending roadmap)
-- Unmapped: 21 ⚠️
+- Mapped to phases: 21
+- Unmapped: 0 ✓
 
 ---
 *Requirements defined: 2026-05-17*
-*Last updated: 2026-05-17 after initial definition*
+*Last updated: 2026-05-17 — traceability populated after roadmap creation*
