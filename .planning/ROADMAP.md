@@ -36,7 +36,7 @@
   5. BC date convention (INTEGER, 0 = 1 BC, -1 = 2 BC) is documented in the schema and a `yearToDisplay(year, locale)` utility formats dates correctly for both FR and EN.
 **Plans:** 5 plans
 Plans:
-- [ ] 01-01-PLAN.md — Walking Skeleton: install Vitest, create vitest.config.mts, write test stubs
+- [x] 01-01-PLAN.md — Walking Skeleton: install Vitest, create vitest.config.mts, write test stubs
 - [ ] 01-02-PLAN.md — Schema update: add pixelsPerYear to HistoricalEra + data/eras.ts values
 - [ ] 01-03-PLAN.md — TDD: implement lib/yearToPixel.ts + lib/yearToDisplay.ts, pass tests
 - [ ] 01-04-PLAN.md — Dataset expansion: append 14 shows to data/shows.ts (30 total)
@@ -152,7 +152,7 @@ Plans:
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
-| 1. Data Foundation + yearToPixel | 0/5 | Not started | — |
+| 1. Data Foundation + yearToPixel | 1/5 | In Progress | — |
 | 2. Parallax Engine + Era Backgrounds | 0/? | Not started | — |
 | 3. Show Cards | 0/? | Not started | — |
 | 4. Historical Events + Flashbacks | 0/? | Not started | — |
