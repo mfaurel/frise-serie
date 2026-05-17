@@ -3,12 +3,12 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: in_progress
-last_updated: "2026-05-17T21:25:29.327Z"
+last_updated: "2026-05-17T21:29:53.378Z"
 progress:
   total_phases: 9
   completed_phases: 0
   total_plans: 5
-  completed_plans: 4
+  completed_plans: 5
   percent: 0
 ---
 
@@ -50,6 +50,8 @@ None
 - **01-02:** Timeline boundaries now derived from ERAS array, not exported constants — ERAS is the single source of truth
 - **01-03:** buildOffsets() precomputes ERA_OFFSETS at module load — avoids O(n) recomputation on every yearToPixel call
 - **01-03:** Inclusive era boundary ensures no gap at shared boundary years (e.g. year 476 = 3476px in both antiquity and early_middle_ages)
+- **01-04:** Append new SHOWS entries at end of array in chronological order — no mid-array insertions; array sort not required
+- **01-04:** posterUrl: '' (empty string) for unverified TMDB hashes; prevents broken image loads until Phase 9 enrichment
 
 ## Performance Metrics
 
@@ -58,7 +60,8 @@ None
 | 01 | 01 | 8min | 2 | 4 |
 | 01 | 02 | 3min | 2 | 3 |
 | 01 | 03 | 3min | 6 | 4 |
+| 01 | 04 | 8min | 1 | 1 |
 
 ## Last Updated
 
-2026-05-17 — Plan 01-03 complete: yearToPixel + yearToDisplay implemented (TDD, 38 tests GREEN); TOTAL_WIDTH=9135; ready for Phase 2
+2026-05-17 — Plan 01-04 complete: SHOWS expanded to 30 entries covering all 9 eras (-1200 to 1986); ready for Plan 01-05
