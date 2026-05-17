@@ -79,6 +79,7 @@ export interface HistoricalEra {
   name: { fr: string; en: string };
   yearStart: number;
   yearEnd: number;
+  pixelsPerYear: number;
   gradient: [string, string];
   textColor: string;
   description: { fr: string; en: string };
