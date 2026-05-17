@@ -34,11 +34,11 @@
   3. `data/eras.json` defines all historical periods with `yearStart`, `yearEnd`, `colorPalette`, and `pixelsPerYear` ratio, and era boundaries in `yearToPixel` are derived solely from this file (no duplicated constants).
   4. A seed dataset of 30–40 shows spans the full time range (3000 BC to present) and conforms to the TypeScript `Show` interface — importable without TypeScript errors.
   5. BC date convention (INTEGER, 0 = 1 BC, -1 = 2 BC) is documented in the schema and a `yearToDisplay(year, locale)` utility formats dates correctly for both FR and EN.
-**Plans:** 5 plans
+**Plans:** 3/5 plans executed
 Plans:
 - [x] 01-01-PLAN.md — Walking Skeleton: install Vitest, create vitest.config.mts, write test stubs
-- [ ] 01-02-PLAN.md — Schema update: add pixelsPerYear to HistoricalEra + data/eras.ts values
-- [ ] 01-03-PLAN.md — TDD: implement lib/yearToPixel.ts + lib/yearToDisplay.ts, pass tests
+- [x] 01-02-PLAN.md — Schema update: add pixelsPerYear to HistoricalEra + data/eras.ts values
+- [x] 01-03-PLAN.md — TDD: implement lib/yearToPixel.ts + lib/yearToDisplay.ts, pass tests
 - [ ] 01-04-PLAN.md — Dataset expansion: append 14 shows to data/shows.ts (30 total)
 - [ ] 01-05-PLAN.md — Backward-compat shim: lib/timeline.ts re-export + CLAUDE.md corrections
 
@@ -152,7 +152,7 @@ Plans:
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
-| 1. Data Foundation + yearToPixel | 1/5 | In Progress | — |
+| 1. Data Foundation + yearToPixel | 3/5 | In Progress|  |
 | 2. Parallax Engine + Era Backgrounds | 0/? | Not started | — |
 | 3. Show Cards | 0/? | Not started | — |
 | 4. Historical Events + Flashbacks | 0/? | Not started | — |

@@ -3,12 +3,12 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: in_progress
-last_updated: "2026-05-17T21:20:04.376Z"
+last_updated: "2026-05-17T21:25:29.327Z"
 progress:
   total_phases: 9
   completed_phases: 0
   total_plans: 5
-  completed_plans: 3
+  completed_plans: 4
   percent: 0
 ---
 
@@ -48,6 +48,8 @@ None
 - **01-02:** pixelsPerYear placed after yearEnd in HistoricalEra interface and era objects for consistent ordering
 - **01-02:** 20th_century_late yearEnd extended to 2025 (from 1991); name "Cold War" kept — renaming is Phase 9 scope
 - **01-02:** Timeline boundaries now derived from ERAS array, not exported constants — ERAS is the single source of truth
+- **01-03:** buildOffsets() precomputes ERA_OFFSETS at module load — avoids O(n) recomputation on every yearToPixel call
+- **01-03:** Inclusive era boundary ensures no gap at shared boundary years (e.g. year 476 = 3476px in both antiquity and early_middle_ages)
 
 ## Performance Metrics
 
@@ -55,7 +57,8 @@ None
 |-------|------|----------|-------|-------|
 | 01 | 01 | 8min | 2 | 4 |
 | 01 | 02 | 3min | 2 | 3 |
+| 01 | 03 | 3min | 6 | 4 |
 
 ## Last Updated
 
-2026-05-17 — Plan 01-02 complete: HistoricalEra.pixelsPerYear added; all 9 eras configured; yearToPixel ready for Wave 2
+2026-05-17 — Plan 01-03 complete: yearToPixel + yearToDisplay implemented (TDD, 38 tests GREEN); TOTAL_WIDTH=9135; ready for Phase 2
