@@ -1,0 +1,12 @@
+{
+  "permissions": {
+    "allow": [
+      "WebSearch",
+      "WebFetch(domain:next-intl.dev)",
+      "WebFetch(domain:developer.chrome.com)",
+      "WebFetch(domain:motion.dev)",
+      "WebFetch(domain:dev.to)",
+      "WebFetch(domain:gsap.com)"
+    ]
+  }
+}
