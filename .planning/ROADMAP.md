@@ -33,7 +33,7 @@
   2. Non-linear scale produces denser pixel density for era-rich periods (e.g. Renaissance) and compressed density for sparse ancient eras — visible in a test render of the axis.
   3. `data/eras.json` defines all historical periods with `yearStart`, `yearEnd`, `colorPalette`, and `pixelsPerYear` ratio, and era boundaries in `yearToPixel` are derived solely from this file (no duplicated constants).
   4. A seed dataset of 30–40 shows spans the full time range (3000 BC to present) and conforms to the TypeScript `Show` interface — importable without TypeScript errors.
-  5. BC date convention (INTEGER, 0 = 1 BC, -1 = 2 BC) is documented in the schema and a `yearToDisplay(year, locale)` utility formats dates correctly for both FR and EN.
+  5. BC date convention (INTEGER, direct negation: -52 = 52 BC, -1 = 1 BC; year 0 is a display-only guard treated as 1 BC) is documented in CLAUDE.md and a `yearToDisplay(year, locale)` utility formats dates correctly for both FR and EN.
 **Plans:** 5/5 plans complete
 Plans:
 - [x] 01-01-PLAN.md — Walking Skeleton: install Vitest, create vitest.config.mts, write test stubs
