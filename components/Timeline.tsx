@@ -7,8 +7,11 @@ import EraBackground from './EraBackground';
 import HistoricalEventMarkers from './HistoricalEventMarker';
 import { SHOWS } from '@/data/shows';
 import { yearToPixel, formatYear, TOTAL_WIDTH } from '@/lib/timeline';
-import { TIMELINE_START, TIMELINE_END } from '@/data/eras';
+import { ERAS } from '@/data/eras';
 import type { Show, FilterState, Locale } from '@/types';
+
+const TIMELINE_START = ERAS[0].yearStart;
+const TIMELINE_END = ERAS[ERAS.length - 1].yearEnd;
 
 const TICK_INTERVALS = [100, 50, 25, 10];
 const CARDS_TOP_OFFSET = 90; // px from top of the timeline track

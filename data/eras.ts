@@ -6,6 +6,7 @@ export const ERAS: HistoricalEra[] = [
     name: { fr: 'Antiquité', en: 'Antiquity' },
     yearStart: -3000,
     yearEnd: 476,
+    pixelsPerYear: 1.0,
     gradient: ['#c9a84c', '#e8d5a3'],
     textColor: '#3d2b00',
     description: {
@@ -24,6 +25,7 @@ export const ERAS: HistoricalEra[] = [
     name: { fr: 'Haut Moyen Âge', en: 'Early Middle Ages' },
     yearStart: 476,
     yearEnd: 1000,
+    pixelsPerYear: 2.5,
     gradient: ['#4a3728', '#7a5c45'],
     textColor: '#f5e6d0',
     description: {
@@ -40,6 +42,7 @@ export const ERAS: HistoricalEra[] = [
     name: { fr: 'Moyen Âge', en: 'Middle Ages' },
     yearStart: 1000,
     yearEnd: 1400,
+    pixelsPerYear: 3.0,
     gradient: ['#2c3e50', '#4a6741'],
     textColor: '#e8dcc8',
     description: {
@@ -57,6 +60,7 @@ export const ERAS: HistoricalEra[] = [
     name: { fr: 'Renaissance', en: 'Renaissance' },
     yearStart: 1400,
     yearEnd: 1600,
+    pixelsPerYear: 5.0,
     gradient: ['#8b4513', '#d4a843'],
     textColor: '#faf0e0',
     description: {
@@ -74,6 +78,7 @@ export const ERAS: HistoricalEra[] = [
     name: { fr: 'Époque moderne', en: 'Early Modern' },
     yearStart: 1600,
     yearEnd: 1789,
+    pixelsPerYear: 4.0,
     gradient: ['#1a3a5c', '#4a7c9e'],
     textColor: '#f0e8d8',
     description: {
@@ -91,6 +96,7 @@ export const ERAS: HistoricalEra[] = [
     name: { fr: 'Révolution & Empire', en: 'Revolution & Empire' },
     yearStart: 1789,
     yearEnd: 1815,
+    pixelsPerYear: 8.0,
     gradient: ['#8b0000', '#c0392b'],
     textColor: '#fdf5e6',
     description: {
@@ -108,6 +114,7 @@ export const ERAS: HistoricalEra[] = [
     name: { fr: 'XIXe siècle', en: '19th Century' },
     yearStart: 1815,
     yearEnd: 1900,
+    pixelsPerYear: 5.0,
     gradient: ['#2d4a2d', '#6b8f6b'],
     textColor: '#f5f0e8',
     description: {
@@ -125,6 +132,7 @@ export const ERAS: HistoricalEra[] = [
     name: { fr: 'XXe siècle (1900–1945)', en: '20th Century (1900–1945)' },
     yearStart: 1900,
     yearEnd: 1945,
+    pixelsPerYear: 8.0,
     gradient: ['#3a3a3a', '#6e6e6e'],
     textColor: '#f0f0f0',
     description: {
@@ -141,7 +149,8 @@ export const ERAS: HistoricalEra[] = [
     id: '20th_century_late',
     name: { fr: 'Guerre Froide', en: 'Cold War' },
     yearStart: 1945,
-    yearEnd: 1991,
+    yearEnd: 2025,
+    pixelsPerYear: 5.0,
     gradient: ['#1a1a2e', '#16213e'],
     textColor: '#e0e0f0',
     description: {
@@ -160,6 +169,3 @@ export function getEraForYear(year: number): HistoricalEra | undefined {
   return ERAS.find((e) => year >= e.yearStart && year <= e.yearEnd);
 }
 
-export const TIMELINE_START = -100;
-export const TIMELINE_END = 2000;
-export const PIXELS_PER_YEAR = 0.8;
