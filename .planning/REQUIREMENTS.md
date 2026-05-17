@@ -8,7 +8,7 @@
 ### Timeline Core
 
 - [ ] **TL-01**: User can scroll a horizontal parallax timeline spanning from ~3000 BC to present, with three depth layers (slow era backgrounds, time axis, fast show cards)
-- [ ] **TL-02**: Timeline uses a non-linear time scale (denser around era-rich periods, compressed for sparse ancient eras) so show cards are never overcrowded
+- [x] **TL-02**: Timeline uses a non-linear time scale (denser around era-rich periods, compressed for sparse ancient eras) so show cards are never overcrowded
 - [ ] **TL-03**: Major historical eras (Antiquity, Middle Ages, Renaissance, Modern, etc.) are color-coded in the background with illustrative textures
 - [ ] **TL-04**: Key historical events (Fall of Rome, French Revolution, etc.) appear as markers on the timeline axis with tooltips
 
@@ -94,7 +94,7 @@
 | Requirement | Phase | Status |
 |-------------|-------|--------|
 | TL-01 | Phase 2 | Pending |
-| TL-02 | Phase 1 | Pending |
+| TL-02 | Phase 1 | Complete |
 | TL-03 | Phase 2 | Pending |
 | TL-04 | Phase 4 | Pending |
 | SC-01 | Phase 3 | Pending |

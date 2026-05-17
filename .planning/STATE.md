@@ -3,13 +3,13 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: in_progress
-last_updated: "2026-05-17T23:13:10Z"
+last_updated: "2026-05-17T21:20:04.376Z"
 progress:
   total_phases: 9
   completed_phases: 0
   total_plans: 5
-  completed_plans: 1
-  percent: 20
+  completed_plans: 3
+  percent: 0
 ---
 
 # Project State — Frise Série
@@ -45,13 +45,17 @@ None
 - **01-01:** environment: node globally for Phase 1 math tests; component tests (Phase 3+) override per file with @vitest-environment jsdom
 - **01-01:** No globals: true in vitest.config — all test files use explicit named imports from vitest (D-12)
 - **01-01:** it.todo for unimplemented Wave 2 cases, not it.skip — todos list but do not fail
+- **01-02:** pixelsPerYear placed after yearEnd in HistoricalEra interface and era objects for consistent ordering
+- **01-02:** 20th_century_late yearEnd extended to 2025 (from 1991); name "Cold War" kept — renaming is Phase 9 scope
+- **01-02:** Timeline boundaries now derived from ERAS array, not exported constants — ERAS is the single source of truth
 
 ## Performance Metrics
 
 | Phase | Plan | Duration | Tasks | Files |
 |-------|------|----------|-------|-------|
 | 01 | 01 | 8min | 2 | 4 |
+| 01 | 02 | 3min | 2 | 3 |
 
 ## Last Updated
 
-2026-05-17 — Plan 01-01 complete: Vitest walking skeleton, @/ alias proven, test:run exits 0
+2026-05-17 — Plan 01-02 complete: HistoricalEra.pixelsPerYear added; all 9 eras configured; yearToPixel ready for Wave 2
