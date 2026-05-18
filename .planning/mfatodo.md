@@ -1,25 +1,14 @@
 ● ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
    GSD ► PROJECT INITIALIZED ✓
   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+ Next step:
 
-  Frise Série — Historical Series Timeline
+  Run /gsd:execute-phase 2 to start execution.
 
-  | Artifact       | Location                          |
-  |----------------|-----------------------------------|
-  | Project        | .planning/PROJECT.md              |
-  | Config         | .planning/config.json             |
-  | Research       | .planning/research/ (5 files)     |
-  | Requirements   | .planning/REQUIREMENTS.md         |
-  | Roadmap        | .planning/ROADMAP.md              |
-  | State          | .planning/STATE.md                |
-  | Project guide  | CLAUDE.md                         |
 
-  9 phases | 21 requirements | Ready to build ✓
-  
-  /clear then:
-
-  /gsd-discuss-phase 1
+  /gsd:discuss-phase 2
+  or skip discussion:
+  /gsd:plan-phase 2
 
   Also available:
   - /gsd-ui-phase 2 — generate UI design contract for the parallax engine (Phase 2 has UI hint: yes)
-  - /gsd-plan-phase 1 — skip discussion, plan directly
