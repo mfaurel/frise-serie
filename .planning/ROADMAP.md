@@ -3,7 +3,7 @@
 **Project mode:** mvp (Vertical MVP — each phase delivers a working user-facing slice)
 **Granularity:** Fine
 **Requirements mapped:** 21/21
-**Last updated:** 2026-05-17
+**Last updated:** 2026-05-18
 
 ---
 
@@ -53,7 +53,12 @@ Plans:
   3. Each historical era (Antiquity, Middle Ages, Renaissance, Early Modern, Modern, Contemporary) renders a distinct colour band with illustrative texture; era labels appear on the background layer.
   4. The timeline skeleton (era backgrounds + axis) is visible in the browser within 1 second of navigation, measured with Lighthouse throttled mobile.
   5. On a device with `prefers-reduced-motion: reduce`, parallax depth movement is suppressed and the timeline still renders fully as a flat scroll.
-**Plans:** TBD
+**Plans:** 4 plans
+Plans:
+- [ ] 02-01-PLAN.md — Wave 0 test stubs: parallaxFormula, noiseUri, TimelineSkeleton test files
+- [ ] 02-02-PLAN.md — New Server Components: BackgroundLayer.tsx + TimelineSkeleton.tsx + lib/noiseConstants.ts
+- [ ] 02-03-PLAN.md — AxisLayer.tsx client component + ShowCard.tsx import cleanup
+- [ ] 02-04-PLAN.md — Timeline.tsx 3-layer refactor + ClientShell.tsx + page.tsx RSC conversion + delete stale files
 **UI hint:** yes
 
 ### Phase 3: Show Cards
@@ -153,7 +158,7 @@ Plans:
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
 | 1. Data Foundation + yearToPixel | 5/5 | Complete   | 2026-05-17 |
-| 2. Parallax Engine + Era Backgrounds | 0/? | Not started | — |
+| 2. Parallax Engine + Era Backgrounds | 0/4 | Not started | — |
 | 3. Show Cards | 0/? | Not started | — |
 | 4. Historical Events + Flashbacks | 0/? | Not started | — |
 | 5. Detail Panel | 0/? | Not started | — |
