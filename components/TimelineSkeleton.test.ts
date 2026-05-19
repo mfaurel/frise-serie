@@ -1,14 +1,17 @@
 // @vitest-environment jsdom
-import { describe, it } from 'vitest'
+import { describe, it, expect } from 'vitest'
+import { render } from '@testing-library/react'
+import React from 'react'
 import { ERAS } from '@/data/eras'
 import { yearToPixel } from '@/lib/yearToPixel'
-
-// import TimelineSkeleton from './TimelineSkeleton' — uncomment in Wave 1
+import TimelineSkeleton from './TimelineSkeleton'
 
 describe('TimelineSkeleton', () => {
-  // Will use @testing-library/react render once TimelineSkeleton.tsx exists (Wave 1)
-  // import TimelineSkeleton from './TimelineSkeleton'
-  it.todo('renders ERAS.length era band divs')
+  it('renders ERAS.length era band divs', () => {
+    const { container } = render(React.createElement(TimelineSkeleton))
+    const eraBands = container.querySelectorAll('.bg-stone-800')
+    expect(eraBands).toHaveLength(ERAS.length)
+  })
 
   // Iterate rendered divs and check each div's style.left against yearToPixel(era.yearStart) in pixels
   // Uses ERAS from @/data/eras and yearToPixel from @/lib/yearToPixel
@@ -21,10 +24,12 @@ describe('TimelineSkeleton', () => {
   // Find the h-px div with top:48 (the axis placeholder)
   it.todo('axis placeholder div is present at top: 48')
 
-  // Check aria role for accessibility (WCAG AA requirement)
-  it.todo('has role=status for accessibility')
+  it('has role=status for accessibility', () => {
+    const { container } = render(React.createElement(TimelineSkeleton))
+    const statusEl = container.querySelector('[role="status"]')
+    expect(statusEl).not.toBeNull()
+  })
 })
 
 // Suppress unused import warnings — these exports are used by the it.todo stubs above
-void ERAS
 void yearToPixel
