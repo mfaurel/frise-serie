@@ -3,7 +3,7 @@
 import Image from 'next/image';
 import { useEffect } from 'react';
 import type { Show, Locale } from '@/types';
-import { formatYear } from '@/lib/timeline';
+import { yearToDisplay } from '@/lib/yearToDisplay';
 import { PLATFORM_COLORS, PLATFORM_LABELS, GENRE_LABELS, REGION_LABELS } from '@/lib/constants';
 
 interface Props {
@@ -80,9 +80,9 @@ export default function ShowDetail({ show, locale, onClose }: Props) {
           {/* Narrative period */}
           <div className="flex items-center gap-2 mb-4">
             <span className="text-amber-400 font-bold text-lg font-serif">
-              {formatYear(show.narrativeYearStart, locale)}
+              {yearToDisplay(show.narrativeYearStart, locale)}
               {show.narrativeYearEnd && show.narrativeYearEnd !== show.narrativeYearStart
-                ? ` – ${formatYear(show.narrativeYearEnd, locale)}`
+                ? ` – ${yearToDisplay(show.narrativeYearEnd, locale)}`
                 : ''}
             </span>
             <span className="text-stone-500 text-xs">

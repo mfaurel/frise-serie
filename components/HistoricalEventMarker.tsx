@@ -2,7 +2,8 @@
 
 import { useState } from 'react';
 import { ERAS } from '@/data/eras';
-import { yearToPixel, formatYear } from '@/lib/timeline';
+import { yearToPixel } from '@/lib/yearToPixel';
+import { yearToDisplay } from '@/lib/yearToDisplay';
 import type { Locale } from '@/types';
 
 interface Props {
@@ -44,7 +45,7 @@ export default function HistoricalEventMarkers({ locale }: Props) {
                 style={{ background: '#1c1917', border: `1px solid ${ev.eraColor}44`, color: ev.eraColor }}
               >
                 <div className="font-bold">{ev.name[locale]}</div>
-                <div className="opacity-70">{formatYear(ev.year, locale)}</div>
+                <div className="opacity-70">{yearToDisplay(ev.year, locale)}</div>
               </div>
             )}
           </div>
