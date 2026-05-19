@@ -1,12 +1,20 @@
-import { describe, it } from 'vitest'
+import { describe, it, expect } from 'vitest'
+import { NOISE_SVG_URI } from '@/lib/noiseConstants'
 
 describe('NOISE_SVG_URI encoding', () => {
-  // import { NOISE_SVG_URI } from '@/lib/noiseConstants'
-  it.todo('contains %23noise (Firefox-compatible filter reference)')
+  it('contains %23noise (Firefox-compatible filter reference)', () => {
+    expect(NOISE_SVG_URI).toContain('%23noise')
+  })
 
-  // import { NOISE_SVG_URI } from '@/lib/noiseConstants'
-  it.todo('starts with url("data:image/svg+xml,"')
+  it('starts with url("data:image/svg+xml,', () => {
+    expect(NOISE_SVG_URI).toMatch(/^url\("data:image\/svg\+xml,/)
+  })
 
-  // import { NOISE_SVG_URI } from '@/lib/noiseConstants'
-  it.todo('does not contain bare # character outside percent-encoding')
+  it('does not contain bare # character outside percent-encoding', () => {
+    expect(NOISE_SVG_URI).not.toMatch(/#(?![\w])/)
+    expect(NOISE_SVG_URI).not.toContain('=#')
+    // Verify no bare '#' that isn't percent-encoded
+    const withoutEncoded = NOISE_SVG_URI.replace(/%23/g, '')
+    expect(withoutEncoded).not.toContain('#')
+  })
 })
