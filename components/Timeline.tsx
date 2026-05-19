@@ -1,12 +1,13 @@
 'use client';
 
 import { useRef, useState, useCallback, useEffect } from 'react';
-import { motion, useScroll, useTransform } from 'framer-motion';
+import { motion, useScroll, useTransform, useReducedMotion } from 'framer-motion';
 import ShowCard from './ShowCard';
-import EraBackground from './EraBackground';
+import AxisLayer from './AxisLayer';
 import HistoricalEventMarkers from './HistoricalEventMarker';
 import { SHOWS } from '@/data/shows';
-import { yearToPixel, formatYear, TOTAL_WIDTH } from '@/lib/timeline';
+import { yearToPixel, TOTAL_WIDTH } from '@/lib/yearToPixel';
+import { yearToDisplay } from '@/lib/yearToDisplay';
 import { ERAS } from '@/data/eras';
 import type { Show, FilterState, Locale } from '@/types';
 
@@ -20,6 +21,7 @@ interface Props {
   filters: FilterState;
   locale: Locale;
   onShowSelect: (show: Show) => void;
+  backgroundLayer: React.ReactNode;
 }
 
 function getTickInterval(zoom: number): number {
@@ -67,15 +69,17 @@ function assignRows(shows: Show[]): Map<string, number> {
   return result;
 }
 
-export default function Timeline({ filters, locale, onShowSelect }: Props) {
+export default function Timeline({ filters, locale, onShowSelect, backgroundLayer }: Props) {
   const containerRef = useRef<HTMLDivElement>(null);
   const [zoom, setZoom] = useState(1);
   const [currentYear, setCurrentYear] = useState(0);
 
+  const shouldReduceMotion = useReducedMotion();
+
   const { scrollXProgress } = useScroll({ container: containerRef });
 
-  // Parallax: background drifts at 60% of scroll speed
-  const bgX = useTransform(scrollXProgress, [0, 1], [0, -(TOTAL_WIDTH * zoom * 0.4)]);
+  // Parallax: background drifts at 70% of scroll speed (D-08 + D-09)
+  const bgX = useTransform(scrollXProgress, [0, 1], [0, shouldReduceMotion ? 0 : -(TOTAL_WIDTH * zoom * 0.7)]);
 
   const filteredShows = applyFilters(SHOWS, filters);
   const rowMap = assignRows(filteredShows);
@@ -141,14 +145,14 @@ export default function Timeline({ filters, locale, onShowSelect }: Props) {
 
       {/* Current year indicator */}
       <div className="absolute top-4 left-1/2 -translate-x-1/2 z-20 px-3 py-1 bg-stone-900/80 backdrop-blur border border-amber-700/40 rounded-full text-amber-400 font-serif font-bold text-sm pointer-events-none">
-        {formatYear(currentYear, locale)}
+        {yearToDisplay(currentYear, locale)}
       </div>
 
       {/* Scrollable timeline */}
       <div
         ref={containerRef}
         className="timeline-scroll flex-1 overflow-x-auto overflow-y-hidden relative focus:outline-none"
-        style={{ minHeight: TRACK_HEIGHT }}
+        style={{ minHeight: TRACK_HEIGHT, touchAction: 'pan-x' }}
         tabIndex={0}
         aria-label={locale === 'fr' ? 'Frise chronologique — utilisez les flèches pour naviguer' : 'Timeline — use arrow keys to navigate'}
       >
@@ -163,35 +167,12 @@ export default function Timeline({ filters, locale, onShowSelect }: Props) {
             style={{ x: bgX, scaleX: 1 / zoom, transformOrigin: 'left center' }}
           >
             <div style={{ width: totalScaledWidth, height: '100%', transform: `scaleX(${zoom})`, transformOrigin: 'left center' }}>
-              <EraBackground locale={locale} />
+              {backgroundLayer}
             </div>
           </motion.div>
 
           {/* Time axis */}
-          <div className="absolute left-0 right-0" style={{ top: 48 }}>
-            {/* Axis line */}
-            <div className="absolute h-px bg-stone-600/60" style={{ left: 0, right: 0, top: 16 }} />
-
-            {/* Ticks */}
-            {ticks.map((year) => {
-              const x = yearToPixel(year) * zoom;
-              const isCentury = year % 100 === 0;
-              const is500 = year % 500 === 0;
-              return (
-                <div key={year} className="absolute flex flex-col items-center" style={{ left: x, transform: 'translateX(-50%)' }}>
-                  <div
-                    className={`w-px ${isCentury ? 'h-4 bg-stone-400' : 'h-2 bg-stone-600'}`}
-                    style={{ marginTop: is500 ? 0 : isCentury ? 4 : 8 }}
-                  />
-                  {isCentury && (
-                    <span className={`text-xs mt-0.5 font-mono ${is500 ? 'text-amber-500 font-bold text-sm' : 'text-stone-500'}`}>
-                      {formatYear(year, locale)}
-                    </span>
-                  )}
-                </div>
-              );
-            })}
-          </div>
+          <AxisLayer zoom={zoom} locale={locale} ticks={ticks} currentYear={currentYear} />
 
           {/* Historical event markers */}
           <div className="absolute" style={{ top: 44, left: 0 }}>
@@ -199,31 +180,33 @@ export default function Timeline({ filters, locale, onShowSelect }: Props) {
           </div>
 
           {/* Show cards */}
-          {filteredShows.map((show) => {
-            const x = yearToPixel(show.narrativeYearStart) * zoom;
-            const row = rowMap.get(show.id) ?? 0;
-            const top = CARDS_TOP_OFFSET + row * CARD_HEIGHT;
+          <div data-layer="card-track">
+            {filteredShows.map((show) => {
+              const x = yearToPixel(show.narrativeYearStart) * zoom;
+              const row = rowMap.get(show.id) ?? 0;
+              const top = CARDS_TOP_OFFSET + row * CARD_HEIGHT;
 
-            return (
-              <div
-                key={show.id}
-                className="absolute"
-                style={{ left: x, top, transform: 'translateX(-14px)' }}
-              >
-                {/* Anchor line from axis to card */}
+              return (
                 <div
-                  className="absolute w-px bg-stone-700/50"
-                  style={{
-                    left: 14,
-                    bottom: '100%',
-                    height: top - 64,
-                    transformOrigin: 'bottom',
-                  }}
-                />
-                <ShowCard show={show} locale={locale} onClick={onShowSelect} />
-              </div>
-            );
-          })}
+                  key={show.id}
+                  className="absolute"
+                  style={{ left: x, top, transform: 'translateX(-14px)' }}
+                >
+                  {/* Anchor line from axis to card */}
+                  <div
+                    className="absolute w-px bg-stone-700/50"
+                    style={{
+                      left: 14,
+                      bottom: '100%',
+                      height: top - 64,
+                      transformOrigin: 'bottom',
+                    }}
+                  />
+                  <ShowCard show={show} locale={locale} onClick={onShowSelect} />
+                </div>
+              );
+            })}
+          </div>
 
           {/* Empty state */}
           {filteredShows.length === 0 && (
