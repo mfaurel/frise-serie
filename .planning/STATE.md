@@ -60,6 +60,8 @@ None
 - **02-02:** NOISE_SVG_URI extracted to lib/noiseConstants.ts — single source of truth for BackgroundLayer and test suite
 - **02-02:** BackgroundLayer.tsx uses combined backgroundImage (NOISE_SVG_URI + linear-gradient) with backgroundBlendMode overlay and backgroundSize '200px 200px, 100% 100%'
 - **02-02:** TimelineSkeleton.test.ts uses React.createElement to avoid double-render in @testing-library/react container
+- **02-03:** AxisLayer accepts currentYear prop but does not render it — reserved for Phase 6 current-year marker on axis; TODO comment documents intent
+- **02-03:** ShowCard.tsx import updated to @/lib/yearToDisplay directly — eliminates shim dependency before Plan 04 deletes @/lib/timeline
 
 ## Performance Metrics
 
@@ -72,6 +74,7 @@ None
 | 01 | 05 | 5min | 2 | 2 |
 | 02 | 01 | 10min | 2 | 3 |
 | 02 | 02 | 8min | 2 | 6 |
+| 02 | 03 | 5min | 2 | 2 |
 
 ## Last Updated
 
@@ -80,3 +83,5 @@ None
 2026-05-19 — Plan 02-01 complete: Wave 0 Nyquist test stubs created. 3 new passing tests (parallaxFormula), 8 new it.todo stubs (noiseUri x3, TimelineSkeleton x5). Full suite 41 passing + 9 todo, 0 failing.
 
 2026-05-19 — Plan 02-02 complete: Server Components BackgroundLayer.tsx and TimelineSkeleton.tsx created. lib/noiseConstants.ts extracted for shared NOISE_SVG_URI. noiseUri tests un-todoed (3 passing). TimelineSkeleton tests un-todoed (2 passing). Full suite 46 passing + 4 todo, 0 failing. @testing-library/react installed (Rule 3 auto-fix).
+
+2026-05-19 — Plan 02-03 complete: AxisLayer.tsx extracted from Timeline.tsx as standalone 'use client' component (yearToDisplay, zoom/locale/ticks/currentYear props). ShowCard.tsx import updated from @/lib/timeline/formatYear to @/lib/yearToDisplay/yearToDisplay. Full suite 46 passing + 4 todo, 0 failing. npx tsc --noEmit exits 0.
