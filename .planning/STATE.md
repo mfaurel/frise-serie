@@ -7,9 +7,9 @@ last_updated: "2026-05-19T22:48:00Z"
 progress:
   total_phases: 9
   completed_phases: 1
-  total_plans: 6
-  completed_plans: 6
-  percent: 13
+  total_plans: 7
+  completed_plans: 7
+  percent: 15
 ---
 
 # Project State — Frise Série
@@ -57,6 +57,9 @@ None
 - **02-01:** TimelineSkeleton component import commented out in test file — prevents TypeScript error on missing module; Wave 1 creates the component and un-todos the stubs
 - **02-01:** NOISE_SVG_URI import comment above each it.todo in noiseUri.test.ts — documents exact import path (lib/noiseConstants.ts) Wave 1 must provide
 - **02-01:** parallaxFormula.test.ts uses pure arithmetic with no DOM or Motion API — stays in node environment (default vitest)
+- **02-02:** NOISE_SVG_URI extracted to lib/noiseConstants.ts — single source of truth for BackgroundLayer and test suite
+- **02-02:** BackgroundLayer.tsx uses combined backgroundImage (NOISE_SVG_URI + linear-gradient) with backgroundBlendMode overlay and backgroundSize '200px 200px, 100% 100%'
+- **02-02:** TimelineSkeleton.test.ts uses React.createElement to avoid double-render in @testing-library/react container
 
 ## Performance Metrics
 
@@ -68,9 +71,12 @@ None
 | 01 | 04 | 8min | 1 | 1 |
 | 01 | 05 | 5min | 2 | 2 |
 | 02 | 01 | 10min | 2 | 3 |
+| 02 | 02 | 8min | 2 | 6 |
 
 ## Last Updated
 
 2026-05-17 — Plan 01-05 complete: lib/timeline.ts converted to re-export shim, CLAUDE.md corrected with actual stack versions and BC dates convention. Phase 1 complete — npx tsc --noEmit exits 0, 38 tests passing.
 
 2026-05-19 — Plan 02-01 complete: Wave 0 Nyquist test stubs created. 3 new passing tests (parallaxFormula), 8 new it.todo stubs (noiseUri x3, TimelineSkeleton x5). Full suite 41 passing + 9 todo, 0 failing.
+
+2026-05-19 — Plan 02-02 complete: Server Components BackgroundLayer.tsx and TimelineSkeleton.tsx created. lib/noiseConstants.ts extracted for shared NOISE_SVG_URI. noiseUri tests un-todoed (3 passing). TimelineSkeleton tests un-todoed (2 passing). Full suite 46 passing + 4 todo, 0 failing. @testing-library/react installed (Rule 3 auto-fix).
