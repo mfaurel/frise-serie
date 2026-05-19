@@ -2,7 +2,7 @@
 
 import Image from 'next/image';
 import type { Show, Locale } from '@/types';
-import { formatYear } from '@/lib/timeline';
+import { yearToDisplay } from '@/lib/yearToDisplay';
 import { PLATFORM_COLORS, PLATFORM_LABELS } from '@/lib/constants';
 
 interface Props {
@@ -84,9 +84,9 @@ export default function ShowCard({ show, locale, onClick }: Props) {
           {show.title[locale]}
         </div>
         <div className="text-xs text-stone-400 mt-0.5">
-          {formatYear(show.narrativeYearStart, locale)}
+          {yearToDisplay(show.narrativeYearStart, locale)}
           {show.narrativeYearEnd && show.narrativeYearEnd !== show.narrativeYearStart
-            ? ` – ${formatYear(show.narrativeYearEnd, locale)}`
+            ? ` – ${yearToDisplay(show.narrativeYearEnd, locale)}`
             : ''}
         </div>
       </div>
