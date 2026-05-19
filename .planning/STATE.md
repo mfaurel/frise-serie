@@ -3,13 +3,13 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: in_progress
-last_updated: "2026-05-17T21:33:43.600Z"
+last_updated: "2026-05-19T22:48:00Z"
 progress:
   total_phases: 9
   completed_phases: 1
-  total_plans: 5
-  completed_plans: 5
-  percent: 11
+  total_plans: 6
+  completed_plans: 6
+  percent: 13
 ---
 
 # Project State — Frise Série
@@ -27,7 +27,7 @@ See: .planning/PROJECT.md (updated 2026-05-17)
 | Phase | Name | Status | Completed |
 |-------|------|--------|-----------|
 | 1 | Data Foundation + yearToPixel | Complete | 2026-05-17 |
-| 2 | Parallax Engine + Era Backgrounds | Pending | — |
+| 2 | Parallax Engine + Era Backgrounds | In Progress | — |
 | 3 | Show Cards | Pending | — |
 | 4 | Historical Events + Flashbacks | Pending | — |
 | 5 | Detail Panel | Pending | — |
@@ -54,6 +54,9 @@ None
 - **01-04:** posterUrl: '' (empty string) for unverified TMDB hashes; prevents broken image loads until Phase 9 enrichment
 - **01-05:** lib/timeline.ts is a pure re-export shim; Phase 2 will remove this file and update callers to import directly from lib/yearToPixel.ts or lib/yearToDisplay.ts
 - **01-05:** PIXELS_PER_YEAR intentionally absent from the shim — deleted in Wave 1; Phase 2+ callers must update their imports
+- **02-01:** TimelineSkeleton component import commented out in test file — prevents TypeScript error on missing module; Wave 1 creates the component and un-todos the stubs
+- **02-01:** NOISE_SVG_URI import comment above each it.todo in noiseUri.test.ts — documents exact import path (lib/noiseConstants.ts) Wave 1 must provide
+- **02-01:** parallaxFormula.test.ts uses pure arithmetic with no DOM or Motion API — stays in node environment (default vitest)
 
 ## Performance Metrics
 
@@ -64,7 +67,10 @@ None
 | 01 | 03 | 3min | 6 | 4 |
 | 01 | 04 | 8min | 1 | 1 |
 | 01 | 05 | 5min | 2 | 2 |
+| 02 | 01 | 10min | 2 | 3 |
 
 ## Last Updated
 
 2026-05-17 — Plan 01-05 complete: lib/timeline.ts converted to re-export shim, CLAUDE.md corrected with actual stack versions and BC dates convention. Phase 1 complete — npx tsc --noEmit exits 0, 38 tests passing.
+
+2026-05-19 — Plan 02-01 complete: Wave 0 Nyquist test stubs created. 3 new passing tests (parallaxFormula), 8 new it.todo stubs (noiseUri x3, TimelineSkeleton x5). Full suite 41 passing + 9 todo, 0 failing.

@@ -55,7 +55,7 @@ Plans:
   5. On a device with `prefers-reduced-motion: reduce`, parallax depth movement is suppressed and the timeline still renders fully as a flat scroll.
 **Plans:** 4 plans
 Plans:
-- [ ] 02-01-PLAN.md — Wave 0 test stubs: parallaxFormula, noiseUri, TimelineSkeleton test files
+- [x] 02-01-PLAN.md — Wave 0 test stubs: parallaxFormula, noiseUri, TimelineSkeleton test files
 - [ ] 02-02-PLAN.md — New Server Components: BackgroundLayer.tsx + TimelineSkeleton.tsx + lib/noiseConstants.ts
 - [ ] 02-03-PLAN.md — AxisLayer.tsx client component + ShowCard.tsx import cleanup
 - [ ] 02-04-PLAN.md — Timeline.tsx 3-layer refactor + ClientShell.tsx + page.tsx RSC conversion + delete stale files
@@ -158,7 +158,7 @@ Plans:
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
 | 1. Data Foundation + yearToPixel | 5/5 | Complete   | 2026-05-17 |
-| 2. Parallax Engine + Era Backgrounds | 0/4 | Not started | — |
+| 2. Parallax Engine + Era Backgrounds | 1/4 | In Progress | — |
 | 3. Show Cards | 0/? | Not started | — |
 | 4. Historical Events + Flashbacks | 0/? | Not started | — |
 | 5. Detail Panel | 0/? | Not started | — |
