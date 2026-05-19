@@ -58,7 +58,7 @@ Plans:
 - [x] 02-01-PLAN.md — Wave 0 test stubs: parallaxFormula, noiseUri, TimelineSkeleton test files
 - [x] 02-02-PLAN.md — New Server Components: BackgroundLayer.tsx + TimelineSkeleton.tsx + lib/noiseConstants.ts
 - [x] 02-03-PLAN.md — AxisLayer.tsx client component + ShowCard.tsx import cleanup
-- [ ] 02-04-PLAN.md — Timeline.tsx 3-layer refactor + ClientShell.tsx + page.tsx RSC conversion + delete stale files
+- [x] 02-04-PLAN.md — Timeline.tsx 3-layer refactor + ClientShell.tsx + page.tsx RSC conversion + delete stale files
 **UI hint:** yes
 
 ### Phase 3: Show Cards
@@ -158,7 +158,7 @@ Plans:
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
 | 1. Data Foundation + yearToPixel | 5/5 | Complete   | 2026-05-17 |
-| 2. Parallax Engine + Era Backgrounds | 3/4 | In Progress | — |
+| 2. Parallax Engine + Era Backgrounds | 4/4 | Complete (pending visual verify) | 2026-05-19 |
 | 3. Show Cards | 0/? | Not started | — |
 | 4. Historical Events + Flashbacks | 0/? | Not started | — |
 | 5. Detail Panel | 0/? | Not started | — |

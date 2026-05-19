@@ -3,13 +3,13 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: in_progress
-last_updated: "2026-05-19T22:48:00Z"
+last_updated: "2026-05-19T20:54:00.210Z"
 progress:
   total_phases: 9
-  completed_phases: 1
-  total_plans: 7
-  completed_plans: 7
-  percent: 15
+  completed_phases: 2
+  total_plans: 9
+  completed_plans: 9
+  percent: 22
 ---
 
 # Project State — Frise Série
@@ -62,6 +62,8 @@ None
 - **02-02:** TimelineSkeleton.test.ts uses React.createElement to avoid double-render in @testing-library/react container
 - **02-03:** AxisLayer accepts currentYear prop but does not render it — reserved for Phase 6 current-year marker on axis; TODO comment documents intent
 - **02-03:** ShowCard.tsx import updated to @/lib/yearToDisplay directly — eliminates shim dependency before Plan 04 deletes @/lib/timeline
+- **02-04:** backgroundLayer prop is React.ReactNode (opaque RSC slot) — BackgroundLayer pre-rendered server-side, passed through ClientShell into Timeline; no user data crosses boundary
+- **02-04:** HistoricalEventMarker.tsx and ShowDetail.tsx updated from @/lib/timeline shim to direct imports during shim deletion (Rule 3 auto-fix)
 
 ## Performance Metrics
 
@@ -75,6 +77,7 @@ None
 | 02 | 01 | 10min | 2 | 3 |
 | 02 | 02 | 8min | 2 | 6 |
 | 02 | 03 | 5min | 2 | 2 |
+| 02 | 04 | 10min | 2 | 7 |
 
 ## Last Updated
 
@@ -85,3 +88,5 @@ None
 2026-05-19 — Plan 02-02 complete: Server Components BackgroundLayer.tsx and TimelineSkeleton.tsx created. lib/noiseConstants.ts extracted for shared NOISE_SVG_URI. noiseUri tests un-todoed (3 passing). TimelineSkeleton tests un-todoed (2 passing). Full suite 46 passing + 4 todo, 0 failing. @testing-library/react installed (Rule 3 auto-fix).
 
 2026-05-19 — Plan 02-03 complete: AxisLayer.tsx extracted from Timeline.tsx as standalone 'use client' component (yearToDisplay, zoom/locale/ticks/currentYear props). ShowCard.tsx import updated from @/lib/timeline/formatYear to @/lib/yearToDisplay/yearToDisplay. Full suite 46 passing + 4 todo, 0 failing. npx tsc --noEmit exits 0.
+
+2026-05-19 — Plan 02-04 complete: Timeline.tsx refactored (useReducedMotion, bgX 0.7, touchAction pan-x, backgroundLayer prop, AxisLayer, card-track). ClientShell.tsx created as 'use client' state boundary. page.tsx converted to Server Component (TimelineSkeleton + ClientShell with BackgroundLayer RSC slot). EraBackground.tsx and lib/timeline.ts deleted. HistoricalEventMarker.tsx and ShowDetail.tsx updated to direct imports (Rule 3). Full suite 46 passing + 4 todo, 0 failing. npx tsc --noEmit exits 0. Phase 2 code complete — awaiting human visual verification.
