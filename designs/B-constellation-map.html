@@ -1,0 +1,864 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Frise Serie — Constellation Map</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  /* ── Reset & Base ───────────────────────────────────────── */
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+  :root {
+    --void:        #050510;
+    --void-light:  #0a0a20;
+    --star-gold:   #f5e6c8;
+    --star-white:  #e8e0f0;
+    --ui-dim:      rgba(200, 195, 220, 0.45);
+    --ui-bright:   rgba(230, 225, 245, 0.85);
+    --ruler-bg:    rgba(8, 8, 25, 0.92);
+
+    /* Era nebula hues */
+    --nebula-antiquite:   hsla(270, 60%, 35%, 0.18);
+    --nebula-moyenage:    hsla(210, 55%, 30%, 0.18);
+    --nebula-renaissance: hsla(340, 50%, 35%, 0.18);
+    --nebula-moderne:     hsla(160, 45%, 28%, 0.18);
+    --nebula-revolutions: hsla(35, 60%, 32%, 0.18);
+    --nebula-guerres:     hsla(0, 50%, 30%, 0.18);
+
+    --font-ui:   'Space Grotesk', sans-serif;
+    --font-mono: 'Space Mono', monospace;
+  }
+
+  html, body {
+    width: 100%; height: 100%;
+    overflow: hidden;
+    background: var(--void);
+    color: var(--star-white);
+    font-family: var(--font-ui);
+    cursor: grab;
+    user-select: none;
+  }
+
+  /* ── Top Bar ────────────────────────────────────────────── */
+  .topbar {
+    position: fixed; top: 0; left: 0; right: 0;
+    height: 48px; z-index: 100;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 0 20px;
+    background: linear-gradient(180deg, rgba(5,5,16,0.95) 0%, rgba(5,5,16,0) 100%);
+    pointer-events: none;
+  }
+  .topbar > * { pointer-events: auto; }
+
+  .logo {
+    font-weight: 700; font-size: 16px; letter-spacing: 2px;
+    text-transform: uppercase; color: var(--star-gold);
+  }
+  .logo span { font-weight: 300; color: var(--ui-dim); margin-left: 4px; }
+
+  /* Minimap */
+  .minimap-wrap {
+    width: 180px; height: 32px;
+    border: 1px solid rgba(200,195,220,0.15);
+    border-radius: 4px; position: relative;
+    background: rgba(5,5,16,0.7);
+    overflow: hidden;
+  }
+  .minimap-viewport {
+    position: absolute;
+    border: 1px solid var(--star-gold);
+    border-radius: 2px;
+    background: rgba(245,230,200,0.08);
+    transition: all 0.15s ease-out;
+  }
+  .minimap-dot {
+    position: absolute; width: 2px; height: 2px;
+    border-radius: 50%; background: var(--star-gold);
+    opacity: 0.6;
+  }
+
+  /* ── Viewport ───────────────────────────────────────────── */
+  .viewport {
+    width: 100%; height: 100%;
+    overflow: hidden; position: relative;
+  }
+
+  .canvas {
+    position: absolute; top: 0; left: 0;
+    width: 5000px; height: 2400px;
+    transform-origin: 0 0;
+    will-change: transform;
+  }
+
+  /* ── Background Stars (decorative) ──────────────────────── */
+  .bg-stars {
+    position: absolute; inset: 0; pointer-events: none;
+  }
+
+  /* ── Nebula Clouds ──────────────────────────────────────── */
+  .nebula {
+    position: absolute; border-radius: 50%;
+    filter: blur(80px);
+    pointer-events: none;
+    opacity: 0.9;
+  }
+
+  /* ── Constellation Lines ────────────────────────────────── */
+  .constellation-lines {
+    position: absolute; inset: 0;
+    pointer-events: none;
+  }
+  .constellation-lines line {
+    stroke: var(--star-gold);
+    stroke-opacity: 0.12;
+    stroke-width: 1;
+    stroke-dasharray: 4 6;
+  }
+
+  /* ── Show Star ──────────────────────────────────────────── */
+  .star {
+    position: absolute;
+    transform: translate(-50%, -50%);
+    cursor: pointer;
+    z-index: 10;
+    transition: z-index 0s;
+  }
+  .star.expanded { z-index: 50; }
+
+  .star-glow {
+    width: 24px; height: 24px;
+    border-radius: 50%;
+    background: radial-gradient(circle, var(--star-gold) 0%, rgba(245,230,200,0.5) 40%, transparent 70%);
+    box-shadow: 0 0 12px 3px rgba(245,230,200,0.25),
+                0 0 30px 6px rgba(245,230,200,0.08);
+    transition: all 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+    position: relative;
+  }
+  .star-glow::after {
+    content: '';
+    position: absolute; inset: -4px;
+    border-radius: 50%;
+    border: 1px solid rgba(245,230,200,0.15);
+    transition: all 0.35s ease;
+  }
+
+  .star:hover .star-glow {
+    width: 32px; height: 32px;
+    box-shadow: 0 0 20px 6px rgba(245,230,200,0.35),
+                0 0 50px 12px rgba(245,230,200,0.12);
+    transform: translate(-4px, -4px);
+  }
+
+  .star-label {
+    position: absolute;
+    top: calc(100% + 8px); left: 50%;
+    transform: translateX(-50%);
+    white-space: nowrap;
+    font-size: 11px; font-weight: 500;
+    color: var(--star-white);
+    opacity: 0.75;
+    text-shadow: 0 0 10px rgba(5,5,16,0.9);
+    pointer-events: none;
+    transition: opacity 0.3s ease;
+  }
+  .star:hover .star-label { opacity: 1; }
+
+  .star-date {
+    position: absolute;
+    top: calc(100% + 22px); left: 50%;
+    transform: translateX(-50%);
+    white-space: nowrap;
+    font-family: var(--font-mono);
+    font-size: 9px;
+    color: var(--ui-dim);
+    pointer-events: none;
+  }
+
+  .star-rating {
+    position: absolute;
+    bottom: calc(100% + 6px); left: 50%;
+    transform: translateX(-50%);
+    white-space: nowrap;
+    font-size: 9px;
+    color: var(--star-gold);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    pointer-events: none;
+  }
+  .star:hover .star-rating { opacity: 0.8; }
+
+  /* ── Expanded Card ──────────────────────────────────────── */
+  .star-card {
+    position: absolute;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    width: 260px;
+    background: linear-gradient(135deg, rgba(15,15,40,0.95), rgba(10,10,30,0.98));
+    border: 1px solid rgba(245,230,200,0.12);
+    border-radius: 12px;
+    padding: 16px;
+    opacity: 0;
+    scale: 0.8;
+    pointer-events: none;
+    transition: all 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+    backdrop-filter: blur(12px);
+    box-shadow: 0 0 40px 10px rgba(5,5,16,0.8),
+                0 0 80px 20px rgba(245,230,200,0.04);
+  }
+  .star.expanded .star-card {
+    opacity: 1; scale: 1; pointer-events: auto;
+  }
+  .star.expanded .star-glow {
+    width: 12px; height: 12px;
+    opacity: 0.4;
+  }
+  .star.expanded .star-label,
+  .star.expanded .star-date,
+  .star.expanded .star-rating { opacity: 0; }
+
+  .card-poster {
+    width: 100%; height: 120px;
+    border-radius: 8px;
+    background: linear-gradient(135deg, rgba(245,230,200,0.06), rgba(245,230,200,0.02));
+    border: 1px solid rgba(245,230,200,0.06);
+    display: flex; align-items: center; justify-content: center;
+    margin-bottom: 12px;
+    font-size: 11px; color: var(--ui-dim);
+    letter-spacing: 1px;
+  }
+
+  .card-title {
+    font-size: 15px; font-weight: 600;
+    color: var(--star-gold);
+    margin-bottom: 4px;
+  }
+  .card-meta {
+    font-family: var(--font-mono); font-size: 10px;
+    color: var(--ui-dim);
+    margin-bottom: 8px;
+    display: flex; gap: 10px; flex-wrap: wrap;
+  }
+  .card-era {
+    font-size: 10px; font-weight: 500;
+    padding: 2px 8px;
+    border-radius: 10px;
+    display: inline-block;
+    margin-bottom: 8px;
+  }
+  .card-rating {
+    font-size: 12px; color: var(--star-gold);
+    margin-bottom: 8px;
+  }
+  .card-platform {
+    font-size: 10px; font-weight: 500;
+    color: var(--ui-bright);
+    padding: 3px 8px;
+    border-radius: 4px;
+    background: rgba(245,230,200,0.06);
+    display: inline-block;
+  }
+  .card-close {
+    position: absolute; top: 8px; right: 8px;
+    width: 20px; height: 20px;
+    border: none; background: rgba(245,230,200,0.08);
+    border-radius: 50%; color: var(--ui-dim);
+    cursor: pointer; font-size: 12px;
+    display: flex; align-items: center; justify-content: center;
+    transition: background 0.2s;
+  }
+  .card-close:hover { background: rgba(245,230,200,0.15); }
+
+  /* ── Time Ruler ─────────────────────────────────────────── */
+  .time-ruler {
+    position: fixed; bottom: 0; left: 0; right: 0;
+    height: 52px; z-index: 90;
+    background: var(--ruler-bg);
+    border-top: 1px solid rgba(200,195,220,0.08);
+    overflow: hidden;
+  }
+  .ruler-track {
+    position: absolute; top: 0; left: 0;
+    height: 100%;
+    will-change: transform;
+  }
+  .ruler-tick {
+    position: absolute; top: 0;
+    height: 100%;
+    display: flex; flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    padding-top: 8px;
+  }
+  .ruler-tick .tick-line {
+    width: 1px; height: 10px;
+    background: rgba(200,195,220,0.2);
+  }
+  .ruler-tick .tick-label {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    color: var(--ui-dim);
+    margin-top: 4px;
+    white-space: nowrap;
+  }
+  .ruler-tick.major .tick-line {
+    height: 16px;
+    background: rgba(200,195,220,0.35);
+  }
+  .ruler-tick.major .tick-label {
+    color: var(--ui-bright);
+    font-size: 11px;
+  }
+
+  /* ── Historical Event Diamonds ──────────────────────────── */
+  .event-diamond {
+    position: absolute;
+    width: 8px; height: 8px;
+    transform: rotate(45deg) translate(-50%, -50%);
+    background: var(--star-gold);
+    opacity: 0.4;
+    top: 6px;
+    cursor: default;
+    transition: opacity 0.2s;
+  }
+  .event-diamond:hover { opacity: 0.8; }
+  .event-tooltip {
+    position: absolute;
+    bottom: calc(100% + 10px); left: 50%;
+    transform: translateX(-50%) rotate(-45deg);
+    white-space: nowrap;
+    font-size: 9px;
+    font-family: var(--font-mono);
+    color: var(--star-gold);
+    background: rgba(5,5,16,0.9);
+    padding: 3px 8px;
+    border-radius: 4px;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.2s;
+  }
+  .event-diamond:hover .event-tooltip { opacity: 1; }
+
+  /* ── Era Label (inside canvas) ──────────────────────────── */
+  .era-label {
+    position: absolute;
+    font-size: 13px; font-weight: 600;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    opacity: 0.2;
+    pointer-events: none;
+    color: var(--star-white);
+  }
+
+  /* ── Zoom Controls ──────────────────────────────────────── */
+  .zoom-controls {
+    position: fixed; bottom: 70px; right: 20px;
+    z-index: 100;
+    display: flex; flex-direction: column; gap: 4px;
+  }
+  .zoom-btn {
+    width: 32px; height: 32px;
+    border: 1px solid rgba(200,195,220,0.12);
+    border-radius: 6px;
+    background: rgba(10,10,30,0.8);
+    color: var(--ui-dim);
+    font-size: 16px;
+    cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    transition: all 0.2s;
+    backdrop-filter: blur(8px);
+  }
+  .zoom-btn:hover {
+    background: rgba(20,20,50,0.9);
+    color: var(--ui-bright);
+    border-color: rgba(200,195,220,0.25);
+  }
+  .zoom-level {
+    text-align: center;
+    font-family: var(--font-mono);
+    font-size: 9px;
+    color: var(--ui-dim);
+    padding: 2px 0;
+  }
+
+  /* ── Cursor States ──────────────────────────────────────── */
+  body.dragging { cursor: grabbing !important; }
+  body.dragging .star { pointer-events: none; }
+
+  /* ── Animations ─────────────────────────────────────────── */
+  @keyframes twinkle {
+    0%, 100% { opacity: 0.3; }
+    50% { opacity: 0.8; }
+  }
+  @keyframes pulse-glow {
+    0%, 100% { box-shadow: 0 0 12px 3px rgba(245,230,200,0.25), 0 0 30px 6px rgba(245,230,200,0.08); }
+    50% { box-shadow: 0 0 16px 4px rgba(245,230,200,0.35), 0 0 40px 8px rgba(245,230,200,0.12); }
+  }
+  .star-glow { animation: pulse-glow 4s ease-in-out infinite; }
+
+  /* stagger animations */
+  .star:nth-child(2n) .star-glow  { animation-delay: -1s; }
+  .star:nth-child(3n) .star-glow  { animation-delay: -2.3s; }
+  .star:nth-child(5n) .star-glow  { animation-delay: -0.7s; }
+  .star:nth-child(7n) .star-glow  { animation-delay: -3.1s; }
+</style>
+</head>
+<body>
+
+<!-- Top Bar -->
+<div class="topbar">
+  <div class="logo">Frise<span>Serie</span></div>
+  <div class="minimap-wrap" id="minimap"></div>
+</div>
+
+<!-- Zoom Controls -->
+<div class="zoom-controls">
+  <button class="zoom-btn" id="zoom-in" title="Zoom in">+</button>
+  <div class="zoom-level" id="zoom-label">100%</div>
+  <button class="zoom-btn" id="zoom-out" title="Zoom out">&minus;</button>
+  <button class="zoom-btn" id="zoom-fit" title="Fit all" style="margin-top:4px;font-size:11px;">&#9638;</button>
+</div>
+
+<!-- Main Viewport -->
+<div class="viewport" id="viewport">
+  <div class="canvas" id="canvas">
+    <!-- Background Stars (generated by JS) -->
+    <div class="bg-stars" id="bg-stars"></div>
+    <!-- Nebulae (generated by JS) -->
+    <!-- Constellation lines SVG -->
+    <svg class="constellation-lines" id="constellation-svg" width="5000" height="2400"></svg>
+    <!-- Stars / Shows (generated by JS) -->
+  </div>
+</div>
+
+<!-- Time Ruler -->
+<div class="time-ruler" id="ruler">
+  <div class="ruler-track" id="ruler-track"></div>
+</div>
+
+<script>
+// ── Data ──────────────────────────────────────────────────────
+const CANVAS_W = 5000;
+const CANVAS_H = 2400;
+
+// Map years to X. Range: -100 (100 BC) to 1960.  Padding 200px each side.
+const YEAR_MIN = -100;
+const YEAR_MAX = 1960;
+const X_PAD = 250;
+const X_RANGE = CANVAS_W - 2 * X_PAD;
+
+function yearToX(year) {
+  return X_PAD + ((year - YEAR_MIN) / (YEAR_MAX - YEAR_MIN)) * X_RANGE;
+}
+
+function formatYear(y) {
+  if (y < 0) return Math.abs(y) + ' av. J.-C.';
+  return String(y);
+}
+
+const ERAS = [
+  { id: 'antiquite',    name: 'Antiquite',        yearStart: -100, yearEnd: 120,   hue: 270, color: 'var(--nebula-antiquite)',   badge: 'hsla(270,60%,45%,0.25)' },
+  { id: 'moyenage',     name: 'Moyen Age',        yearStart: 700,  yearEnd: 1350,  hue: 210, color: 'var(--nebula-moyenage)',    badge: 'hsla(210,55%,40%,0.25)' },
+  { id: 'renaissance',  name: 'Renaissance',      yearStart: 1450, yearEnd: 1580,  hue: 340, color: 'var(--nebula-renaissance)', badge: 'hsla(340,50%,45%,0.25)' },
+  { id: 'moderne',      name: 'Epoque Moderne',   yearStart: 1580, yearEnd: 1740,  hue: 160, color: 'var(--nebula-moderne)',     badge: 'hsla(160,45%,38%,0.25)' },
+  { id: 'revolutions',  name: 'Revolutions',      yearStart: 1760, yearEnd: 1850,  hue: 35,  color: 'var(--nebula-revolutions)', badge: 'hsla(35,60%,42%,0.25)' },
+  { id: 'guerres',      name: 'Guerres Mondiales', yearStart: 1900, yearEnd: 1955, hue: 0,   color: 'var(--nebula-guerres)',     badge: 'hsla(0,50%,40%,0.25)' },
+];
+
+const SHOWS = [
+  // Antiquite
+  { title: 'Spartacus',        yearStart: -73,  yearEnd: -73,  rating: 3, platform: 'Prime Video', era: 'antiquite',   y: 680 },
+  { title: 'Rome',             yearStart: -52,  yearEnd: -44,  rating: 4, platform: 'Max',          era: 'antiquite',   y: 520 },
+  // Moyen Age
+  { title: 'Vikings',          yearStart: 793,  yearEnd: 1002, rating: 4, platform: 'Netflix',      era: 'moyenage',    y: 450 },
+  { title: 'The Last Kingdom', yearStart: 866,  yearEnd: 950,  rating: 4, platform: 'Netflix',      era: 'moyenage',    y: 700 },
+  { title: 'Marco Polo',       yearStart: 1271, yearEnd: 1300, rating: 3, platform: 'Netflix',      era: 'moyenage',    y: 550 },
+  { title: 'Knightfall',       yearStart: 1306, yearEnd: 1314, rating: 3, platform: 'Netflix',      era: 'moyenage',    y: 380 },
+  // Renaissance
+  { title: 'Les Borgia',       yearStart: 1492, yearEnd: 1507, rating: 4, platform: 'Canal+',       era: 'renaissance', y: 620 },
+  { title: 'Les Tudors',       yearStart: 1509, yearEnd: 1547, rating: 4, platform: 'Prime Video',  era: 'renaissance', y: 430 },
+  { title: 'Reign',            yearStart: 1557, yearEnd: 1567, rating: 2, platform: 'Netflix',      era: 'renaissance', y: 760 },
+  // Epoque Moderne
+  { title: 'Shogun',           yearStart: 1600, yearEnd: 1600, rating: 5, platform: 'Disney+',      era: 'moderne',     y: 350 },
+  { title: 'Versailles',       yearStart: 1667, yearEnd: 1715, rating: 4, platform: 'Canal+',       era: 'moderne',     y: 580 },
+  { title: 'Black Sails',      yearStart: 1715, yearEnd: 1725, rating: 4, platform: 'Prime Video',  era: 'moderne',     y: 800 },
+  // Revolutions
+  { title: 'Turn',             yearStart: 1776, yearEnd: 1783, rating: 3, platform: 'Prime Video',  era: 'revolutions', y: 500 },
+  { title: 'Les Miserables',   yearStart: 1815, yearEnd: 1832, rating: 4, platform: 'Arte',         era: 'revolutions', y: 680 },
+  // Guerres Mondiales
+  { title: 'Peaky Blinders',   yearStart: 1919, yearEnd: 1934, rating: 4, platform: 'Netflix',      era: 'guerres',     y: 440 },
+  { title: 'Band of Brothers', yearStart: 1944, yearEnd: 1944, rating: 5, platform: 'Max',          era: 'guerres',     y: 650 },
+];
+
+const EVENTS = [
+  { year: -73,   label: 'Revolte de Spartacus' },
+  { year: -44,   label: 'Assassinat de Cesar' },
+  { year: 476,   label: 'Chute de Rome' },
+  { year: 800,   label: 'Sacre de Charlemagne' },
+  { year: 1066,  label: 'Bataille de Hastings' },
+  { year: 1215,  label: 'Magna Carta' },
+  { year: 1453,  label: 'Chute de Constantinople' },
+  { year: 1492,  label: 'Decouverte de l\'Amerique' },
+  { year: 1517,  label: 'Reforme protestante' },
+  { year: 1607,  label: 'Fondation de Jamestown' },
+  { year: 1715,  label: 'Mort de Louis XIV' },
+  { year: 1776,  label: 'Declaration d\'independance US' },
+  { year: 1789,  label: 'Revolution francaise' },
+  { year: 1815,  label: 'Bataille de Waterloo' },
+  { year: 1914,  label: 'Debut de la Grande Guerre' },
+  { year: 1939,  label: 'Debut de la Seconde Guerre' },
+  { year: 1945,  label: 'Fin de la Seconde Guerre' },
+];
+
+// ── Build Canvas ──────────────────────────────────────────────
+const canvas = document.getElementById('canvas');
+const viewport = document.getElementById('viewport');
+
+// Background decorative stars
+(function buildBgStars() {
+  const container = document.getElementById('bg-stars');
+  const frag = document.createDocumentFragment();
+  for (let i = 0; i < 400; i++) {
+    const d = document.createElement('div');
+    const size = Math.random() < 0.1 ? 2 : 1;
+    Object.assign(d.style, {
+      position: 'absolute',
+      width: size + 'px', height: size + 'px',
+      borderRadius: '50%',
+      background: 'rgba(220,215,240,' + (0.15 + Math.random() * 0.35) + ')',
+      left: Math.random() * CANVAS_W + 'px',
+      top: Math.random() * CANVAS_H + 'px',
+      animation: 'twinkle ' + (3 + Math.random() * 5) + 's ease-in-out infinite',
+      animationDelay: '-' + (Math.random() * 5) + 's',
+    });
+    frag.appendChild(d);
+  }
+  container.appendChild(frag);
+})();
+
+// Nebulae
+(function buildNebulae() {
+  ERAS.forEach(era => {
+    const cx = (yearToX(era.yearStart) + yearToX(era.yearEnd)) / 2;
+    const rx = Math.max(yearToX(era.yearEnd) - yearToX(era.yearStart), 200) * 0.8;
+    // Main nebula blob
+    const n = document.createElement('div');
+    n.className = 'nebula';
+    Object.assign(n.style, {
+      left: (cx - rx) + 'px',
+      top: (300 - rx * 0.4) + 'px',
+      width: (rx * 2) + 'px',
+      height: (rx * 1.5) + 'px',
+      background: `radial-gradient(ellipse, hsla(${era.hue},55%,30%,0.22) 0%, transparent 70%)`,
+    });
+    canvas.insertBefore(n, canvas.querySelector('.constellation-lines'));
+
+    // Second smaller blob offset
+    const n2 = document.createElement('div');
+    n2.className = 'nebula';
+    Object.assign(n2.style, {
+      left: (cx - rx * 0.3) + 'px',
+      top: (500) + 'px',
+      width: (rx * 1.2) + 'px',
+      height: (rx * 0.9) + 'px',
+      background: `radial-gradient(ellipse, hsla(${era.hue},45%,25%,0.15) 0%, transparent 65%)`,
+    });
+    canvas.insertBefore(n2, canvas.querySelector('.constellation-lines'));
+
+    // Era label
+    const lbl = document.createElement('div');
+    lbl.className = 'era-label';
+    lbl.textContent = era.name;
+    Object.assign(lbl.style, {
+      left: cx + 'px',
+      top: '260px',
+      transform: 'translateX(-50%)',
+    });
+    canvas.appendChild(lbl);
+  });
+})();
+
+// Constellation Lines (connect shows within same era)
+(function buildLines() {
+  const svg = document.getElementById('constellation-svg');
+  ERAS.forEach(era => {
+    const eraShows = SHOWS.filter(s => s.era === era.id);
+    // Connect in order of yearStart
+    eraShows.sort((a, b) => a.yearStart - b.yearStart);
+    for (let i = 0; i < eraShows.length - 1; i++) {
+      const a = eraShows[i], b = eraShows[i + 1];
+      const x1 = yearToX((a.yearStart + a.yearEnd) / 2);
+      const x2 = yearToX((b.yearStart + b.yearEnd) / 2);
+      const line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+      line.setAttribute('x1', x1);
+      line.setAttribute('y1', a.y);
+      line.setAttribute('x2', x2);
+      line.setAttribute('y2', b.y);
+      svg.appendChild(line);
+    }
+  });
+})();
+
+// Show Stars
+let expandedStar = null;
+
+function createStarEl(show) {
+  const x = yearToX((show.yearStart + show.yearEnd) / 2);
+  const era = ERAS.find(e => e.id === show.era);
+
+  const el = document.createElement('div');
+  el.className = 'star';
+  el.style.left = x + 'px';
+  el.style.top = show.y + 'px';
+
+  const dateStr = show.yearStart === show.yearEnd
+    ? formatYear(show.yearStart)
+    : formatYear(show.yearStart) + ' - ' + formatYear(show.yearEnd);
+
+  const stars = '★'.repeat(show.rating) + '☆'.repeat(5 - show.rating);
+
+  el.innerHTML = `
+    <div class="star-glow"></div>
+    <div class="star-rating">${stars}</div>
+    <div class="star-label">${show.title}</div>
+    <div class="star-date">${dateStr}</div>
+    <div class="star-card">
+      <button class="card-close">&times;</button>
+      <div class="card-poster">POSTER</div>
+      <div class="card-era" style="background:${era.badge};color:hsla(${era.hue},60%,75%,1)">${era.name}</div>
+      <div class="card-title">${show.title}</div>
+      <div class="card-meta">
+        <span>${dateStr}</span>
+      </div>
+      <div class="card-rating">${stars}</div>
+      <div class="card-platform">${show.platform}</div>
+    </div>
+  `;
+
+  // Click to expand
+  el.addEventListener('click', (e) => {
+    e.stopPropagation();
+    if (el.classList.contains('expanded')) return;
+    if (expandedStar) expandedStar.classList.remove('expanded');
+    el.classList.add('expanded');
+    expandedStar = el;
+  });
+
+  // Close button
+  el.querySelector('.card-close').addEventListener('click', (e) => {
+    e.stopPropagation();
+    el.classList.remove('expanded');
+    expandedStar = null;
+  });
+
+  canvas.appendChild(el);
+}
+
+SHOWS.forEach(createStarEl);
+
+// Click void to close expanded
+viewport.addEventListener('click', () => {
+  if (expandedStar) {
+    expandedStar.classList.remove('expanded');
+    expandedStar = null;
+  }
+});
+
+// ── Time Ruler ────────────────────────────────────────────────
+(function buildRuler() {
+  const track = document.getElementById('ruler-track');
+  track.style.width = CANVAS_W + 'px';
+
+  // Major ticks every 200 years, minor every 50
+  for (let y = -100; y <= 1960; y += 50) {
+    const major = y % 200 === 0;
+    const x = yearToX(y);
+    const tick = document.createElement('div');
+    tick.className = 'ruler-tick' + (major ? ' major' : '');
+    tick.style.left = x + 'px';
+    tick.innerHTML = `
+      <div class="tick-line"></div>
+      <div class="tick-label">${formatYear(y)}</div>
+    `;
+    track.appendChild(tick);
+  }
+
+  // Historical event diamonds
+  EVENTS.forEach(ev => {
+    const x = yearToX(ev.year);
+    const diamond = document.createElement('div');
+    diamond.className = 'event-diamond';
+    diamond.style.left = x + 'px';
+    diamond.innerHTML = `<div class="event-tooltip">${ev.label}</div>`;
+    track.appendChild(diamond);
+  });
+})();
+
+// ── Pan & Zoom ────────────────────────────────────────────────
+let panX = -600, panY = -200;
+let scale = 0.7;
+const SCALE_MIN = 0.2, SCALE_MAX = 2.5;
+
+function applyTransform() {
+  canvas.style.transform = `translate(${panX}px, ${panY}px) scale(${scale})`;
+  // Ruler follows horizontal pan/zoom
+  const rulerTrack = document.getElementById('ruler-track');
+  rulerTrack.style.transform = `translateX(${panX * scale / scale}px) scaleX(${scale})`;
+  rulerTrack.style.transformOrigin = '0 0';
+  // Actually, ruler track should match canvas x
+  rulerTrack.style.transform = `translateX(${panX}px) scaleX(${scale})`;
+
+  // Update zoom label
+  document.getElementById('zoom-label').textContent = Math.round(scale * 100) + '%';
+
+  updateMinimap();
+}
+
+// Drag to pan
+let isDragging = false, dragStartX, dragStartY, panStartX, panStartY;
+
+viewport.addEventListener('mousedown', (e) => {
+  if (e.target.closest('.star')) return;
+  isDragging = true;
+  dragStartX = e.clientX;
+  dragStartY = e.clientY;
+  panStartX = panX;
+  panStartY = panY;
+  document.body.classList.add('dragging');
+});
+
+window.addEventListener('mousemove', (e) => {
+  if (!isDragging) return;
+  panX = panStartX + (e.clientX - dragStartX);
+  panY = panStartY + (e.clientY - dragStartY);
+  applyTransform();
+});
+
+window.addEventListener('mouseup', () => {
+  isDragging = false;
+  document.body.classList.remove('dragging');
+});
+
+// Scroll to zoom (centered on cursor)
+viewport.addEventListener('wheel', (e) => {
+  e.preventDefault();
+  const rect = viewport.getBoundingClientRect();
+  const mx = e.clientX - rect.left;
+  const my = e.clientY - rect.top;
+
+  const prevScale = scale;
+  const delta = e.deltaY > 0 ? 0.9 : 1.1;
+  scale = Math.min(SCALE_MAX, Math.max(SCALE_MIN, scale * delta));
+
+  // Adjust pan to zoom toward cursor
+  panX = mx - (mx - panX) * (scale / prevScale);
+  panY = my - (my - panY) * (scale / prevScale);
+
+  applyTransform();
+}, { passive: false });
+
+// Zoom buttons
+document.getElementById('zoom-in').addEventListener('click', () => {
+  const cx = viewport.clientWidth / 2;
+  const cy = viewport.clientHeight / 2;
+  const prevScale = scale;
+  scale = Math.min(SCALE_MAX, scale * 1.25);
+  panX = cx - (cx - panX) * (scale / prevScale);
+  panY = cy - (cy - panY) * (scale / prevScale);
+  applyTransform();
+});
+
+document.getElementById('zoom-out').addEventListener('click', () => {
+  const cx = viewport.clientWidth / 2;
+  const cy = viewport.clientHeight / 2;
+  const prevScale = scale;
+  scale = Math.max(SCALE_MIN, scale * 0.8);
+  panX = cx - (cx - panX) * (scale / prevScale);
+  panY = cy - (cy - panY) * (scale / prevScale);
+  applyTransform();
+});
+
+document.getElementById('zoom-fit').addEventListener('click', () => {
+  const vw = viewport.clientWidth;
+  const vh = viewport.clientHeight - 52; // ruler height
+  scale = Math.min(vw / CANVAS_W, vh / CANVAS_H) * 0.92;
+  panX = (vw - CANVAS_W * scale) / 2;
+  panY = (vh - CANVAS_H * scale) / 2;
+  applyTransform();
+});
+
+// ── Minimap ───────────────────────────────────────────────────
+function updateMinimap() {
+  const minimap = document.getElementById('minimap');
+  const mw = 180, mh = 32;
+  const mapScaleX = mw / CANVAS_W;
+  const mapScaleY = mh / CANVAS_H;
+
+  // Viewport rectangle in canvas coords
+  const vw = viewport.clientWidth;
+  const vh = viewport.clientHeight - 52;
+  const canvasVX = -panX / scale;
+  const canvasVY = -panY / scale;
+  const canvasVW = vw / scale;
+  const canvasVH = vh / scale;
+
+  let vpEl = minimap.querySelector('.minimap-viewport');
+  if (!vpEl) {
+    vpEl = document.createElement('div');
+    vpEl.className = 'minimap-viewport';
+    minimap.appendChild(vpEl);
+  }
+  vpEl.style.left   = Math.max(0, canvasVX * mapScaleX) + 'px';
+  vpEl.style.top    = Math.max(0, canvasVY * mapScaleY) + 'px';
+  vpEl.style.width  = Math.min(mw, canvasVW * mapScaleX) + 'px';
+  vpEl.style.height = Math.min(mh, canvasVH * mapScaleY) + 'px';
+}
+
+// Minimap dots
+(function buildMinimapDots() {
+  const minimap = document.getElementById('minimap');
+  const mw = 180, mh = 32;
+  SHOWS.forEach(s => {
+    const x = yearToX((s.yearStart + s.yearEnd) / 2);
+    const dot = document.createElement('div');
+    dot.className = 'minimap-dot';
+    dot.style.left = (x / CANVAS_W * mw) + 'px';
+    dot.style.top  = (s.y / CANVAS_H * mh) + 'px';
+    minimap.appendChild(dot);
+  });
+})();
+
+// Minimap click to navigate
+document.getElementById('minimap').addEventListener('click', (e) => {
+  const rect = e.currentTarget.getBoundingClientRect();
+  const mx = e.clientX - rect.left;
+  const my = e.clientY - rect.top;
+  const canvasX = (mx / 180) * CANVAS_W;
+  const canvasY = (my / 32) * CANVAS_H;
+  const vw = viewport.clientWidth;
+  const vh = viewport.clientHeight - 52;
+  panX = -(canvasX * scale - vw / 2);
+  panY = -(canvasY * scale - vh / 2);
+  applyTransform();
+});
+
+// ── Keyboard shortcuts ────────────────────────────────────────
+window.addEventListener('keydown', (e) => {
+  if (e.key === 'Escape' && expandedStar) {
+    expandedStar.classList.remove('expanded');
+    expandedStar = null;
+  }
+  const PAN_STEP = 80;
+  if (e.key === 'ArrowLeft')  { panX += PAN_STEP; applyTransform(); }
+  if (e.key === 'ArrowRight') { panX -= PAN_STEP; applyTransform(); }
+  if (e.key === 'ArrowUp')    { panY += PAN_STEP; applyTransform(); }
+  if (e.key === 'ArrowDown')  { panY -= PAN_STEP; applyTransform(); }
+});
+
+// ── Initial render ────────────────────────────────────────────
+applyTransform();
+</script>
+</body>
+</html>

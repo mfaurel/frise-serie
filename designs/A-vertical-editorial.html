@@ -1,0 +1,1077 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Frise Série — Vertical Editorial</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <style>
+    /* ── Reset & Base ─────────────────────────────────────── */
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    :root {
+      --bg-deep: #0a0a0c;
+      --bg-section: #111114;
+      --bg-card: #1a1a1f;
+      --bg-card-hover: #222228;
+      --bg-sidebar: #0d0d10;
+      --bg-panel: #141418;
+      --text-primary: #f0efe8;
+      --text-secondary: #9b9a93;
+      --text-muted: #5c5b56;
+      --accent: #c8a96e;
+      --accent-dim: #8a7548;
+      --border: #2a2a30;
+      --border-light: #3a3a42;
+      --star-filled: #c8a96e;
+      --star-empty: #3a3a42;
+      --sidebar-w: 220px;
+      --panel-w: 420px;
+      --transition-smooth: cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    }
+
+    html {
+      scroll-behavior: smooth;
+      background: var(--bg-deep);
+      color: var(--text-primary);
+      font-family: 'Inter', system-ui, sans-serif;
+      font-size: 16px;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    body {
+      overflow-x: hidden;
+      background: var(--bg-deep);
+    }
+
+    /* ── Sidebar Navigation ──────────────────────────────── */
+    .sidebar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: var(--sidebar-w);
+      height: 100vh;
+      background: var(--bg-sidebar);
+      border-right: 1px solid var(--border);
+      z-index: 100;
+      display: flex;
+      flex-direction: column;
+      padding: 48px 0 32px;
+    }
+
+    .sidebar-brand {
+      padding: 0 28px 40px;
+      border-bottom: 1px solid var(--border);
+      margin-bottom: 24px;
+    }
+
+    .sidebar-brand h1 {
+      font-family: 'Instrument Serif', serif;
+      font-size: 22px;
+      font-weight: 400;
+      color: var(--text-primary);
+      letter-spacing: -0.02em;
+      line-height: 1.2;
+    }
+
+    .sidebar-brand span {
+      display: block;
+      font-family: 'Inter', sans-serif;
+      font-size: 11px;
+      font-weight: 400;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      margin-top: 6px;
+    }
+
+    .sidebar-nav {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+      padding: 0 12px;
+      overflow-y: auto;
+    }
+
+    .sidebar-link {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 12px 16px;
+      border-radius: 8px;
+      text-decoration: none;
+      color: var(--text-secondary);
+      font-size: 13px;
+      font-weight: 500;
+      letter-spacing: 0.01em;
+      transition: all 0.3s var(--transition-smooth);
+      cursor: pointer;
+      position: relative;
+    }
+
+    .sidebar-link::before {
+      content: '';
+      width: 3px;
+      height: 0;
+      background: var(--accent);
+      border-radius: 2px;
+      position: absolute;
+      left: 0;
+      top: 50%;
+      transform: translateY(-50%);
+      transition: height 0.3s var(--transition-smooth);
+    }
+
+    .sidebar-link:hover {
+      color: var(--text-primary);
+      background: rgba(200, 169, 110, 0.06);
+    }
+
+    .sidebar-link.active {
+      color: var(--accent);
+      background: rgba(200, 169, 110, 0.08);
+    }
+
+    .sidebar-link.active::before {
+      height: 20px;
+    }
+
+    .sidebar-era-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+
+    .sidebar-footer {
+      padding: 20px 28px 0;
+      border-top: 1px solid var(--border);
+      margin-top: auto;
+    }
+
+    .sidebar-footer p {
+      font-size: 11px;
+      color: var(--text-muted);
+      line-height: 1.5;
+    }
+
+    /* ── Main Content ─────────────────────────────────────── */
+    .main {
+      margin-left: var(--sidebar-w);
+      scroll-snap-type: y proximity;
+      height: 100vh;
+      overflow-y: auto;
+      scroll-behavior: smooth;
+    }
+
+    /* ── Hero Section ─────────────────────────────────────── */
+    .hero {
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      padding: 60px;
+      scroll-snap-align: start;
+      position: relative;
+      background: radial-gradient(ellipse at 50% 30%, rgba(200, 169, 110, 0.06) 0%, transparent 60%);
+    }
+
+    .hero-overline {
+      font-size: 12px;
+      font-weight: 500;
+      text-transform: uppercase;
+      letter-spacing: 0.2em;
+      color: var(--accent);
+      margin-bottom: 24px;
+    }
+
+    .hero h2 {
+      font-family: 'Instrument Serif', serif;
+      font-size: clamp(48px, 7vw, 88px);
+      font-weight: 400;
+      line-height: 1.05;
+      letter-spacing: -0.03em;
+      color: var(--text-primary);
+      max-width: 700px;
+    }
+
+    .hero h2 em {
+      font-style: italic;
+      color: var(--accent);
+    }
+
+    .hero-sub {
+      margin-top: 28px;
+      font-size: 16px;
+      font-weight: 300;
+      color: var(--text-secondary);
+      max-width: 460px;
+      line-height: 1.6;
+    }
+
+    .hero-scroll-hint {
+      position: absolute;
+      bottom: 40px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+      color: var(--text-muted);
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.15em;
+      animation: pulseDown 2s ease-in-out infinite;
+    }
+
+    .hero-scroll-hint .arrow {
+      width: 1px;
+      height: 32px;
+      background: linear-gradient(to bottom, var(--text-muted), transparent);
+    }
+
+    @keyframes pulseDown {
+      0%, 100% { opacity: 0.5; transform: translateY(0); }
+      50% { opacity: 1; transform: translateY(6px); }
+    }
+
+    /* ── Era Section ──────────────────────────────────────── */
+    .era-section {
+      min-height: 100vh;
+      scroll-snap-align: start;
+      padding: 100px 60px 80px;
+      position: relative;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .era-section::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      opacity: 0.4;
+      pointer-events: none;
+    }
+
+    /* Era-specific background treatments */
+    .era-section[data-era="antiquite"]::before {
+      background: radial-gradient(ellipse at 20% 20%, rgba(168, 120, 60, 0.08) 0%, transparent 50%);
+    }
+    .era-section[data-era="moyen-age"]::before {
+      background: radial-gradient(ellipse at 80% 30%, rgba(100, 80, 50, 0.08) 0%, transparent 50%);
+    }
+    .era-section[data-era="renaissance"]::before {
+      background: radial-gradient(ellipse at 50% 50%, rgba(140, 60, 60, 0.06) 0%, transparent 50%);
+    }
+    .era-section[data-era="moderne"]::before {
+      background: radial-gradient(ellipse at 30% 70%, rgba(60, 90, 140, 0.06) 0%, transparent 50%);
+    }
+    .era-section[data-era="revolutions"]::before {
+      background: radial-gradient(ellipse at 70% 40%, rgba(140, 50, 50, 0.06) 0%, transparent 50%);
+    }
+    .era-section[data-era="guerres"]::before {
+      background: radial-gradient(ellipse at 50% 20%, rgba(70, 70, 70, 0.1) 0%, transparent 50%);
+    }
+
+    /* ── Era Divider / Header ─────────────────────────────── */
+    .era-header {
+      margin-bottom: 60px;
+      position: relative;
+    }
+
+    .era-header-overline {
+      font-size: 11px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.2em;
+      color: var(--accent-dim);
+      margin-bottom: 12px;
+    }
+
+    .era-header h2 {
+      font-family: 'Instrument Serif', serif;
+      font-size: clamp(40px, 5vw, 72px);
+      font-weight: 400;
+      line-height: 1.05;
+      letter-spacing: -0.03em;
+      color: var(--text-primary);
+    }
+
+    .era-header-line {
+      width: 80px;
+      height: 2px;
+      background: var(--accent);
+      margin-top: 24px;
+      border-radius: 1px;
+    }
+
+    .era-header-dates {
+      margin-top: 16px;
+      font-size: 14px;
+      font-weight: 300;
+      color: var(--text-muted);
+      letter-spacing: 0.05em;
+    }
+
+    /* ── Card Grid ─────────────────────────────────────────── */
+    .card-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+      gap: 32px;
+      flex: 1;
+    }
+
+    /* Masonry-like staggering via nth-child offsets */
+    .card-grid .show-card:nth-child(even) {
+      margin-top: 40px;
+    }
+
+    /* ── Show Card ─────────────────────────────────────────── */
+    .show-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      overflow: hidden;
+      cursor: pointer;
+      transition: all 0.4s var(--transition-smooth);
+      position: relative;
+    }
+
+    .show-card:hover {
+      background: var(--bg-card-hover);
+      border-color: var(--border-light);
+      transform: translateY(-4px);
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+    }
+
+    .show-card:hover .card-poster-overlay {
+      opacity: 1;
+    }
+
+    .card-poster {
+      width: 100%;
+      aspect-ratio: 2 / 3;
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .card-poster-initial {
+      font-family: 'Instrument Serif', serif;
+      font-size: 80px;
+      font-weight: 400;
+      color: rgba(255, 255, 255, 0.15);
+      user-select: none;
+    }
+
+    .card-poster-overlay {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(to top, rgba(0, 0, 0, 0.7) 0%, transparent 50%);
+      opacity: 0;
+      transition: opacity 0.4s var(--transition-smooth);
+      display: flex;
+      align-items: flex-end;
+      padding: 20px;
+    }
+
+    .card-poster-overlay span {
+      font-size: 12px;
+      font-weight: 500;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--accent);
+    }
+
+    .card-body {
+      padding: 20px 22px 24px;
+    }
+
+    .card-title {
+      font-family: 'Instrument Serif', serif;
+      font-size: 22px;
+      font-weight: 400;
+      color: var(--text-primary);
+      line-height: 1.2;
+      letter-spacing: -0.01em;
+      margin-bottom: 8px;
+    }
+
+    .card-dates {
+      font-size: 13px;
+      font-weight: 400;
+      color: var(--text-secondary);
+      margin-bottom: 14px;
+      letter-spacing: 0.02em;
+    }
+
+    .card-meta {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .card-stars {
+      display: flex;
+      gap: 3px;
+    }
+
+    .card-stars .star {
+      width: 14px;
+      height: 14px;
+    }
+
+    .card-platform {
+      font-size: 11px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      padding: 4px 10px;
+      border-radius: 4px;
+      background: rgba(200, 169, 110, 0.1);
+      color: var(--accent);
+      border: 1px solid rgba(200, 169, 110, 0.15);
+    }
+
+    /* ── Detail Panel ─────────────────────────────────────── */
+    .detail-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.6);
+      z-index: 200;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.4s var(--transition-smooth);
+    }
+
+    .detail-overlay.open {
+      opacity: 1;
+      pointer-events: all;
+    }
+
+    .detail-panel {
+      position: fixed;
+      top: 0;
+      right: 0;
+      width: var(--panel-w);
+      height: 100vh;
+      background: var(--bg-panel);
+      border-left: 1px solid var(--border);
+      z-index: 210;
+      transform: translateX(100%);
+      transition: transform 0.5s var(--transition-smooth);
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .detail-panel.open {
+      transform: translateX(0);
+    }
+
+    .detail-close {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      border: 1px solid var(--border);
+      background: var(--bg-card);
+      color: var(--text-secondary);
+      font-size: 18px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.2s ease;
+      z-index: 5;
+    }
+
+    .detail-close:hover {
+      background: var(--bg-card-hover);
+      color: var(--text-primary);
+    }
+
+    .detail-poster {
+      width: 100%;
+      aspect-ratio: 16 / 9;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      flex-shrink: 0;
+    }
+
+    .detail-poster-initial {
+      font-family: 'Instrument Serif', serif;
+      font-size: 64px;
+      color: rgba(255, 255, 255, 0.12);
+    }
+
+    .detail-content {
+      padding: 32px 28px 40px;
+      flex: 1;
+    }
+
+    .detail-era-badge {
+      font-size: 11px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.15em;
+      color: var(--accent);
+      margin-bottom: 12px;
+    }
+
+    .detail-title {
+      font-family: 'Instrument Serif', serif;
+      font-size: 32px;
+      font-weight: 400;
+      color: var(--text-primary);
+      line-height: 1.15;
+      letter-spacing: -0.02em;
+      margin-bottom: 8px;
+    }
+
+    .detail-dates {
+      font-size: 15px;
+      color: var(--text-secondary);
+      margin-bottom: 20px;
+    }
+
+    .detail-stars {
+      display: flex;
+      gap: 4px;
+      margin-bottom: 24px;
+    }
+
+    .detail-stars .star {
+      width: 18px;
+      height: 18px;
+    }
+
+    .detail-divider {
+      width: 100%;
+      height: 1px;
+      background: var(--border);
+      margin: 20px 0;
+    }
+
+    .detail-field {
+      margin-bottom: 16px;
+    }
+
+    .detail-field-label {
+      font-size: 11px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      color: var(--text-muted);
+      margin-bottom: 4px;
+    }
+
+    .detail-field-value {
+      font-size: 15px;
+      color: var(--text-primary);
+      font-weight: 400;
+    }
+
+    .detail-description {
+      font-size: 14px;
+      line-height: 1.7;
+      color: var(--text-secondary);
+      font-weight: 300;
+    }
+
+    /* ── Utility ───────────────────────────────────────────── */
+    .sr-only {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      overflow: hidden;
+      clip: rect(0, 0, 0, 0);
+    }
+
+    /* ── Scrollbar ─────────────────────────────────────────── */
+    .main::-webkit-scrollbar {
+      width: 6px;
+    }
+    .main::-webkit-scrollbar-track {
+      background: transparent;
+    }
+    .main::-webkit-scrollbar-thumb {
+      background: var(--border);
+      border-radius: 3px;
+    }
+    .main::-webkit-scrollbar-thumb:hover {
+      background: var(--border-light);
+    }
+
+    /* ── Footer ────────────────────────────────────────────── */
+    .site-footer {
+      padding: 60px;
+      text-align: center;
+      border-top: 1px solid var(--border);
+      scroll-snap-align: end;
+    }
+
+    .site-footer p {
+      font-size: 12px;
+      color: var(--text-muted);
+      letter-spacing: 0.05em;
+    }
+
+    /* ── Responsive ────────────────────────────────────────── */
+    @media (max-width: 900px) {
+      .sidebar { display: none; }
+      .main { margin-left: 0; }
+      .era-section { padding: 80px 28px 60px; }
+      .card-grid { grid-template-columns: 1fr; }
+      .detail-panel { width: 100%; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ════════ Sidebar ════════ -->
+  <nav class="sidebar" aria-label="Navigation par era">
+    <div class="sidebar-brand">
+      <h1>Frise<br/>Serie</h1>
+      <span>Timeline editoriale</span>
+    </div>
+    <div class="sidebar-nav" id="sidebarNav">
+      <!-- populated by JS -->
+    </div>
+    <div class="sidebar-footer">
+      <p>Design Concept A<br/>Vertical Editorial</p>
+    </div>
+  </nav>
+
+  <!-- ════════ Main Scroll Container ════════ -->
+  <main class="main" id="mainScroll">
+
+    <!-- Hero -->
+    <section class="hero" id="hero">
+      <p class="hero-overline">Collection Interactive</p>
+      <h2>L'Histoire<br/>par les <em>Series</em></h2>
+      <p class="hero-sub">
+        Une exploration editoriale des series historiques, de l'Antiquite aux Guerres mondiales.
+        Scrollez pour voyager dans le temps.
+      </p>
+      <div class="hero-scroll-hint">
+        <span>Defiler</span>
+        <div class="arrow"></div>
+      </div>
+    </section>
+
+    <!-- Era sections rendered by JS -->
+    <div id="erasContainer"></div>
+
+    <footer class="site-footer">
+      <p>Frise Serie &mdash; Concept A &middot; Vertical Editorial &middot; 2026</p>
+    </footer>
+  </main>
+
+  <!-- ════════ Detail Panel ════════ -->
+  <div class="detail-overlay" id="detailOverlay"></div>
+  <aside class="detail-panel" id="detailPanel" aria-hidden="true">
+    <button class="detail-close" id="detailClose" aria-label="Fermer">&times;</button>
+    <div class="detail-poster" id="detailPoster">
+      <span class="detail-poster-initial" id="detailPosterInitial"></span>
+    </div>
+    <div class="detail-content">
+      <p class="detail-era-badge" id="detailEra"></p>
+      <h3 class="detail-title" id="detailTitle"></h3>
+      <p class="detail-dates" id="detailDates"></p>
+      <div class="detail-stars" id="detailStars"></div>
+      <div class="detail-divider"></div>
+      <div class="detail-field">
+        <p class="detail-field-label">Plateforme</p>
+        <p class="detail-field-value" id="detailPlatform"></p>
+      </div>
+      <div class="detail-field">
+        <p class="detail-field-label">Periode couverte</p>
+        <p class="detail-field-value" id="detailPeriod"></p>
+      </div>
+      <div class="detail-divider"></div>
+      <div class="detail-field">
+        <p class="detail-field-label">A propos</p>
+        <p class="detail-description" id="detailDescription"></p>
+      </div>
+    </div>
+  </aside>
+
+  <script>
+    // ──────────────────────────────────────────────────────
+    // DATA
+    // ──────────────────────────────────────────────────────
+    const ERAS = [
+      {
+        id: 'antiquite',
+        label: 'Antiquite',
+        dateRange: 'VIIIe s. av. J.-C. — Ve s.',
+        color: '#a8783c',
+        shows: [
+          {
+            title: 'Spartacus',
+            dates: '73 av. J.-C.',
+            stars: 3,
+            platform: 'Prime Video',
+            description: 'L\'histoire de Spartacus, gladiateur thrace qui mena la plus celebre revolte d\'esclaves contre la Republique romaine. Entre arenes sanglantes et intrigues politiques.'
+          },
+          {
+            title: 'Rome',
+            dates: '52 — 44 av. J.-C.',
+            stars: 4,
+            platform: 'Max',
+            description: 'Deux soldats romains ordinaires traversent les evenements qui ont transforme la Republique en Empire : de la conquete de la Gaule a l\'assassinat de Cesar.'
+          }
+        ]
+      },
+      {
+        id: 'moyen-age',
+        label: 'Moyen Age',
+        dateRange: 'Ve — XVe s.',
+        color: '#7a6842',
+        shows: [
+          {
+            title: 'Vikings',
+            dates: '793 — 1002',
+            stars: 4,
+            platform: 'Netflix',
+            description: 'L\'epopee de Ragnar Lothbrok et de ses fils, des premiers raids sur l\'Angleterre a la colonisation de nouvelles terres. Une fresque nordique sur plusieurs generations.'
+          },
+          {
+            title: 'The Last Kingdom',
+            dates: '866 — 950',
+            stars: 4,
+            platform: 'Netflix',
+            description: 'Uhtred de Bebbanburg, Saxon eleve par les Danois, navigue entre deux mondes dans l\'Angleterre du IXe siecle, au service du roi Alfred le Grand.'
+          },
+          {
+            title: 'Knightfall',
+            dates: '1306 — 1314',
+            stars: 3,
+            platform: 'Netflix',
+            description: 'Les derniers jours de l\'ordre des Templiers. Entre quete du Saint Graal et persecution par Philippe le Bel, la chute d\'un ordre legendaire.'
+          },
+          {
+            title: 'Marco Polo',
+            dates: '1271 — 1300',
+            stars: 3,
+            platform: 'Netflix',
+            description: 'Le jeune marchand venitien a la cour de Kublai Khan. Intrigues, arts martiaux et choc des civilisations au coeur de l\'Empire mongol.'
+          }
+        ]
+      },
+      {
+        id: 'renaissance',
+        label: 'Renaissance',
+        dateRange: 'XVe — XVIe s.',
+        color: '#8c3c3c',
+        shows: [
+          {
+            title: 'Les Borgia',
+            dates: '1492 — 1507',
+            stars: 4,
+            platform: 'Canal+',
+            description: 'L\'ascension de la famille Borgia au sommet de la papaute. Rodrigo Borgia devient Alexandre VI et transforme le Vatican en theatre de pouvoir, de poison et d\'ambition.'
+          },
+          {
+            title: 'Les Tudors',
+            dates: '1509 — 1547',
+            stars: 4,
+            platform: 'Prime Video',
+            description: 'Le regne tumultueux d\'Henri VIII : six mariages, la rupture avec Rome, et la naissance de l\'Eglise anglicane. Pouvoir absolu et passions devoratrices.'
+          },
+          {
+            title: 'Reign',
+            dates: '1557 — 1567',
+            stars: 2,
+            platform: 'Netflix',
+            description: 'Marie Stuart, reine d\'Ecosse, arrive a la cour de France pour epouser le futur roi. Entre alliances et trahisons, une jeune reine apprend le prix du pouvoir.'
+          }
+        ]
+      },
+      {
+        id: 'moderne',
+        label: 'Epoque Moderne',
+        dateRange: 'XVIe — XVIIIe s.',
+        color: '#3c5a8c',
+        shows: [
+          {
+            title: 'Shogun',
+            dates: '1600',
+            stars: 5,
+            platform: 'Disney+',
+            description: 'Un navigateur anglais echoue au Japon feodal a l\'aube de la bataille de Sekigahara. Immersion totale dans le Japon des samourais, entre honneur, strategie et beaute.'
+          },
+          {
+            title: 'Versailles',
+            dates: '1667 — 1715',
+            stars: 4,
+            platform: 'Canal+',
+            description: 'Louis XIV impose sa vision absolutiste en batissant Versailles. Le Roi-Soleil transforme un pavillon de chasse en centre nevralgique du pouvoir europeen.'
+          },
+          {
+            title: 'Black Sails',
+            dates: '1715 — 1725',
+            stars: 4,
+            platform: 'Prime Video',
+            description: 'Prequel de L\'Ile au tresor. Le capitaine Flint et ses pirates luttent pour la survie de Nassau, republique de pirates menacee par l\'Empire britannique.'
+          }
+        ]
+      },
+      {
+        id: 'revolutions',
+        label: 'Revolutions',
+        dateRange: 'XVIIIe — XIXe s.',
+        color: '#8c3232',
+        shows: [
+          {
+            title: 'Turn',
+            dates: '1776 — 1783',
+            stars: 3,
+            platform: 'Prime Video',
+            description: 'L\'histoire vraie du Culper Ring, premier reseau d\'espionnage americain pendant la guerre d\'Independance. Fermiers le jour, espions la nuit.'
+          },
+          {
+            title: 'Les Miserables',
+            dates: '1815 — 1832',
+            stars: 4,
+            platform: 'Arte',
+            description: 'L\'adaptation fidele du roman de Victor Hugo. Jean Valjean, Javert, Fantine et Cosette dans la France post-napoleonienne, entre misere et esperance revolutionnaire.'
+          }
+        ]
+      },
+      {
+        id: 'guerres',
+        label: 'Guerres mondiales',
+        dateRange: 'XXe s.',
+        color: '#5a5a5a',
+        shows: [
+          {
+            title: 'Peaky Blinders',
+            dates: '1919 — 1934',
+            stars: 4,
+            platform: 'Netflix',
+            description: 'La famille Shelby, gang de Birmingham, etend son empire criminel dans l\'Angleterre de l\'entre-deux-guerres. Tommy Shelby, soldat traumatise devenu chef de clan impitoyable.'
+          },
+          {
+            title: 'Band of Brothers',
+            dates: '1944',
+            stars: 5,
+            platform: 'Max',
+            description: 'L\'histoire vraie de la Easy Company, 506e regiment d\'infanterie parachutiste. Du Debarquement a la prise du Nid d\'Aigle, le recit intime de freres d\'armes.'
+          }
+        ]
+      }
+    ];
+
+    // ──────────────────────────────────────────────────────
+    // RENDER HELPERS
+    // ──────────────────────────────────────────────────────
+    function renderStars(count, size) {
+      const w = size || 14;
+      let html = '';
+      for (let i = 1; i <= 5; i++) {
+        const filled = i <= count;
+        html += `<svg class="star" width="${w}" height="${w}" viewBox="0 0 24 24" fill="${filled ? 'var(--star-filled)' : 'var(--star-empty)'}">
+          <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+        </svg>`;
+      }
+      return html;
+    }
+
+    function getPosterColor(era) {
+      const eraData = ERAS.find(e => e.id === era);
+      return eraData ? eraData.color : '#444';
+    }
+
+    // ──────────────────────────────────────────────────────
+    // RENDER SIDEBAR
+    // ──────────────────────────────────────────────────────
+    const sidebarNav = document.getElementById('sidebarNav');
+    ERAS.forEach(era => {
+      const link = document.createElement('a');
+      link.className = 'sidebar-link';
+      link.setAttribute('data-era', era.id);
+      link.href = `#era-${era.id}`;
+      link.innerHTML = `
+        <span class="sidebar-era-dot" style="background: ${era.color}"></span>
+        ${era.label}
+      `;
+      link.addEventListener('click', (e) => {
+        e.preventDefault();
+        const target = document.getElementById(`era-${era.id}`);
+        if (target) {
+          target.scrollIntoView({ behavior: 'smooth' });
+        }
+      });
+      sidebarNav.appendChild(link);
+    });
+
+    // ──────────────────────────────────────────────────────
+    // RENDER ERA SECTIONS
+    // ──────────────────────────────────────────────────────
+    const erasContainer = document.getElementById('erasContainer');
+
+    ERAS.forEach((era, eraIndex) => {
+      const section = document.createElement('section');
+      section.className = 'era-section';
+      section.id = `era-${era.id}`;
+      section.setAttribute('data-era', era.id);
+
+      let cardsHtml = '';
+      era.shows.forEach((show, showIndex) => {
+        const initial = show.title.charAt(0).toUpperCase();
+        cardsHtml += `
+          <article class="show-card" data-era-index="${eraIndex}" data-show-index="${showIndex}">
+            <div class="card-poster" style="background: linear-gradient(135deg, ${era.color}22, ${era.color}44)">
+              <span class="card-poster-initial">${initial}</span>
+              <div class="card-poster-overlay">
+                <span>Voir les details</span>
+              </div>
+            </div>
+            <div class="card-body">
+              <h3 class="card-title">${show.title}</h3>
+              <p class="card-dates">${show.dates}</p>
+              <div class="card-meta">
+                <div class="card-stars">${renderStars(show.stars)}</div>
+                <span class="card-platform">${show.platform}</span>
+              </div>
+            </div>
+          </article>
+        `;
+      });
+
+      section.innerHTML = `
+        <div class="era-header">
+          <p class="era-header-overline">Chapitre ${eraIndex + 1}</p>
+          <h2>${era.label}</h2>
+          <div class="era-header-line"></div>
+          <p class="era-header-dates">${era.dateRange}</p>
+        </div>
+        <div class="card-grid">
+          ${cardsHtml}
+        </div>
+      `;
+
+      erasContainer.appendChild(section);
+    });
+
+    // ──────────────────────────────────────────────────────
+    // CARD CLICK → DETAIL PANEL
+    // ──────────────────────────────────────────────────────
+    const detailOverlay = document.getElementById('detailOverlay');
+    const detailPanel = document.getElementById('detailPanel');
+    const detailClose = document.getElementById('detailClose');
+
+    function openDetail(eraIndex, showIndex) {
+      const era = ERAS[eraIndex];
+      const show = era.shows[showIndex];
+
+      document.getElementById('detailPoster').style.background =
+        `linear-gradient(135deg, ${era.color}33, ${era.color}55)`;
+      document.getElementById('detailPosterInitial').textContent =
+        show.title.charAt(0).toUpperCase();
+      document.getElementById('detailEra').textContent = era.label;
+      document.getElementById('detailTitle').textContent = show.title;
+      document.getElementById('detailDates').textContent = show.dates;
+      document.getElementById('detailStars').innerHTML = renderStars(show.stars, 18);
+      document.getElementById('detailPlatform').textContent = show.platform;
+      document.getElementById('detailPeriod').textContent = `${show.dates} — ${era.label}`;
+      document.getElementById('detailDescription').textContent = show.description;
+
+      detailPanel.classList.add('open');
+      detailPanel.setAttribute('aria-hidden', 'false');
+      detailOverlay.classList.add('open');
+      document.body.style.overflow = 'hidden';
+    }
+
+    function closeDetail() {
+      detailPanel.classList.remove('open');
+      detailPanel.setAttribute('aria-hidden', 'true');
+      detailOverlay.classList.remove('open');
+      document.body.style.overflow = '';
+    }
+
+    document.querySelectorAll('.show-card').forEach(card => {
+      card.addEventListener('click', () => {
+        const eraIdx = parseInt(card.dataset.eraIndex);
+        const showIdx = parseInt(card.dataset.showIndex);
+        openDetail(eraIdx, showIdx);
+      });
+    });
+
+    detailClose.addEventListener('click', closeDetail);
+    detailOverlay.addEventListener('click', closeDetail);
+
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') closeDetail();
+    });
+
+    // ──────────────────────────────────────────────────────
+    // INTERSECTION OBSERVER — SIDEBAR HIGHLIGHT
+    // ──────────────────────────────────────────────────────
+    const mainScroll = document.getElementById('mainScroll');
+
+    const observerOptions = {
+      root: mainScroll,
+      rootMargin: '-20% 0px -60% 0px',
+      threshold: 0
+    };
+
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          const eraId = entry.target.getAttribute('data-era');
+          document.querySelectorAll('.sidebar-link').forEach(link => {
+            link.classList.toggle('active', link.dataset.era === eraId);
+          });
+        }
+      });
+    }, observerOptions);
+
+    document.querySelectorAll('.era-section').forEach(section => {
+      observer.observe(section);
+    });
+
+    // ──────────────────────────────────────────────────────
+    // ENTRANCE ANIMATIONS (fade-in on scroll)
+    // ──────────────────────────────────────────────────────
+    const fadeObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.style.opacity = '1';
+          entry.target.style.transform = 'translateY(0)';
+        }
+      });
+    }, {
+      root: mainScroll,
+      rootMargin: '0px 0px -10% 0px',
+      threshold: 0.1
+    });
+
+    document.querySelectorAll('.show-card').forEach((card, i) => {
+      card.style.opacity = '0';
+      card.style.transform = 'translateY(30px)';
+      card.style.transition = `opacity 0.6s ${i * 0.08}s var(--transition-smooth), transform 0.6s ${i * 0.08}s var(--transition-smooth)`;
+      fadeObserver.observe(card);
+    });
+
+    document.querySelectorAll('.era-header').forEach(header => {
+      header.style.opacity = '0';
+      header.style.transform = 'translateY(20px)';
+      header.style.transition = 'opacity 0.8s var(--transition-smooth), transform 0.8s var(--transition-smooth)';
+      fadeObserver.observe(header);
+    });
+  </script>
+</body>
+</html>

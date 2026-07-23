@@ -1,0 +1,2 @@
+{"id":"794b0be5-72e1-438e-b3fc-c22a418ed8a0","ts":"2026-07-23T20:29:59.498Z","severity":"info","message":"GSD MCP Server Prepared at C:\\workspace\\frise-serie\\.mcp.json","source":"notify","read":false}
+{"id":"76e02a4f-eb1c-4865-b6d0-148f1ce7c9bb","ts":"2026-07-23T20:36:15.622Z","severity":"info","message":"The discussion is waiting for your approval - pausing before more tool calls run.","source":"notify","read":false}
