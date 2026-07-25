@@ -1,0 +1,661 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Noir Chronicle — L'Histoire par les Séries</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400;1,500&family=IBM+Plex+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+  :root {
+    --text: #E8E0D0;
+    --text-dim: #8a8278;
+    --text-faint: #5a554d;
+    --accent: #C8956C;
+    --bg: #000000;
+    --bg-card: #0a0a0a;
+    --serif: 'Cormorant Garamond', 'Georgia', serif;
+    --sans: 'IBM Plex Sans', 'Helvetica Neue', sans-serif;
+  }
+
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--sans);
+    font-weight: 300;
+    line-height: 1.7;
+    overflow-x: hidden;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  /* ── Reading Progress ── */
+  #progress {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 3px;
+    height: 0%;
+    background: linear-gradient(to bottom, var(--accent), transparent);
+    z-index: 1000;
+    transition: height 0.05s linear;
+  }
+
+  /* ── Top Bar (hidden initially) ── */
+  #topbar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 48px;
+    background: rgba(0, 0, 0, 0.85);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border-bottom: 1px solid rgba(200, 149, 108, 0.1);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 32px;
+    z-index: 900;
+    transform: translateY(-100%);
+    transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  #topbar.visible {
+    transform: translateY(0);
+  }
+  #topbar .bar-title {
+    font-family: var(--serif);
+    font-size: 16px;
+    font-weight: 500;
+    letter-spacing: 0.08em;
+    color: var(--text-dim);
+  }
+
+  /* ── TOC Button ── */
+  .toc-btn {
+    position: fixed;
+    top: 20px;
+    right: 24px;
+    z-index: 950;
+    background: rgba(10, 10, 10, 0.7);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    border: 1px solid rgba(200, 149, 108, 0.2);
+    color: var(--text-dim);
+    font-family: var(--sans);
+    font-size: 12px;
+    font-weight: 500;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    padding: 8px 16px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+  }
+  .toc-btn:hover {
+    border-color: var(--accent);
+    color: var(--text);
+  }
+  #topbar.visible ~ .toc-btn {
+    top: 56px;
+  }
+
+  /* ── TOC Overlay ── */
+  #toc-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.92);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    z-index: 2000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.4s ease;
+  }
+  #toc-overlay.open {
+    opacity: 1;
+    pointer-events: all;
+  }
+  #toc-overlay .toc-close {
+    position: absolute;
+    top: 32px;
+    right: 32px;
+    background: none;
+    border: none;
+    color: var(--text-dim);
+    font-size: 28px;
+    cursor: pointer;
+    font-family: var(--sans);
+    font-weight: 300;
+    transition: color 0.2s;
+  }
+  #toc-overlay .toc-close:hover {
+    color: var(--text);
+  }
+  .toc-list {
+    list-style: none;
+    text-align: center;
+  }
+  .toc-list li {
+    margin: 24px 0;
+  }
+  .toc-list a {
+    font-family: var(--serif);
+    font-size: 28px;
+    font-weight: 400;
+    color: var(--text-dim);
+    text-decoration: none;
+    transition: color 0.3s ease;
+    letter-spacing: 0.04em;
+  }
+  .toc-list a:hover {
+    color: var(--accent);
+  }
+  .toc-list .toc-date {
+    display: block;
+    font-family: var(--sans);
+    font-size: 12px;
+    font-weight: 300;
+    letter-spacing: 0.15em;
+    color: var(--text-faint);
+    margin-top: 4px;
+  }
+
+  /* ── Hero ── */
+  .hero {
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    overflow: hidden;
+  }
+  .hero canvas {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+  }
+  .hero-content {
+    position: relative;
+    z-index: 1;
+    text-align: center;
+  }
+  .hero-label {
+    font-family: var(--sans);
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.35em;
+    text-transform: uppercase;
+    color: var(--text-faint);
+    margin-bottom: 24px;
+  }
+  .hero-title {
+    font-family: var(--serif);
+    font-size: clamp(40px, 8vw, 88px);
+    font-weight: 300;
+    line-height: 1.1;
+    letter-spacing: -0.01em;
+    color: var(--text);
+    max-width: 700px;
+  }
+  .hero-title em {
+    font-style: italic;
+    font-weight: 400;
+    color: var(--accent);
+  }
+  .hero-subtitle {
+    font-family: var(--sans);
+    font-size: 14px;
+    font-weight: 300;
+    color: var(--text-dim);
+    margin-top: 28px;
+    letter-spacing: 0.08em;
+  }
+  .hero-line {
+    width: 1px;
+    height: 120px;
+    background: linear-gradient(to bottom, var(--accent), transparent);
+    margin-top: 48px;
+  }
+
+  /* ── Main Content ── */
+  .chronicle {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 0 24px 160px;
+  }
+
+  /* ── Era Divider ── */
+  .era-divider {
+    position: relative;
+    padding: 120px 0 64px;
+    text-align: center;
+    opacity: 0;
+    transform: translateY(30px);
+    transition: opacity 0.8s ease, transform 0.8s ease;
+  }
+  .era-divider.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  .era-bg-text {
+    font-family: var(--serif);
+    font-size: clamp(80px, 15vw, 160px);
+    font-weight: 700;
+    color: var(--text);
+    opacity: 0.05;
+    line-height: 1;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    white-space: nowrap;
+    pointer-events: none;
+    user-select: none;
+  }
+  .era-label {
+    position: relative;
+    font-family: var(--serif);
+    font-size: 32px;
+    font-weight: 400;
+    letter-spacing: 0.04em;
+    color: var(--text);
+    z-index: 1;
+  }
+  .era-daterange {
+    position: relative;
+    font-family: var(--sans);
+    font-size: 13px;
+    font-weight: 300;
+    letter-spacing: 0.2em;
+    color: var(--text-dim);
+    margin-top: 8px;
+    z-index: 1;
+    text-transform: uppercase;
+  }
+
+  /* ── Show Card (Chronicle Entry) ── */
+  .entry {
+    position: relative;
+    padding: 32px 0 32px 28px;
+    border-left: 2px solid var(--text-faint);
+    opacity: 0;
+    transform: translateY(24px);
+    transition: opacity 0.6s ease, transform 0.6s ease, box-shadow 0.35s ease, background 0.35s ease;
+    margin-left: 4px;
+    cursor: default;
+  }
+  .entry.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  .entry::before {
+    content: '';
+    position: absolute;
+    left: -1px;
+    top: 0;
+    bottom: 0;
+    width: 2px;
+    background: var(--era-color, var(--accent));
+    opacity: 0;
+    transition: opacity 0.35s ease;
+  }
+  .entry:hover::before {
+    opacity: 1;
+  }
+  .entry:hover {
+    background: rgba(200, 149, 108, 0.02);
+    box-shadow: 0 0 40px rgba(200, 149, 108, 0.04);
+  }
+  .entry-inner {
+    transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  .entry:hover .entry-inner {
+    transform: translateX(4px);
+  }
+  .entry-title {
+    font-family: var(--serif);
+    font-size: 28px;
+    font-weight: 500;
+    letter-spacing: 0.01em;
+    line-height: 1.2;
+    color: var(--text);
+    margin-bottom: 8px;
+  }
+  .entry-meta {
+    font-family: var(--sans);
+    font-size: 13px;
+    font-weight: 400;
+    color: var(--text-dim);
+    margin-bottom: 14px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+  .entry-meta .sep {
+    color: var(--text-faint);
+  }
+  .entry-stars {
+    color: var(--accent);
+    letter-spacing: 2px;
+    font-size: 12px;
+  }
+  .entry-description {
+    font-family: var(--sans);
+    font-size: 15px;
+    font-weight: 300;
+    line-height: 1.8;
+    color: var(--text-dim);
+    max-width: 640px;
+  }
+
+  /* ── Diamond Separator ── */
+  .diamond-sep {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 16px 0;
+    margin-left: 4px;
+    opacity: 0;
+    transition: opacity 0.6s ease;
+  }
+  .diamond-sep.visible {
+    opacity: 1;
+  }
+  .diamond-sep .line {
+    flex: 1;
+    height: 1px;
+    background: rgba(232, 224, 208, 0.08);
+  }
+  .diamond-sep .diamond {
+    width: 8px;
+    height: 8px;
+    background: var(--accent);
+    transform: rotate(45deg);
+    margin: 0 16px;
+    opacity: 0.5;
+  }
+
+  /* ── Footer ── */
+  .colophon {
+    text-align: center;
+    padding: 80px 24px;
+    border-top: 1px solid rgba(232, 224, 208, 0.06);
+  }
+  .colophon p {
+    font-family: var(--sans);
+    font-size: 12px;
+    font-weight: 300;
+    letter-spacing: 0.15em;
+    color: var(--text-faint);
+    text-transform: uppercase;
+  }
+
+  /* ── Responsive ── */
+  @media (max-width: 600px) {
+    .chronicle { padding: 0 16px 120px; }
+    .entry { padding: 24px 0 24px 20px; }
+    .entry-title { font-size: 22px; }
+    .era-divider { padding: 80px 0 40px; }
+    .toc-list a { font-size: 22px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- Reading Progress -->
+<div id="progress"></div>
+
+<!-- Top Bar -->
+<div id="topbar">
+  <span class="bar-title">L'Histoire par les Séries</span>
+</div>
+
+<!-- TOC Button -->
+<button class="toc-btn" id="toc-btn" onclick="toggleTOC()">Table</button>
+
+<!-- TOC Overlay -->
+<div id="toc-overlay">
+  <button class="toc-close" onclick="toggleTOC()">&times;</button>
+  <ul class="toc-list" id="toc-list"></ul>
+</div>
+
+<!-- Hero -->
+<section class="hero">
+  <canvas id="starfield"></canvas>
+  <div class="hero-content">
+    <div class="hero-label">Une chronologie immersive</div>
+    <h1 class="hero-title">L'Histoire<br>par les <em>Séries</em></h1>
+    <p class="hero-subtitle">De l'Antiquité aux guerres mondiales</p>
+    <div class="hero-line"></div>
+  </div>
+</section>
+
+<!-- Chronicle -->
+<main class="chronicle" id="chronicle"></main>
+
+<!-- Colophon -->
+<div class="colophon">
+  <p>Noir Chronicle &mdash; Frise Série</p>
+</div>
+
+<script>
+// ── Data ──
+const ERAS = [
+  { id: 'antiquite', label: 'Antiquité', dateRange: 'VIIIe s. av. J.-C. — Ve s.', color: '#a8783c', shows: [
+    { title: 'Spartacus', dates: '73 av. J.-C.', stars: 3, platform: 'Prime Video', description: "L'histoire de Spartacus, gladiateur thrace qui mena la plus célèbre révolte d'esclaves contre la République romaine. Entre arènes sanglantes et intrigues politiques." },
+    { title: 'Rome', dates: '52 — 44 av. J.-C.', stars: 4, platform: 'Max', description: "Deux soldats romains ordinaires traversent les événements qui ont transformé la République en Empire : de la conquête de la Gaule à l'assassinat de César." }
+  ]},
+  { id: 'moyen-age', label: 'Moyen Âge', dateRange: 'Ve — XVe s.', color: '#7a6842', shows: [
+    { title: 'Vikings', dates: '793 — 1002', stars: 4, platform: 'Netflix', description: "L'épopée de Ragnar Lothbrok et de ses fils, des premiers raids sur l'Angleterre à la colonisation de nouvelles terres. Une fresque nordique sur plusieurs générations." },
+    { title: 'The Last Kingdom', dates: '866 — 950', stars: 4, platform: 'Netflix', description: "Uhtred de Bebbanburg, Saxon élevé par les Danois, navigue entre deux mondes dans l'Angleterre du IXe siècle, au service du roi Alfred le Grand." },
+    { title: 'Knightfall', dates: '1306 — 1314', stars: 3, platform: 'Netflix', description: "Les derniers jours de l'ordre des Templiers. Entre quête du Saint Graal et persécution par Philippe le Bel." },
+    { title: 'Marco Polo', dates: '1271 — 1300', stars: 3, platform: 'Netflix', description: "Le jeune marchand vénitien à la cour de Kublai Khan. Intrigues, arts martiaux et choc des civilisations." }
+  ]},
+  { id: 'renaissance', label: 'Renaissance', dateRange: 'XVe — XVIe s.', color: '#8c3c3c', shows: [
+    { title: 'Les Borgia', dates: '1492 — 1507', stars: 4, platform: 'Canal+', description: "L'ascension de la famille Borgia au sommet de la papauté. Rodrigo Borgia devient Alexandre VI et transforme le Vatican en théâtre de pouvoir, de poison et d'ambition." },
+    { title: 'Les Tudors', dates: '1509 — 1547', stars: 4, platform: 'Prime Video', description: "Le règne tumultueux d'Henri VIII : six mariages, la rupture avec Rome, et la naissance de l'Église anglicane." },
+    { title: 'Reign', dates: '1557 — 1567', stars: 2, platform: 'Netflix', description: "Marie Stuart, reine d'Écosse, arrive à la cour de France pour épouser le futur roi." }
+  ]},
+  { id: 'moderne', label: 'Époque Moderne', dateRange: 'XVIe — XVIIIe s.', color: '#3c5a8c', shows: [
+    { title: 'Shōgun', dates: '1600', stars: 5, platform: 'Disney+', description: "Un navigateur anglais échoue au Japon féodal à l'aube de la bataille de Sekigahara. Immersion totale dans le Japon des samouraïs." },
+    { title: 'Versailles', dates: '1667 — 1715', stars: 4, platform: 'Canal+', description: "Louis XIV impose sa vision absolutiste en bâtissant Versailles. Le Roi-Soleil transforme un pavillon de chasse en centre névralgique du pouvoir européen." },
+    { title: 'Black Sails', dates: '1715 — 1725', stars: 4, platform: 'Prime Video', description: "Préquel de L'Île au trésor. Le capitaine Flint et ses pirates luttent pour la survie de Nassau, république de pirates menacée par l'Empire britannique." }
+  ]},
+  { id: 'revolutions', label: 'Révolutions', dateRange: 'XVIIIe — XIXe s.', color: '#8c3232', shows: [
+    { title: 'Turn', dates: '1776 — 1783', stars: 3, platform: 'Prime Video', description: "L'histoire vraie du Culper Ring, premier réseau d'espionnage américain pendant la guerre d'Indépendance." },
+    { title: 'Les Misérables', dates: '1815 — 1832', stars: 4, platform: 'Arte', description: "L'adaptation fidèle du roman de Victor Hugo. Jean Valjean, Javert, Fantine et Cosette dans la France post-napoléonienne." }
+  ]},
+  { id: 'guerres', label: 'Guerres mondiales', dateRange: 'XXe s.', color: '#5a5a5a', shows: [
+    { title: 'Peaky Blinders', dates: '1919 — 1934', stars: 4, platform: 'Netflix', description: "La famille Shelby, gang de Birmingham, étend son empire criminel dans l'Angleterre de l'entre-deux-guerres. Tommy Shelby, soldat traumatisé devenu chef de clan impitoyable." },
+    { title: 'Band of Brothers', dates: '1944', stars: 5, platform: 'Max', description: "L'histoire vraie de la Easy Company, 506e régiment d'infanterie parachutiste. Du Débarquement à la prise du Nid d'Aigle." }
+  ]}
+];
+
+// ── Starfield ──
+(function() {
+  const canvas = document.getElementById('starfield');
+  const ctx = canvas.getContext('2d');
+  let stars = [];
+  const COUNT = 200;
+
+  function resize() {
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+  }
+
+  function init() {
+    resize();
+    stars = [];
+    for (let i = 0; i < COUNT; i++) {
+      stars.push({
+        x: Math.random() * canvas.width,
+        y: Math.random() * canvas.height,
+        r: Math.random() * 1.2 + 0.3,
+        a: Math.random() * 0.4 + 0.05,
+        speed: Math.random() * 0.0008 + 0.0003,
+        phase: Math.random() * Math.PI * 2
+      });
+    }
+  }
+
+  function draw(t) {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    for (const s of stars) {
+      const flicker = Math.sin(t * s.speed * 1000 + s.phase) * 0.15 + 0.85;
+      ctx.beginPath();
+      ctx.arc(s.x, s.y, s.r, 0, Math.PI * 2);
+      ctx.fillStyle = `rgba(232, 224, 208, ${s.a * flicker})`;
+      ctx.fill();
+    }
+    requestAnimationFrame(draw);
+  }
+
+  window.addEventListener('resize', () => { resize(); init(); });
+  init();
+  requestAnimationFrame(draw);
+})();
+
+// ── Render Stars ──
+function renderStars(count) {
+  let s = '';
+  for (let i = 0; i < 5; i++) {
+    s += i < count ? '★' : '☆';
+  }
+  return s;
+}
+
+// ── Build Chronicle ──
+(function() {
+  const container = document.getElementById('chronicle');
+  const tocList = document.getElementById('toc-list');
+  let html = '';
+
+  ERAS.forEach((era, eraIdx) => {
+    // TOC entry
+    const li = document.createElement('li');
+    li.innerHTML = `<a href="#era-${era.id}" onclick="toggleTOC()">${era.label}<span class="toc-date">${era.dateRange}</span></a>`;
+    tocList.appendChild(li);
+
+    // Era divider
+    html += `
+      <div class="era-divider" id="era-${era.id}" data-reveal>
+        <div class="era-bg-text">${era.label}</div>
+        <div class="era-label">${era.label}</div>
+        <div class="era-daterange">${era.dateRange}</div>
+      </div>`;
+
+    era.shows.forEach((show, showIdx) => {
+      // Entry
+      html += `
+        <div class="entry" style="--era-color: ${era.color}; border-left-color: ${era.color};" data-reveal data-delay="${showIdx * 100}">
+          <div class="entry-inner">
+            <div class="entry-title">${show.title}</div>
+            <div class="entry-meta">
+              <span>${show.dates}</span>
+              <span class="sep">|</span>
+              <span>${show.platform}</span>
+              <span class="sep">|</span>
+              <span class="entry-stars">${renderStars(show.stars)}</span>
+            </div>
+            <p class="entry-description">${show.description}</p>
+          </div>
+        </div>`;
+
+      // Diamond separator between shows (not after last)
+      if (showIdx < era.shows.length - 1) {
+        html += `
+          <div class="diamond-sep" data-reveal>
+            <div class="line"></div>
+            <div class="diamond"></div>
+            <div class="line"></div>
+          </div>`;
+      }
+    });
+  });
+
+  container.innerHTML = html;
+})();
+
+// ── Scroll Reveal ──
+(function() {
+  const els = document.querySelectorAll('[data-reveal]');
+
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        const delay = parseInt(entry.target.dataset.delay || '0');
+        setTimeout(() => {
+          entry.target.classList.add('visible');
+        }, delay);
+        observer.unobserve(entry.target);
+      }
+    });
+  }, {
+    threshold: 0.15,
+    rootMargin: '0px 0px -40px 0px'
+  });
+
+  els.forEach(el => observer.observe(el));
+})();
+
+// ── Scroll: Progress + Topbar ──
+(function() {
+  const progress = document.getElementById('progress');
+  const topbar = document.getElementById('topbar');
+  const hero = document.querySelector('.hero');
+  let ticking = false;
+
+  window.addEventListener('scroll', () => {
+    if (!ticking) {
+      requestAnimationFrame(() => {
+        const scrollTop = window.scrollY;
+        const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+        const pct = Math.min(scrollTop / docHeight * 100, 100);
+        progress.style.height = pct + '%';
+
+        // Show topbar after hero
+        if (scrollTop > hero.offsetHeight * 0.7) {
+          topbar.classList.add('visible');
+        } else {
+          topbar.classList.remove('visible');
+        }
+
+        ticking = false;
+      });
+      ticking = true;
+    }
+  });
+})();
+
+// ── TOC Toggle ──
+function toggleTOC() {
+  const overlay = document.getElementById('toc-overlay');
+  overlay.classList.toggle('open');
+  document.body.style.overflow = overlay.classList.contains('open') ? 'hidden' : '';
+}
+
+// Close TOC on Escape
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'Escape') {
+    const overlay = document.getElementById('toc-overlay');
+    if (overlay.classList.contains('open')) {
+      toggleTOC();
+    }
+  }
+});
+</script>
+</body>
+</html>

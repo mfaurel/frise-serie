@@ -1,0 +1,812 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Frise Serie — Stellar Atlas</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,300;0,400;0,500;0,700;1,400&family=DM+Serif+Display:ital@0;1&display=swap" rel="stylesheet">
+<style>
+/* ── Reset & Base ───────────────────────────────────────── */
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body {
+  font-family: 'DM Sans', sans-serif;
+  background: #0C0C12;
+  color: #F0E6D0;
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* ── Topographic background pattern ─────────────────────── */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  opacity: 0.04;
+  background:
+    repeating-radial-gradient(ellipse at 20% 50%, transparent 0, transparent 40px, rgba(240,230,208,0.15) 40.5px, transparent 41px),
+    repeating-radial-gradient(ellipse at 80% 30%, transparent 0, transparent 55px, rgba(240,230,208,0.12) 55.5px, transparent 56px),
+    repeating-radial-gradient(ellipse at 50% 80%, transparent 0, transparent 70px, rgba(240,230,208,0.1) 70.5px, transparent 71px),
+    repeating-radial-gradient(ellipse at 35% 20%, transparent 0, transparent 30px, rgba(240,230,208,0.13) 30.5px, transparent 31px),
+    repeating-radial-gradient(ellipse at 65% 65%, transparent 0, transparent 48px, rgba(240,230,208,0.11) 48.5px, transparent 49px);
+}
+
+/* ── Floating dot navigator ─────────────────────────────── */
+.nav-dots {
+  position: fixed;
+  right: 24px;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 100;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0;
+}
+.nav-line {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 1px;
+  background: rgba(240,230,208,0.15);
+  z-index: 0;
+}
+.nav-dot {
+  position: relative;
+  z-index: 1;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  border: 1.5px solid rgba(240,230,208,0.3);
+  background: #0C0C12;
+  cursor: pointer;
+  transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  margin: 14px 0;
+}
+.nav-dot:hover {
+  border-color: #C8956C;
+  background: rgba(200,149,108,0.2);
+  transform: scale(1.3);
+}
+.nav-dot.active {
+  background: #C8956C;
+  border-color: #C8956C;
+  box-shadow: 0 0 8px rgba(200,149,108,0.5);
+  transform: scale(1.4);
+}
+.nav-dot-label {
+  position: absolute;
+  right: 20px;
+  top: 50%;
+  transform: translateY(-50%);
+  white-space: nowrap;
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: #C8956C;
+  opacity: 0;
+  transition: opacity 0.3s;
+  pointer-events: none;
+}
+.nav-dot:hover .nav-dot-label {
+  opacity: 1;
+}
+
+/* ── Progress bar ───────────────────────────────────────── */
+.progress-bar {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  height: 3px;
+  background: linear-gradient(90deg, #C8956C, #F0E6D0);
+  z-index: 200;
+  transition: width 0.1s linear;
+  border-radius: 0 2px 2px 0;
+}
+
+/* ── Header ─────────────────────────────────────────────── */
+.site-header {
+  position: relative;
+  z-index: 10;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+}
+.site-header::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse at 50% 60%, rgba(200,149,108,0.06) 0%, transparent 70%);
+  pointer-events: none;
+}
+.site-header h1 {
+  font-family: 'DM Serif Display', serif;
+  font-size: clamp(3rem, 7vw, 6rem);
+  letter-spacing: 0.04em;
+  color: #F0E6D0;
+  line-height: 1.1;
+  position: relative;
+}
+.site-header h1 span {
+  display: block;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 0.22em;
+  font-weight: 300;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  color: #C8956C;
+  margin-top: 0.8em;
+}
+.scroll-hint {
+  position: absolute;
+  bottom: 40px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  opacity: 0.4;
+  animation: pulse-hint 2.5s ease-in-out infinite;
+}
+.scroll-hint span {
+  font-size: 11px;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  font-weight: 300;
+}
+.scroll-hint svg {
+  width: 20px;
+  height: 20px;
+}
+@keyframes pulse-hint {
+  0%, 100% { opacity: 0.4; transform: translateY(0); }
+  50% { opacity: 0.7; transform: translateY(4px); }
+}
+
+/* ── Era sections ───────────────────────────────────────── */
+.era-section {
+  position: relative;
+  z-index: 10;
+  min-height: 100vh;
+  display: flex;
+  padding: 80px 0;
+}
+.era-section::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.8s ease;
+}
+.era-section.in-view::before {
+  opacity: 1;
+}
+
+/* Left column — era info */
+.era-info {
+  width: 40%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 40px 60px 40px 80px;
+  position: relative;
+}
+.era-label-wrapper {
+  position: relative;
+}
+.era-label {
+  font-family: 'DM Serif Display', serif;
+  font-size: clamp(2.5rem, 5vw, 4.5rem);
+  line-height: 1.05;
+  color: #F0E6D0;
+  opacity: 0;
+  transform: translateY(30px);
+  transition: all 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+.era-section.in-view .era-label {
+  opacity: 1;
+  transform: translateY(0);
+}
+.era-date-range {
+  font-size: 14px;
+  font-weight: 300;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  margin-top: 16px;
+  opacity: 0;
+  transform: translateY(20px);
+  transition: all 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94) 0.15s;
+}
+.era-section.in-view .era-date-range {
+  opacity: 0.6;
+  transform: translateY(0);
+}
+.era-divider {
+  width: 60px;
+  height: 1px;
+  margin: 24px 0;
+  opacity: 0;
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: all 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94) 0.25s;
+}
+.era-section.in-view .era-divider {
+  opacity: 1;
+  transform: scaleX(1);
+}
+.era-show-count {
+  font-size: 13px;
+  font-weight: 300;
+  letter-spacing: 0.06em;
+  opacity: 0;
+  transform: translateY(15px);
+  transition: all 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94) 0.35s;
+}
+.era-section.in-view .era-show-count {
+  opacity: 0.4;
+  transform: translateY(0);
+}
+
+/* Right column — constellation */
+.constellation-area {
+  width: 60%;
+  position: relative;
+  min-height: 500px;
+}
+.constellation-svg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 1;
+}
+.constellation-line {
+  stroke-dasharray: 1000;
+  stroke-dashoffset: 1000;
+  transition: stroke-dashoffset 1.5s cubic-bezier(0.25, 0.46, 0.45, 0.94) 0.6s;
+}
+.era-section.in-view .constellation-line {
+  stroke-dashoffset: 0;
+}
+
+/* ── Star nodes ─────────────────────────────────────────── */
+.star-node {
+  position: absolute;
+  z-index: 10;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  cursor: pointer;
+  opacity: 0;
+  transform: scale(0.5);
+  transition: opacity 0.6s ease, transform 0.6s ease;
+}
+.era-section.in-view .star-node {
+  opacity: 1;
+  transform: scale(1);
+}
+.star-glow {
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  position: relative;
+  transition: all 0.35s ease;
+}
+.star-glow::before {
+  content: '';
+  position: absolute;
+  inset: -6px;
+  border-radius: 50%;
+  opacity: 0.25;
+  transition: all 0.35s ease;
+}
+.star-glow::after {
+  content: '';
+  position: absolute;
+  inset: -14px;
+  border-radius: 50%;
+  opacity: 0;
+  transition: all 0.35s ease;
+}
+.star-node:hover .star-glow::after {
+  opacity: 0.12;
+}
+.star-node:hover .star-glow {
+  transform: scale(1.3);
+}
+.star-node.expanded .star-glow {
+  transform: scale(1.5);
+}
+.star-node.expanded .star-glow::after {
+  opacity: 0.2;
+}
+.star-title {
+  margin-top: 10px;
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  white-space: nowrap;
+  text-shadow: 0 1px 6px rgba(12,12,18,0.9);
+  transition: color 0.3s;
+}
+.star-node:hover .star-title {
+  color: #F0E6D0;
+}
+.star-dates {
+  font-size: 10px;
+  font-weight: 300;
+  opacity: 0.45;
+  margin-top: 2px;
+  white-space: nowrap;
+  text-shadow: 0 1px 4px rgba(12,12,18,0.9);
+}
+
+/* ── Expanded card ──────────────────────────────────────── */
+.show-card {
+  position: absolute;
+  z-index: 50;
+  width: 280px;
+  background: rgba(18,18,26,0.95);
+  border: 1px solid rgba(240,230,208,0.1);
+  border-radius: 8px;
+  padding: 24px;
+  backdrop-filter: blur(16px);
+  opacity: 0;
+  transform: translateY(8px) scale(0.96);
+  pointer-events: none;
+  transition: all 0.35s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  box-shadow: 0 12px 40px rgba(0,0,0,0.5), 0 0 0 1px rgba(240,230,208,0.04);
+}
+.show-card.visible {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+  pointer-events: auto;
+}
+.card-header {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  margin-bottom: 16px;
+}
+.card-poster {
+  width: 44px;
+  height: 44px;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'DM Serif Display', serif;
+  font-size: 22px;
+  color: #F0E6D0;
+  flex-shrink: 0;
+}
+.card-title-block {
+  flex: 1;
+  min-width: 0;
+}
+.card-title {
+  font-family: 'DM Serif Display', serif;
+  font-size: 18px;
+  line-height: 1.2;
+  color: #F0E6D0;
+}
+.card-dates {
+  font-size: 12px;
+  font-weight: 300;
+  color: rgba(240,230,208,0.5);
+  margin-top: 3px;
+}
+.card-rating {
+  display: flex;
+  gap: 2px;
+  margin-bottom: 12px;
+}
+.card-rating span {
+  font-size: 14px;
+  color: #C8956C;
+}
+.card-rating span.empty {
+  opacity: 0.25;
+}
+.card-platform {
+  display: inline-block;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding: 4px 10px;
+  border-radius: 3px;
+  background: rgba(200,149,108,0.12);
+  color: #C8956C;
+  margin-bottom: 14px;
+}
+.card-description {
+  font-size: 13px;
+  line-height: 1.6;
+  color: rgba(240,230,208,0.65);
+  font-weight: 300;
+}
+
+/* ── Footer ─────────────────────────────────────────────── */
+.site-footer {
+  position: relative;
+  z-index: 10;
+  text-align: center;
+  padding: 80px 40px 100px;
+  font-size: 12px;
+  font-weight: 300;
+  letter-spacing: 0.1em;
+  color: rgba(240,230,208,0.25);
+}
+
+/* ── Media queries ──────────────────────────────────────── */
+@media (max-width: 900px) {
+  .era-section {
+    flex-direction: column;
+  }
+  .era-info {
+    width: 100%;
+    padding: 40px 40px 20px;
+    text-align: center;
+  }
+  .era-divider { margin: 20px auto; }
+  .constellation-area {
+    width: 100%;
+    min-height: 400px;
+    padding: 0 20px;
+  }
+  .nav-dots { display: none; }
+  .era-info { padding-left: 40px; }
+}
+</style>
+</head>
+<body>
+
+<!-- Progress bar -->
+<div class="progress-bar" id="progressBar"></div>
+
+<!-- Floating dot navigator (built by JS) -->
+<nav class="nav-dots" id="navDots" aria-label="Navigation par eres"></nav>
+
+<!-- Header -->
+<header class="site-header">
+  <h1>
+    Stellar Atlas
+    <span>Cartographie des series historiques</span>
+  </h1>
+  <div class="scroll-hint">
+    <span>Explorer</span>
+    <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5">
+      <path d="M10 3 L10 17 M4 11 L10 17 L16 11"/>
+    </svg>
+  </div>
+</header>
+
+<!-- Era sections (built by JS) -->
+<main id="main"></main>
+
+<!-- Footer -->
+<footer class="site-footer">
+  Frise Serie &mdash; Stellar Atlas &mdash; 2026
+</footer>
+
+<script>
+// ── Data ──────────────────────────────────────────────────
+const ERAS = [
+  { id: 'antiquite', label: 'Antiquite', dateRange: 'VIIIe s. av. J.-C. — Ve s.', color: '#a8783c', hue: 30, shows: [
+    { title: 'Spartacus', dates: '73 av. J.-C.', stars: 3, platform: 'Prime Video', description: "L’histoire de Spartacus, gladiateur thrace qui mena la plus célèbre révolte d’esclaves contre la République romaine.", x: 25, y: 35 },
+    { title: 'Rome', dates: '52 — 44 av. J.-C.', stars: 4, platform: 'Max', description: "Deux soldats romains ordinaires traversent les événements qui ont transformé la République en Empire.", x: 65, y: 60 }
+  ]},
+  { id: 'moyen-age', label: 'Moyen Âge', dateRange: 'Ve — XVe s.', color: '#7a6842', hue: 210, shows: [
+    { title: 'Vikings', dates: '793 — 1002', stars: 4, platform: 'Netflix', description: "L’épopée de Ragnar Lothbrok et de ses fils.", x: 15, y: 25 },
+    { title: 'The Last Kingdom', dates: '866 — 950', stars: 4, platform: 'Netflix', description: "Uhtred de Bebbanburg, Saxon élevé par les Danois.", x: 45, y: 55 },
+    { title: 'Knightfall', dates: '1306 — 1314', stars: 3, platform: 'Netflix', description: "Les derniers jours de l’ordre des Templiers.", x: 75, y: 30 },
+    { title: 'Marco Polo', dates: '1271 — 1300', stars: 3, platform: 'Netflix', description: "Le jeune marchand vénitien à la cour de Kublai Khan.", x: 55, y: 75 }
+  ]},
+  { id: 'renaissance', label: 'Renaissance', dateRange: 'XVe — XVIe s.', color: '#8c3c3c', hue: 340, shows: [
+    { title: 'Les Borgia', dates: '1492 — 1507', stars: 4, platform: 'Canal+', description: "L’ascension de la famille Borgia au sommet de la papauté.", x: 20, y: 40 },
+    { title: 'Les Tudors', dates: '1509 — 1547', stars: 4, platform: 'Prime Video', description: "Le règne tumultueux d’Henri VIII.", x: 55, y: 25 },
+    { title: 'Reign', dates: '1557 — 1567', stars: 2, platform: 'Netflix', description: "Marie Stuart, reine d’Écosse, arrive à la cour de France.", x: 70, y: 65 }
+  ]},
+  { id: 'moderne', label: 'Époque Moderne', dateRange: 'XVIe — XVIIIe s.', color: '#3c5a8c', hue: 200, shows: [
+    { title: 'Shōgun', dates: '1600', stars: 5, platform: 'Disney+', description: "Un navigateur anglais échoue au Japon féodal.", x: 30, y: 30 },
+    { title: 'Versailles', dates: '1667 — 1715', stars: 4, platform: 'Canal+', description: "Louis XIV impose sa vision absolutiste en bâtissant Versailles.", x: 60, y: 55 },
+    { title: 'Black Sails', dates: '1715 — 1725', stars: 4, platform: 'Prime Video', description: "Préquel de L’Île au trésor. Le capitaine Flint et ses pirates.", x: 45, y: 80 }
+  ]},
+  { id: 'revolutions', label: 'Révolutions', dateRange: 'XVIIIe — XIXe s.', color: '#8c3232', hue: 15, shows: [
+    { title: 'Turn', dates: '1776 — 1783', stars: 3, platform: 'Prime Video', description: "L’histoire vraie du Culper Ring, premier réseau d’espionnage américain.", x: 35, y: 35 },
+    { title: 'Les Misérables', dates: '1815 — 1832', stars: 4, platform: 'Arte', description: "L’adaptation fidèle du roman de Victor Hugo.", x: 65, y: 60 }
+  ]},
+  { id: 'guerres', label: 'Guerres mondiales', dateRange: 'XXe s.', color: '#5a5a5a', hue: 0, shows: [
+    { title: 'Peaky Blinders', dates: '1919 — 1934', stars: 4, platform: 'Netflix', description: "La famille Shelby, gang de Birmingham, étend son empire criminel.", x: 25, y: 40 },
+    { title: 'Band of Brothers', dates: '1944', stars: 5, platform: 'Max', description: "L’histoire vraie de la Easy Company, 506e régiment d’infanterie parachutiste.", x: 70, y: 55 }
+  ]}
+];
+
+// ── Helpers ────────────────────────────────────────────────
+function starRating(n) {
+  let out = '';
+  for (let i = 1; i <= 5; i++) {
+    out += `<span class="${i > n ? 'empty' : ''}">★</span>`;
+  }
+  return out;
+}
+
+function eraGradient(color, hue) {
+  return `radial-gradient(ellipse at 30% 50%, hsla(${hue}, 40%, 15%, 0.25) 0%, transparent 60%)`;
+}
+
+// ── Build nav dots ────────────────────────────────────────
+const navDots = document.getElementById('navDots');
+const navLine = document.createElement('div');
+navLine.className = 'nav-line';
+navDots.appendChild(navLine);
+
+ERAS.forEach(era => {
+  const dot = document.createElement('button');
+  dot.className = 'nav-dot';
+  dot.dataset.target = era.id;
+  dot.setAttribute('aria-label', era.label);
+  const label = document.createElement('span');
+  label.className = 'nav-dot-label';
+  label.textContent = era.label;
+  dot.appendChild(label);
+  navDots.appendChild(dot);
+  dot.addEventListener('click', () => {
+    document.getElementById('era-' + era.id).scrollIntoView({ behavior: 'smooth' });
+  });
+});
+
+// ── Build era sections ────────────────────────────────────
+const main = document.getElementById('main');
+
+ERAS.forEach((era, eraIdx) => {
+  const section = document.createElement('section');
+  section.className = 'era-section';
+  section.id = 'era-' + era.id;
+  section.style.setProperty('--era-color', era.color);
+  // Radial gradient overlay for era atmosphere
+  const bgOverlay = document.createElement('div');
+  bgOverlay.style.cssText = `
+    position: absolute; inset: 0; pointer-events: none; z-index: 0;
+    background: ${eraGradient(era.color, era.hue)};
+    opacity: 0; transition: opacity 0.8s ease;
+  `;
+  bgOverlay.className = 'era-bg-overlay';
+  section.appendChild(bgOverlay);
+
+  // Left column
+  const info = document.createElement('div');
+  info.className = 'era-info';
+  info.innerHTML = `
+    <div class="era-label-wrapper">
+      <div class="era-label">${era.label}</div>
+      <div class="era-date-range">${era.dateRange}</div>
+      <div class="era-divider" style="background: ${era.color};"></div>
+      <div class="era-show-count">${era.shows.length} serie${era.shows.length > 1 ? 's' : ''}</div>
+    </div>
+  `;
+  section.appendChild(info);
+
+  // Right column
+  const constellation = document.createElement('div');
+  constellation.className = 'constellation-area';
+
+  // SVG for connecting lines
+  const svgNS = 'http://www.w3.org/2000/svg';
+  const svg = document.createElementNS(svgNS, 'svg');
+  svg.setAttribute('class', 'constellation-svg');
+  svg.setAttribute('viewBox', '0 0 100 100');
+  svg.setAttribute('preserveAspectRatio', 'none');
+
+  // Draw lines connecting shows chronologically
+  for (let i = 0; i < era.shows.length - 1; i++) {
+    const a = era.shows[i];
+    const b = era.shows[i + 1];
+    const line = document.createElementNS(svgNS, 'line');
+    line.setAttribute('x1', a.x);
+    line.setAttribute('y1', a.y);
+    line.setAttribute('x2', b.x);
+    line.setAttribute('y2', b.y);
+    line.setAttribute('stroke', era.color);
+    line.setAttribute('stroke-opacity', '0.3');
+    line.setAttribute('stroke-width', '0.3');
+    line.setAttribute('class', 'constellation-line');
+    svg.appendChild(line);
+  }
+
+  constellation.appendChild(svg);
+
+  // Star nodes
+  era.shows.forEach((show, showIdx) => {
+    const node = document.createElement('div');
+    node.className = 'star-node';
+    node.style.left = show.x + '%';
+    node.style.top = show.y + '%';
+    node.style.transform = 'translate(-50%, -50%) scale(0.5)';
+    node.style.transitionDelay = (0.3 + showIdx * 0.12) + 's';
+    node.dataset.eraId = era.id;
+    node.dataset.showIdx = showIdx;
+
+    node.innerHTML = `
+      <div class="star-glow" style="
+        background: ${era.color};
+        box-shadow: 0 0 8px ${era.color}, 0 0 2px ${era.color};
+      ">
+        <div style="position:absolute;inset:-6px;border-radius:50%;background:${era.color};opacity:0.2;"></div>
+      </div>
+      <div class="star-title">${show.title}</div>
+      <div class="star-dates">${show.dates}</div>
+    `;
+
+    node.addEventListener('click', (e) => {
+      e.stopPropagation();
+      toggleCard(era, show, showIdx, node, constellation);
+    });
+
+    constellation.appendChild(node);
+  });
+
+  section.appendChild(constellation);
+  main.appendChild(section);
+});
+
+// ── Card management ───────────────────────────────────────
+let activeCard = null;
+let activeNode = null;
+
+function toggleCard(era, show, showIdx, node, container) {
+  // Close existing
+  if (activeCard) {
+    activeCard.classList.remove('visible');
+    if (activeNode) activeNode.classList.remove('expanded');
+    const oldCard = activeCard;
+    const oldNode = activeNode;
+    setTimeout(() => { if (oldCard.parentNode) oldCard.parentNode.removeChild(oldCard); }, 350);
+    if (activeNode === node) {
+      activeCard = null;
+      activeNode = null;
+      return;
+    }
+  }
+
+  // Create card
+  const card = document.createElement('div');
+  card.className = 'show-card';
+
+  const posterBg = era.color;
+  const initial = show.title.charAt(0);
+
+  card.innerHTML = `
+    <div class="card-header">
+      <div class="card-poster" style="background: ${posterBg};">${initial}</div>
+      <div class="card-title-block">
+        <div class="card-title">${show.title}</div>
+        <div class="card-dates">${show.dates}</div>
+      </div>
+    </div>
+    <div class="card-rating">${starRating(show.stars)}</div>
+    <div class="card-platform">${show.platform}</div>
+    <div class="card-description">${show.description}</div>
+  `;
+
+  // Position card relative to the star
+  const nodeRect = node.getBoundingClientRect();
+  const containerRect = container.getBoundingClientRect();
+  const nodeRelX = nodeRect.left - containerRect.left + nodeRect.width / 2;
+  const nodeRelY = nodeRect.top - containerRect.top + nodeRect.height / 2;
+
+  // Place to the right by default, left if too close to right edge
+  let cardLeft, cardTop;
+  if (show.x > 55) {
+    cardLeft = nodeRelX - 300;
+  } else {
+    cardLeft = nodeRelX + 30;
+  }
+  cardTop = nodeRelY - 40;
+
+  // Clamp vertically
+  if (cardTop < 10) cardTop = 10;
+  if (cardTop + 260 > containerRect.height) cardTop = containerRect.height - 270;
+
+  card.style.left = cardLeft + 'px';
+  card.style.top = cardTop + 'px';
+
+  container.appendChild(card);
+  node.classList.add('expanded');
+
+  requestAnimationFrame(() => {
+    requestAnimationFrame(() => {
+      card.classList.add('visible');
+    });
+  });
+
+  activeCard = card;
+  activeNode = node;
+}
+
+// Close card on click outside
+document.addEventListener('click', (e) => {
+  if (activeCard && !e.target.closest('.show-card') && !e.target.closest('.star-node')) {
+    activeCard.classList.remove('visible');
+    if (activeNode) activeNode.classList.remove('expanded');
+    const old = activeCard;
+    setTimeout(() => { if (old.parentNode) old.parentNode.removeChild(old); }, 350);
+    activeCard = null;
+    activeNode = null;
+  }
+});
+
+// ── Intersection Observer for entrance animations ─────────
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      entry.target.classList.add('in-view');
+      // Also show bg overlay
+      const overlay = entry.target.querySelector('.era-bg-overlay');
+      if (overlay) overlay.style.opacity = '1';
+    }
+  });
+}, {
+  threshold: 0.2,
+  rootMargin: '-50px 0px'
+});
+
+document.querySelectorAll('.era-section').forEach(section => {
+  observer.observe(section);
+});
+
+// ── Star node entrance with correct transform ─────────────
+const starObserver = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      const section = entry.target;
+      const stars = section.querySelectorAll('.star-node');
+      stars.forEach(star => {
+        star.style.transform = 'translate(-50%, -50%) scale(1)';
+      });
+    }
+  });
+}, { threshold: 0.15 });
+
+document.querySelectorAll('.era-section').forEach(s => starObserver.observe(s));
+
+// ── Scroll: progress bar + active nav dot ─────────────────
+const dots = document.querySelectorAll('.nav-dot');
+const sections = document.querySelectorAll('.era-section');
+const progressBar = document.getElementById('progressBar');
+
+function onScroll() {
+  // Progress bar
+  const scrollH = document.documentElement.scrollHeight - window.innerHeight;
+  const scrolled = window.scrollY / scrollH;
+  progressBar.style.width = (scrolled * 100) + '%';
+
+  // Active dot
+  let currentIdx = -1;
+  sections.forEach((sec, i) => {
+    const rect = sec.getBoundingClientRect();
+    if (rect.top < window.innerHeight * 0.5 && rect.bottom > window.innerHeight * 0.3) {
+      currentIdx = i;
+    }
+  });
+  dots.forEach((dot, i) => {
+    dot.classList.toggle('active', i === currentIdx);
+  });
+}
+
+window.addEventListener('scroll', onScroll, { passive: true });
+onScroll();
+</script>
+</body>
+</html>

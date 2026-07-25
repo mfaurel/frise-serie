@@ -1,0 +1,1017 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Frise Serie — Cosmic Magazine</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;0,800;0,900;1,400;1,500;1,600&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  /* ── Reset & Base ───────────────────────────────────────── */
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+  :root {
+    --bg-deep:     #070B14;
+    --bg-card:     rgba(255, 255, 255, 0.03);
+    --bg-card-hover: rgba(255, 255, 255, 0.06);
+    --gold:        #D4A853;
+    --gold-dim:    rgba(212, 168, 83, 0.4);
+    --gold-glow:   rgba(212, 168, 83, 0.15);
+    --text-primary:   rgba(255, 255, 255, 0.92);
+    --text-secondary: rgba(255, 255, 255, 0.55);
+    --text-muted:     rgba(255, 255, 255, 0.3);
+    --divider:        rgba(255, 255, 255, 0.08);
+    --topbar-bg:      rgba(7, 11, 20, 0.88);
+    --font-display: 'Playfair Display', Georgia, serif;
+    --font-body:    'Inter', -apple-system, sans-serif;
+  }
+
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    width: 100vw; height: 100vh;
+    overflow: hidden;
+    background: var(--bg-deep);
+    color: var(--text-primary);
+    font-family: var(--font-body);
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* ── Dot Grid Background ────────────────────────────────── */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    z-index: 0;
+    background-image:
+      radial-gradient(circle, rgba(255,255,255,0.025) 1px, transparent 1px);
+    background-size: 32px 32px;
+    pointer-events: none;
+  }
+
+  /* ── Top Bar ────────────────────────────────────────────── */
+  .topbar {
+    position: fixed; top: 0; left: 0; right: 0;
+    height: 56px; z-index: 200;
+    display: flex; align-items: center; gap: 24px;
+    padding: 0 32px;
+    background: var(--topbar-bg);
+    backdrop-filter: blur(20px) saturate(1.4);
+    -webkit-backdrop-filter: blur(20px) saturate(1.4);
+    border-bottom: 1px solid var(--divider);
+  }
+
+  .logo {
+    font-family: var(--font-display);
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--gold);
+    letter-spacing: 0.02em;
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+
+  .logo span {
+    font-weight: 400;
+    color: var(--text-secondary);
+    font-style: italic;
+  }
+
+  .pills-wrapper {
+    flex: 1;
+    overflow-x: auto;
+    overflow-y: hidden;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+    mask-image: linear-gradient(to right, transparent, black 24px, black calc(100% - 24px), transparent);
+    -webkit-mask-image: linear-gradient(to right, transparent, black 24px, black calc(100% - 24px), transparent);
+  }
+  .pills-wrapper::-webkit-scrollbar { display: none; }
+
+  .pills {
+    display: flex; gap: 6px;
+    padding: 4px 0;
+    white-space: nowrap;
+  }
+
+  .pill {
+    position: relative;
+    padding: 6px 16px;
+    border-radius: 24px;
+    font-size: 13px;
+    font-weight: 500;
+    letter-spacing: 0.01em;
+    color: var(--text-secondary);
+    background: transparent;
+    border: 1px solid transparent;
+    cursor: pointer;
+    transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+    flex-shrink: 0;
+  }
+
+  .pill:hover {
+    color: var(--text-primary);
+    background: rgba(255, 255, 255, 0.04);
+  }
+
+  .pill.active {
+    color: var(--gold);
+    background: var(--gold-glow);
+    border-color: var(--gold-dim);
+  }
+
+  .pill.active::after {
+    content: '';
+    position: absolute;
+    bottom: -1px; left: 50%; transform: translateX(-50%);
+    width: 20px; height: 2px;
+    background: var(--gold);
+    border-radius: 1px;
+    animation: pillGlow 2s ease-in-out infinite alternate;
+  }
+
+  @keyframes pillGlow {
+    0% { opacity: 0.6; width: 16px; }
+    100% { opacity: 1; width: 24px; }
+  }
+
+  .nav-hint {
+    flex-shrink: 0;
+    font-size: 11px;
+    color: var(--text-muted);
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    display: flex; align-items: center; gap: 6px;
+  }
+
+  .nav-hint kbd {
+    display: inline-flex; align-items: center; justify-content: center;
+    width: 22px; height: 20px;
+    border: 1px solid rgba(255,255,255,0.12);
+    border-radius: 4px;
+    font-size: 11px;
+    font-family: var(--font-body);
+    color: var(--text-secondary);
+    background: rgba(255,255,255,0.03);
+  }
+
+  /* ── Horizontal Scroll Container ────────────────────────── */
+  .magazine {
+    display: flex;
+    width: max-content;
+    height: 100vh;
+    scroll-snap-type: x mandatory;
+    overflow-x: auto;
+    overflow-y: hidden;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+  }
+  .magazine::-webkit-scrollbar { display: none; }
+
+  /* ── Era Spread ─────────────────────────────────────────── */
+  .spread {
+    position: relative;
+    width: 100vw;
+    height: 100vh;
+    flex-shrink: 0;
+    scroll-snap-align: start;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    padding: 80px 48px 60px;
+    gap: 48px;
+    overflow: hidden;
+  }
+
+  /* Per-era gradient overlay */
+  .spread::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    pointer-events: none;
+    opacity: 0.5;
+  }
+
+  .spread[data-era="antiquite"]::before {
+    background: radial-gradient(ellipse at 30% 60%, rgba(168, 120, 60, 0.08) 0%, transparent 70%);
+  }
+  .spread[data-era="moyen-age"]::before {
+    background: radial-gradient(ellipse at 30% 60%, rgba(122, 104, 66, 0.08) 0%, transparent 70%);
+  }
+  .spread[data-era="renaissance"]::before {
+    background: radial-gradient(ellipse at 30% 60%, rgba(140, 60, 60, 0.08) 0%, transparent 70%);
+  }
+  .spread[data-era="moderne"]::before {
+    background: radial-gradient(ellipse at 30% 60%, rgba(60, 90, 140, 0.08) 0%, transparent 70%);
+  }
+  .spread[data-era="revolutions"]::before {
+    background: radial-gradient(ellipse at 30% 60%, rgba(140, 50, 50, 0.08) 0%, transparent 70%);
+  }
+  .spread[data-era="guerres"]::before {
+    background: radial-gradient(ellipse at 30% 60%, rgba(90, 90, 90, 0.08) 0%, transparent 70%);
+  }
+
+  /* Era vertical divider */
+  .spread::after {
+    content: '';
+    position: absolute;
+    right: 0; top: 56px; bottom: 0;
+    width: 1px;
+    background: linear-gradient(to bottom,
+      transparent 0%,
+      var(--divider) 15%,
+      rgba(255,255,255,0.06) 50%,
+      var(--divider) 85%,
+      transparent 100%
+    );
+    z-index: 1;
+  }
+
+  .spread:last-child::after { display: none; }
+
+  /* ── Left Panel — Era Info ──────────────────────────────── */
+  .era-info {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding-right: 24px;
+  }
+
+  .era-number {
+    font-family: var(--font-display);
+    font-size: 120px;
+    font-weight: 900;
+    line-height: 1;
+    color: rgba(255, 255, 255, 0.025);
+    letter-spacing: -0.04em;
+    position: absolute;
+    top: 40px;
+    left: -10px;
+    pointer-events: none;
+    user-select: none;
+  }
+
+  .era-date-range {
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    margin-bottom: 16px;
+    transition: color 0.4s;
+  }
+
+  .era-title {
+    font-family: var(--font-display);
+    font-size: clamp(40px, 5vw, 72px);
+    font-weight: 800;
+    line-height: 1.05;
+    letter-spacing: -0.02em;
+    margin-bottom: 20px;
+    transition: color 0.4s;
+  }
+
+  .era-description {
+    font-size: 15px;
+    line-height: 1.7;
+    color: var(--text-secondary);
+    max-width: 420px;
+    margin-bottom: 32px;
+  }
+
+  /* Nebula illustration area */
+  .nebula {
+    position: relative;
+    width: 280px;
+    height: 280px;
+    margin-top: 16px;
+  }
+
+  .nebula-ring {
+    position: absolute;
+    border-radius: 50%;
+    border: 1px solid;
+    opacity: 0;
+    animation: nebulaFade 3s ease-in-out infinite alternate;
+  }
+
+  .nebula-ring:nth-child(1) {
+    inset: 0;
+    animation-delay: 0s;
+  }
+  .nebula-ring:nth-child(2) {
+    inset: 25px;
+    animation-delay: 0.6s;
+  }
+  .nebula-ring:nth-child(3) {
+    inset: 55px;
+    animation-delay: 1.2s;
+  }
+  .nebula-ring:nth-child(4) {
+    inset: 90px;
+    animation-delay: 1.8s;
+  }
+
+  .nebula-core {
+    position: absolute;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    animation: corePulse 2s ease-in-out infinite alternate;
+  }
+
+  @keyframes nebulaFade {
+    0% { opacity: 0.08; transform: rotate(0deg); }
+    100% { opacity: 0.25; transform: rotate(12deg); }
+  }
+
+  @keyframes corePulse {
+    0% { transform: translate(-50%, -50%) scale(1); opacity: 0.6; box-shadow: 0 0 20px currentColor; }
+    100% { transform: translate(-50%, -50%) scale(1.5); opacity: 1; box-shadow: 0 0 40px currentColor, 0 0 80px currentColor; }
+  }
+
+  .era-stats {
+    display: flex; gap: 32px;
+    margin-top: 8px;
+  }
+
+  .era-stat {
+    display: flex; flex-direction: column; gap: 2px;
+  }
+
+  .era-stat-value {
+    font-family: var(--font-display);
+    font-size: 28px;
+    font-weight: 700;
+    color: var(--gold);
+  }
+
+  .era-stat-label {
+    font-size: 11px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+  }
+
+  /* ── Right Panel — Show Cards ───────────────────────────── */
+  .shows-panel {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    overflow-y: auto;
+    padding-right: 16px;
+    padding-top: 20px;
+    scrollbar-width: thin;
+    scrollbar-color: rgba(255,255,255,0.08) transparent;
+    align-content: center;
+    justify-content: center;
+  }
+
+  .shows-panel::-webkit-scrollbar { width: 4px; }
+  .shows-panel::-webkit-scrollbar-track { background: transparent; }
+  .shows-panel::-webkit-scrollbar-thumb {
+    background: rgba(255,255,255,0.1);
+    border-radius: 2px;
+  }
+
+  /* ── Show Card ──────────────────────────────────────────── */
+  .show-card {
+    position: relative;
+    display: grid;
+    grid-template-columns: 72px 1fr;
+    gap: 20px;
+    padding: 20px 24px;
+    background: var(--bg-card);
+    border: 1px solid var(--divider);
+    border-radius: 12px;
+    cursor: pointer;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    overflow: hidden;
+  }
+
+  .show-card::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: 12px;
+    opacity: 0;
+    transition: opacity 0.4s;
+    pointer-events: none;
+  }
+
+  .show-card:hover {
+    background: var(--bg-card-hover);
+    border-color: rgba(255, 255, 255, 0.12);
+    transform: translateX(4px);
+  }
+
+  .show-card:hover::before {
+    opacity: 1;
+  }
+
+  .show-card.expanded {
+    background: rgba(255, 255, 255, 0.05);
+    border-color: rgba(255, 255, 255, 0.14);
+  }
+
+  /* Poster Initial */
+  .poster-initial {
+    width: 72px;
+    height: 72px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: var(--font-display);
+    font-size: 32px;
+    font-weight: 800;
+    font-style: italic;
+    color: rgba(255, 255, 255, 0.85);
+    flex-shrink: 0;
+    position: relative;
+    overflow: hidden;
+    transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .poster-initial::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: 10px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    pointer-events: none;
+  }
+
+  .show-card:hover .poster-initial {
+    transform: scale(1.05);
+  }
+
+  /* Card Text */
+  .card-text {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 4px;
+    min-width: 0;
+  }
+
+  .card-title {
+    font-family: var(--font-display);
+    font-size: 20px;
+    font-weight: 700;
+    line-height: 1.2;
+    letter-spacing: -0.01em;
+    transition: color 0.3s;
+  }
+
+  .show-card:hover .card-title {
+    color: var(--gold);
+  }
+
+  .card-dates {
+    font-size: 13px;
+    color: var(--text-secondary);
+    font-weight: 400;
+  }
+
+  .card-stars {
+    display: flex; gap: 3px;
+    margin-top: 2px;
+  }
+
+  .star {
+    width: 14px; height: 14px;
+    fill: var(--text-muted);
+    transition: fill 0.3s;
+  }
+
+  .star.filled {
+    fill: var(--gold);
+  }
+
+  /* Expand toggle indicator */
+  .expand-indicator {
+    position: absolute;
+    top: 20px; right: 20px;
+    width: 24px; height: 24px;
+    display: flex; align-items: center; justify-content: center;
+    color: var(--text-muted);
+    transition: all 0.35s;
+  }
+
+  .expand-indicator svg {
+    width: 16px; height: 16px;
+    transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .show-card.expanded .expand-indicator svg {
+    transform: rotate(180deg);
+  }
+
+  .show-card:hover .expand-indicator {
+    color: var(--text-secondary);
+  }
+
+  /* Expandable details */
+  .card-details {
+    grid-column: 1 / -1;
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.45s cubic-bezier(0.4, 0, 0.2, 1),
+                opacity 0.35s ease,
+                padding 0.35s ease;
+    opacity: 0;
+    padding-top: 0;
+  }
+
+  .show-card.expanded .card-details {
+    max-height: 200px;
+    opacity: 1;
+    padding-top: 16px;
+  }
+
+  .card-description {
+    font-size: 14px;
+    line-height: 1.65;
+    color: var(--text-secondary);
+    margin-bottom: 14px;
+    padding-left: 92px;
+  }
+
+  .card-meta {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding-left: 92px;
+  }
+
+  .platform-badge {
+    display: inline-flex;
+    align-items: center;
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.03em;
+    background: rgba(255, 255, 255, 0.06);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    color: var(--text-secondary);
+    transition: all 0.3s;
+  }
+
+  .platform-badge::before {
+    content: '';
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    margin-right: 8px;
+    flex-shrink: 0;
+  }
+
+  .platform-badge[data-platform="Netflix"]::before { background: #E50914; }
+  .platform-badge[data-platform="Prime Video"]::before { background: #00A8E1; }
+  .platform-badge[data-platform="Max"]::before { background: #002BE7; }
+  .platform-badge[data-platform="Disney+"]::before { background: #113CCF; }
+  .platform-badge[data-platform="Canal+"]::before { background: #1A1A1A; box-shadow: 0 0 0 1px rgba(255,255,255,0.2); }
+  .platform-badge[data-platform="Arte"]::before { background: #FA5A28; }
+
+  .rating-display {
+    font-size: 12px;
+    color: var(--text-muted);
+    display: flex;
+    align-items: center;
+    gap: 4px;
+  }
+
+  .rating-display .star {
+    width: 12px; height: 12px;
+  }
+
+  /* ── Progress Bar ───────────────────────────────────────── */
+  .progress-bar {
+    position: fixed;
+    bottom: 0; left: 0; right: 0;
+    height: 3px;
+    z-index: 200;
+    background: rgba(255, 255, 255, 0.04);
+  }
+
+  .progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--gold-dim), var(--gold));
+    border-radius: 0 2px 2px 0;
+    transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+  }
+
+  .progress-fill::after {
+    content: '';
+    position: absolute;
+    right: 0; top: -2px;
+    width: 7px; height: 7px;
+    background: var(--gold);
+    border-radius: 50%;
+    box-shadow: 0 0 12px var(--gold), 0 0 24px var(--gold-dim);
+  }
+
+  /* ── Era position label on progress bar ──────────────── */
+  .progress-label {
+    position: fixed;
+    bottom: 10px; left: 50%;
+    transform: translateX(-50%);
+    z-index: 201;
+    font-size: 11px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    transition: opacity 0.3s;
+    pointer-events: none;
+  }
+
+  /* ── Era divider date markers ───────────────────────────── */
+  .era-divider-date {
+    position: absolute;
+    right: -1px;
+    top: 56px;
+    z-index: 2;
+    writing-mode: vertical-rl;
+    text-orientation: mixed;
+    font-size: 10px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    padding: 12px 8px;
+    opacity: 0.5;
+  }
+
+  /* ── Responsive ─────────────────────────────────────────── */
+  @media (max-width: 900px) {
+    .spread {
+      grid-template-columns: 1fr;
+      grid-template-rows: auto 1fr;
+      padding: 70px 24px 50px;
+      gap: 24px;
+    }
+
+    .era-info {
+      padding-right: 0;
+    }
+
+    .era-title {
+      font-size: clamp(28px, 7vw, 44px);
+    }
+
+    .nebula {
+      display: none;
+    }
+
+    .era-number {
+      font-size: 80px;
+    }
+
+    .card-description,
+    .card-meta {
+      padding-left: 0;
+    }
+
+    .nav-hint { display: none; }
+  }
+
+  /* ── Entrance animation ─────────────────────────────────── */
+  @keyframes spreadEnter {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .spread .era-info,
+  .spread .shows-panel {
+    animation: spreadEnter 0.6s ease-out both;
+  }
+
+  .spread .shows-panel {
+    animation-delay: 0.15s;
+  }
+
+  /* Show card stagger */
+  .show-card {
+    opacity: 0;
+    animation: cardEnter 0.5s ease-out forwards;
+  }
+
+  @keyframes cardEnter {
+    from { opacity: 0; transform: translateY(12px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .show-card:nth-child(1) { animation-delay: 0.2s; }
+  .show-card:nth-child(2) { animation-delay: 0.3s; }
+  .show-card:nth-child(3) { animation-delay: 0.4s; }
+  .show-card:nth-child(4) { animation-delay: 0.5s; }
+  .show-card:nth-child(5) { animation-delay: 0.6s; }
+
+  /* ── Scroll hint arrow ──────────────────────────────────── */
+  .scroll-hint {
+    position: fixed;
+    right: 32px;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 100;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    opacity: 0.3;
+    transition: opacity 0.3s;
+    pointer-events: none;
+  }
+
+  .scroll-hint.hidden { opacity: 0; }
+
+  .scroll-hint svg {
+    width: 20px; height: 20px;
+    color: var(--text-secondary);
+    animation: arrowPulse 1.5s ease-in-out infinite;
+  }
+
+  @keyframes arrowPulse {
+    0%, 100% { transform: translateX(0); opacity: 0.4; }
+    50% { transform: translateX(4px); opacity: 0.8; }
+  }
+</style>
+</head>
+<body>
+
+<!-- Top Bar -->
+<nav class="topbar">
+  <div class="logo">Frise Serie <span>Cosmic Magazine</span></div>
+  <div class="pills-wrapper">
+    <div class="pills" id="pills"></div>
+  </div>
+  <div class="nav-hint">
+    <kbd>&larr;</kbd><kbd>&rarr;</kbd> naviguer
+  </div>
+</nav>
+
+<!-- Magazine Horizontal Scroll -->
+<main class="magazine" id="magazine"></main>
+
+<!-- Scroll Hint -->
+<div class="scroll-hint" id="scrollHint">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <polyline points="9 18 15 12 9 6"></polyline>
+  </svg>
+</div>
+
+<!-- Progress Bar -->
+<div class="progress-bar">
+  <div class="progress-fill" id="progressFill" style="width: 0%"></div>
+</div>
+<div class="progress-label" id="progressLabel"></div>
+
+<script>
+// ── Data ──────────────────────────────────────────────────
+const ERAS = [
+  { id: 'antiquite', label: 'Antiquite', dateRange: 'VIIIe s. av. J.-C. — Ve s.', color: '#a8783c', shows: [
+    { title: 'Spartacus', dates: '73 av. J.-C.', stars: 3, platform: 'Prime Video', description: "L'histoire de Spartacus, gladiateur thrace qui mena la plus célèbre révolte d'esclaves contre la République romaine." },
+    { title: 'Rome', dates: '52 — 44 av. J.-C.', stars: 4, platform: 'Max', description: "Deux soldats romains ordinaires traversent les événements qui ont transformé la République en Empire." }
+  ]},
+  { id: 'moyen-age', label: 'Moyen Âge', dateRange: 'Ve — XVe s.', color: '#7a6842', shows: [
+    { title: 'Vikings', dates: '793 — 1002', stars: 4, platform: 'Netflix', description: "L'épopée de Ragnar Lothbrok et de ses fils, des premiers raids sur l'Angleterre." },
+    { title: 'The Last Kingdom', dates: '866 — 950', stars: 4, platform: 'Netflix', description: "Uhtred de Bebbanburg, Saxon élevé par les Danois, navigue entre deux mondes." },
+    { title: 'Knightfall', dates: '1306 — 1314', stars: 3, platform: 'Netflix', description: "Les derniers jours de l'ordre des Templiers." },
+    { title: 'Marco Polo', dates: '1271 — 1300', stars: 3, platform: 'Netflix', description: "Le jeune marchand vénitien à la cour de Kublai Khan." }
+  ]},
+  { id: 'renaissance', label: 'Renaissance', dateRange: 'XVe — XVIe s.', color: '#8c3c3c', shows: [
+    { title: 'Les Borgia', dates: '1492 — 1507', stars: 4, platform: 'Canal+', description: "L'ascension de la famille Borgia au sommet de la papauté." },
+    { title: 'Les Tudors', dates: '1509 — 1547', stars: 4, platform: 'Prime Video', description: "Le règne tumultueux d'Henri VIII." },
+    { title: 'Reign', dates: '1557 — 1567', stars: 2, platform: 'Netflix', description: "Marie Stuart, reine d'Écosse, arrive à la cour de France." }
+  ]},
+  { id: 'moderne', label: 'Époque Moderne', dateRange: 'XVIe — XVIIIe s.', color: '#3c5a8c', shows: [
+    { title: 'Shōgun', dates: '1600', stars: 5, platform: 'Disney+', description: "Un navigateur anglais échoue au Japon féodal." },
+    { title: 'Versailles', dates: '1667 — 1715', stars: 4, platform: 'Canal+', description: "Louis XIV impose sa vision absolutiste en bâtissant Versailles." },
+    { title: 'Black Sails', dates: '1715 — 1725', stars: 4, platform: 'Prime Video', description: "Préquel de L'Île au trésor. Le capitaine Flint et ses pirates." }
+  ]},
+  { id: 'revolutions', label: 'Révolutions', dateRange: 'XVIIIe — XIXe s.', color: '#8c3232', shows: [
+    { title: 'Turn', dates: '1776 — 1783', stars: 3, platform: 'Prime Video', description: "L'histoire vraie du Culper Ring, premier réseau d'espionnage américain." },
+    { title: 'Les Misérables', dates: '1815 — 1832', stars: 4, platform: 'Arte', description: "L'adaptation fidèle du roman de Victor Hugo." }
+  ]},
+  { id: 'guerres', label: 'Guerres mondiales', dateRange: 'XXe s.', color: '#5a5a5a', shows: [
+    { title: 'Peaky Blinders', dates: '1919 — 1934', stars: 4, platform: 'Netflix', description: "La famille Shelby, gang de Birmingham, étend son empire criminel." },
+    { title: 'Band of Brothers', dates: '1944', stars: 5, platform: 'Max', description: "L'histoire vraie de la Easy Company, 506e régiment d'infanterie parachutiste." }
+  ]}
+];
+
+const ERA_DESCRIPTIONS = {
+  'antiquite': "Des cités-États grecques à la chute de Rome, les fondations de notre civilisation.",
+  'moyen-age': "Un millénaire de chevaliers, de vikings et de conquêtes entre foi et pouvoir.",
+  'renaissance': "L'éveil intellectuel de l'Europe, entre art, politique et intrigues dynastiques.",
+  'moderne': "L'âge des empires, de l'absolutisme et des grandes découvertes maritimes.",
+  'revolutions': "Le siècle des lumières s'embrase, les peuples se soulèvent.",
+  'guerres': "Le XXe siècle marqué par deux guerres mondiales qui ont redéfini le monde."
+};
+
+// ── Star SVG ──────────────────────────────────────────────
+function starSVG(filled) {
+  return `<svg class="star ${filled ? 'filled' : ''}" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+    <polygon points="12,2 15.09,8.26 22,9.27 17,14.14 18.18,21.02 12,17.77 5.82,21.02 7,14.14 2,9.27 8.91,8.26"/>
+  </svg>`;
+}
+
+function starsHTML(count) {
+  return Array.from({length: 5}, (_, i) => starSVG(i < count)).join('');
+}
+
+// ── Build Pills ───────────────────────────────────────────
+const pillsContainer = document.getElementById('pills');
+ERAS.forEach((era, i) => {
+  const pill = document.createElement('button');
+  pill.className = 'pill' + (i === 0 ? ' active' : '');
+  pill.textContent = era.label;
+  pill.dataset.index = i;
+  pill.addEventListener('click', () => scrollToEra(i));
+  pillsContainer.appendChild(pill);
+});
+
+// ── Build Spreads ─────────────────────────────────────────
+const magazine = document.getElementById('magazine');
+
+ERAS.forEach((era, eraIndex) => {
+  const spread = document.createElement('section');
+  spread.className = 'spread';
+  spread.dataset.era = era.id;
+  spread.id = `era-${era.id}`;
+
+  const romanNumerals = ['I', 'II', 'III', 'IV', 'V', 'VI', 'VII'];
+  const avgStars = (era.shows.reduce((s, sh) => s + sh.stars, 0) / era.shows.length).toFixed(1);
+
+  spread.innerHTML = `
+    <!-- Left Panel -->
+    <div class="era-info">
+      <div class="era-number">${romanNumerals[eraIndex]}</div>
+      <div class="era-date-range" style="color: ${era.color}">${era.dateRange}</div>
+      <h2 class="era-title" style="color: ${era.color}">${era.label}</h2>
+      <p class="era-description">${ERA_DESCRIPTIONS[era.id]}</p>
+
+      <div class="era-stats">
+        <div class="era-stat">
+          <div class="era-stat-value">${era.shows.length}</div>
+          <div class="era-stat-label">Séries</div>
+        </div>
+        <div class="era-stat">
+          <div class="era-stat-value">${avgStars}</div>
+          <div class="era-stat-label">Note moy.</div>
+        </div>
+      </div>
+
+      <div class="nebula">
+        <div class="nebula-ring" style="border-color: ${era.color}"></div>
+        <div class="nebula-ring" style="border-color: ${era.color}"></div>
+        <div class="nebula-ring" style="border-color: ${era.color}"></div>
+        <div class="nebula-ring" style="border-color: ${era.color}"></div>
+        <div class="nebula-core" style="background: ${era.color}; color: ${era.color}"></div>
+      </div>
+    </div>
+
+    <!-- Right Panel -->
+    <div class="shows-panel">
+      ${era.shows.map((show, si) => {
+        const initial = show.title.charAt(0);
+        const hue = (eraIndex * 60 + si * 30) % 360;
+        return `
+        <article class="show-card" style="animation-delay: ${0.2 + si * 0.1}s; --card-hue: ${hue}">
+          <div class="poster-initial" style="background: linear-gradient(135deg, hsl(${hue}, 35%, 22%), hsl(${hue + 30}, 30%, 15%))">
+            ${initial}
+          </div>
+          <div class="card-text">
+            <div class="card-title">${show.title}</div>
+            <div class="card-dates">${show.dates}</div>
+            <div class="card-stars">${starsHTML(show.stars)}</div>
+          </div>
+          <div class="expand-indicator">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="6 9 12 15 18 9"></polyline>
+            </svg>
+          </div>
+          <div class="card-details">
+            <p class="card-description">${show.description}</p>
+            <div class="card-meta">
+              <span class="platform-badge" data-platform="${show.platform}">${show.platform}</span>
+              <span class="rating-display">${starsHTML(show.stars)} ${show.stars}/5</span>
+            </div>
+          </div>
+        </article>`;
+      }).join('')}
+    </div>
+
+    ${eraIndex < ERAS.length - 1 ? `<div class="era-divider-date">${era.dateRange}</div>` : ''}
+  `;
+
+  magazine.appendChild(spread);
+});
+
+// ── Card Accordion ────────────────────────────────────────
+document.querySelectorAll('.show-card').forEach(card => {
+  card.addEventListener('click', (e) => {
+    e.stopPropagation();
+    const wasExpanded = card.classList.contains('expanded');
+
+    // Close all cards in same panel
+    card.closest('.shows-panel').querySelectorAll('.show-card.expanded').forEach(c => {
+      c.classList.remove('expanded');
+    });
+
+    if (!wasExpanded) {
+      card.classList.add('expanded');
+    }
+  });
+});
+
+// ── Scroll Tracking & Progress ────────────────────────────
+const progressFill = document.getElementById('progressFill');
+const progressLabel = document.getElementById('progressLabel');
+const scrollHint = document.getElementById('scrollHint');
+let currentEra = 0;
+
+function updateProgress() {
+  const scrollLeft = magazine.scrollLeft;
+  const maxScroll = magazine.scrollWidth - magazine.clientWidth;
+  const progress = maxScroll > 0 ? (scrollLeft / maxScroll) * 100 : 0;
+  progressFill.style.width = Math.max(2, progress) + '%';
+
+  // Determine current era
+  const eraWidth = magazine.clientWidth;
+  const newEra = Math.round(scrollLeft / eraWidth);
+  const clampedEra = Math.max(0, Math.min(ERAS.length - 1, newEra));
+
+  if (clampedEra !== currentEra) {
+    currentEra = clampedEra;
+    updateActivePill(currentEra);
+  }
+
+  progressLabel.textContent = `${ERAS[clampedEra].label} — ${ERAS[clampedEra].dateRange}`;
+
+  // Hide scroll hint on last era
+  if (clampedEra >= ERAS.length - 1) {
+    scrollHint.classList.add('hidden');
+  } else {
+    scrollHint.classList.remove('hidden');
+  }
+}
+
+function updateActivePill(index) {
+  document.querySelectorAll('.pill').forEach((p, i) => {
+    p.classList.toggle('active', i === index);
+    if (i === index) {
+      p.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+    }
+  });
+}
+
+magazine.addEventListener('scroll', updateProgress, { passive: true });
+
+// ── Navigation ────────────────────────────────────────────
+function scrollToEra(index) {
+  const target = document.querySelectorAll('.spread')[index];
+  if (target) {
+    target.scrollIntoView({ behavior: 'smooth', block: 'start', inline: 'start' });
+  }
+}
+
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'ArrowRight' || e.key === 'ArrowDown') {
+    e.preventDefault();
+    const next = Math.min(currentEra + 1, ERAS.length - 1);
+    scrollToEra(next);
+  } else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') {
+    e.preventDefault();
+    const prev = Math.max(currentEra - 1, 0);
+    scrollToEra(prev);
+  } else if (e.key === 'Home') {
+    e.preventDefault();
+    scrollToEra(0);
+  } else if (e.key === 'End') {
+    e.preventDefault();
+    scrollToEra(ERAS.length - 1);
+  }
+});
+
+// ── Mouse wheel horizontal scroll ────────────────────────
+magazine.addEventListener('wheel', (e) => {
+  if (Math.abs(e.deltaY) > Math.abs(e.deltaX)) {
+    e.preventDefault();
+    magazine.scrollBy({ left: e.deltaY * 2, behavior: 'auto' });
+  }
+}, { passive: false });
+
+// ── Init ──────────────────────────────────────────────────
+updateProgress();
+updateActivePill(0);
+</script>
+</body>
+</html>

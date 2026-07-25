@@ -1,64 +1,20 @@
 # Codebase Map
 
-Generated: 2026-07-23T20:35:17Z | Files: 42 | Described: 0/42
-<!-- gsd:codebase-meta {"generatedAt":"2026-07-23T20:35:17Z","fingerprint":"645017d89e044daef8f45436a6edb7a6ad7e021e","fileCount":42,"truncated":false} -->
+Generated: 2026-07-25T15:11:05Z | Files: 12 | Described: 0/12
+<!-- gsd:codebase-meta {"generatedAt":"2026-07-25T15:11:05Z","fingerprint":"c35e86de09df3329f820afe400a12ba44a959947","fileCount":12,"truncated":false} -->
 
 ### (root)/
-- `.env.example`
-- `.gitignore`
-- `CLAUDE.md`
-- `next-env.d.ts`
-- `next.config.mjs`
-- `package-lock.json`
-- `package.json`
-- `postcss.config.js`
+- `.mcp.json`
+- `ARCHITECTURE.md`
+- `ERA-ILLUSTRATION-PROMPTS.md`
 - `PRD.md`
-- `tailwind.config.ts`
-- `tsconfig.json`
-- `tsconfig.tsbuildinfo`
-- `vitest.config.mts`
+- `UX-DESIGN.md`
 
-### .github/workflows/
-- `.github/workflows/deploy.yml`
-
-### app/
-- `app/globals.css`
-- `app/layout.tsx`
-- `app/page.tsx`
-
-### components/
-- `components/AxisLayer.tsx`
-- `components/BackgroundLayer.tsx`
-- `components/ClientShell.tsx`
-- `components/FilterPanel.tsx`
-- `components/HistoricalEventMarker.tsx`
-- `components/Navigation.tsx`
-- `components/ShowCard.tsx`
-- `components/ShowDetail.tsx`
-- `components/Timeline.tsx`
-- `components/TimelineSkeleton.test.ts`
-- `components/TimelineSkeleton.tsx`
-
-### data/
-- `data/eras.ts`
-- `data/shows.ts`
-
-### lib/
-- `lib/constants.ts`
-- `lib/noiseConstants.ts`
-- `lib/noiseUri.test.ts`
-- `lib/parallaxFormula.test.ts`
-- `lib/tmdb.ts`
-- `lib/yearToDisplay.test.ts`
-- `lib/yearToDisplay.ts`
-- `lib/yearToPixel.test.ts`
-- `lib/yearToPixel.ts`
-
-### scripts/
-- `scripts/enrich-shows.ts`
-
-### to-prd/
-- `to-prd/SKILL.md`
-
-### types/
-- `types/index.ts`
+### designs/
+- `designs/01-cinematheque.html`
+- `designs/02-cartographe.html`
+- `designs/03-neon-cinema.html`
+- `designs/A-vertical-editorial.html`
+- `designs/B-constellation-map.html`
+- `designs/C-film-strip.html`
+- `designs/D-geological-strata.html`

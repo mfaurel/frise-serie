@@ -1,0 +1,1141 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Frise Serie — Celestial Editorial</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+/* ============================
+   RESET & BASE
+   ============================ */
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+:root {
+  --void: #050510;
+  --void-light: #0a0a1f;
+  --void-mid: #10102a;
+  --star-gold: #f5e6c8;
+  --star-gold-dim: #f5e6c840;
+  --star-gold-bright: #ffe8a0;
+  --text-primary: #e8e0d4;
+  --text-secondary: #9a9486;
+  --text-muted: #5a554e;
+  --sidebar-w: 260px;
+  --ruler-h: 52px;
+  --drawer-h: 70vh;
+  --transition-smooth: cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+html {
+  scroll-behavior: smooth;
+  scrollbar-width: thin;
+  scrollbar-color: var(--star-gold-dim) var(--void);
+}
+
+body {
+  font-family: 'Space Grotesk', sans-serif;
+  background: var(--void);
+  color: var(--text-primary);
+  overflow-x: hidden;
+  line-height: 1.6;
+}
+
+/* ============================
+   STAR FIELD (background)
+   ============================ */
+#star-field {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+}
+
+/* ============================
+   TIME RULER (top bar)
+   ============================ */
+.time-ruler {
+  position: fixed;
+  top: 0;
+  left: var(--sidebar-w);
+  right: 0;
+  height: var(--ruler-h);
+  background: linear-gradient(180deg, var(--void) 0%, transparent 100%);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  z-index: 100;
+  display: flex;
+  align-items: flex-end;
+  padding: 0 40px 8px;
+  border-bottom: 1px solid rgba(245, 230, 200, 0.06);
+}
+
+.ruler-track {
+  display: flex;
+  width: 100%;
+  justify-content: space-between;
+  position: relative;
+}
+
+.ruler-track::before {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--star-gold-dim), transparent);
+}
+
+.ruler-mark {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  position: relative;
+}
+
+.ruler-mark::after {
+  content: '';
+  width: 1px;
+  height: 8px;
+  background: var(--star-gold-dim);
+}
+
+.ruler-mark span {
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  color: var(--text-muted);
+  text-transform: uppercase;
+}
+
+.ruler-mark.active span {
+  color: var(--star-gold);
+}
+
+.ruler-mark.active::after {
+  background: var(--star-gold);
+  box-shadow: 0 0 6px var(--star-gold);
+}
+
+/* ============================
+   SIDEBAR
+   ============================ */
+.sidebar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: var(--sidebar-w);
+  height: 100vh;
+  background: linear-gradient(135deg, #08081a 0%, #060614 100%);
+  border-right: 1px solid rgba(245, 230, 200, 0.06);
+  z-index: 200;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.sidebar-header {
+  padding: 28px 24px 20px;
+  border-bottom: 1px solid rgba(245, 230, 200, 0.06);
+}
+
+.sidebar-logo {
+  font-family: 'Instrument Serif', serif;
+  font-size: 22px;
+  color: var(--star-gold);
+  letter-spacing: 0.02em;
+  margin-bottom: 4px;
+}
+
+.sidebar-logo em {
+  font-style: italic;
+  opacity: 0.7;
+}
+
+.sidebar-subtitle {
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+  color: var(--text-muted);
+  font-weight: 500;
+}
+
+.sidebar-nav {
+  flex: 1;
+  padding: 16px 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  overflow-y: auto;
+}
+
+.nav-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 14px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.3s var(--transition-smooth);
+  position: relative;
+  text-decoration: none;
+  color: inherit;
+}
+
+.nav-item:hover {
+  background: rgba(245, 230, 200, 0.04);
+}
+
+.nav-item.active {
+  background: rgba(245, 230, 200, 0.06);
+}
+
+.nav-item.active::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 3px;
+  height: 24px;
+  background: var(--star-gold);
+  border-radius: 0 2px 2px 0;
+  box-shadow: 0 0 8px var(--star-gold-dim);
+}
+
+.nav-star {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  flex-shrink: 0;
+  transition: all 0.3s var(--transition-smooth);
+  box-shadow: 0 0 4px currentColor;
+}
+
+.nav-item.active .nav-star {
+  box-shadow: 0 0 8px currentColor, 0 0 16px currentColor;
+  transform: scale(1.3);
+}
+
+.nav-label {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text-secondary);
+  transition: color 0.3s;
+}
+
+.nav-item.active .nav-label {
+  color: var(--text-primary);
+}
+
+.nav-date {
+  font-size: 10px;
+  color: var(--text-muted);
+  margin-left: auto;
+  font-weight: 400;
+}
+
+.sidebar-footer {
+  padding: 16px 24px;
+  border-top: 1px solid rgba(245, 230, 200, 0.06);
+  font-size: 10px;
+  color: var(--text-muted);
+  text-align: center;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+/* ============================
+   MAIN CONTENT
+   ============================ */
+.main-content {
+  margin-left: var(--sidebar-w);
+  padding-top: var(--ruler-h);
+  position: relative;
+  z-index: 1;
+}
+
+.main-scroll {
+  scroll-snap-type: y proximity;
+}
+
+/* ============================
+   ERA SECTION
+   ============================ */
+.era-section {
+  min-height: 100vh;
+  scroll-snap-align: start;
+  position: relative;
+  padding: 80px 40px 60px;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.era-nebula {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  opacity: 0.35;
+}
+
+.era-header {
+  position: relative;
+  z-index: 2;
+  margin-bottom: 40px;
+  display: flex;
+  align-items: baseline;
+  gap: 20px;
+}
+
+.era-initial {
+  font-family: 'Instrument Serif', serif;
+  font-size: 96px;
+  line-height: 1;
+  background: var(--nebula-gradient, linear-gradient(135deg, #a8783c, #d4a85c));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  filter: drop-shadow(0 0 20px var(--era-color-alpha, rgba(168, 120, 60, 0.3)));
+  font-weight: 400;
+}
+
+.era-title-block {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.era-title {
+  font-family: 'Instrument Serif', serif;
+  font-size: 36px;
+  color: var(--text-primary);
+  font-weight: 400;
+}
+
+.era-date-range {
+  font-size: 13px;
+  color: var(--text-secondary);
+  letter-spacing: 0.06em;
+  font-weight: 400;
+}
+
+.era-show-count {
+  font-size: 11px;
+  color: var(--text-muted);
+  margin-top: 4px;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+}
+
+/* ============================
+   CAROUSEL ROW
+   ============================ */
+.carousel-container {
+  position: relative;
+  z-index: 2;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.carousel-row {
+  display: flex;
+  gap: 24px;
+  overflow-x: auto;
+  padding: 20px 4px 30px;
+  scroll-snap-type: x mandatory;
+  scrollbar-width: none;
+}
+
+.carousel-row::-webkit-scrollbar {
+  display: none;
+}
+
+/* ============================
+   CONSTELLATION SVG
+   ============================ */
+.constellation-svg {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.constellation-line {
+  stroke: var(--star-gold-dim);
+  stroke-width: 0.5;
+  stroke-dasharray: 4 6;
+  opacity: 0.4;
+}
+
+.constellation-dot {
+  fill: var(--star-gold);
+  opacity: 0.6;
+}
+
+/* ============================
+   SHOW CARD
+   ============================ */
+.show-card {
+  flex: 0 0 280px;
+  height: 380px;
+  scroll-snap-align: start;
+  background: linear-gradient(145deg, rgba(20, 20, 45, 0.8) 0%, rgba(10, 10, 30, 0.9) 100%);
+  border: 1px solid rgba(245, 230, 200, 0.08);
+  border-radius: 16px;
+  overflow: hidden;
+  cursor: pointer;
+  transition: all 0.4s var(--transition-smooth);
+  position: relative;
+  display: flex;
+  flex-direction: column;
+}
+
+.show-card::before {
+  content: '';
+  position: absolute;
+  inset: -1px;
+  border-radius: 16px;
+  padding: 1px;
+  background: linear-gradient(145deg, transparent 30%, var(--card-glow, rgba(245, 230, 200, 0.15)) 100%);
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  opacity: 0;
+  transition: opacity 0.4s var(--transition-smooth);
+  pointer-events: none;
+}
+
+.show-card:hover {
+  transform: translateY(-8px);
+  border-color: rgba(245, 230, 200, 0.15);
+  box-shadow:
+    0 20px 60px rgba(0, 0, 0, 0.5),
+    0 0 40px var(--card-glow-shadow, rgba(245, 230, 200, 0.05));
+}
+
+.show-card:hover::before {
+  opacity: 1;
+}
+
+.card-poster {
+  height: 160px;
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.card-poster-bg {
+  position: absolute;
+  inset: 0;
+  opacity: 0.6;
+}
+
+.card-initial {
+  font-family: 'Instrument Serif', serif;
+  font-size: 80px;
+  position: relative;
+  z-index: 1;
+  color: rgba(255, 255, 255, 0.12);
+  line-height: 1;
+  text-shadow: 0 0 40px var(--card-glow-shadow, rgba(245, 230, 200, 0.15));
+  transition: all 0.4s var(--transition-smooth);
+}
+
+.show-card:hover .card-initial {
+  color: rgba(255, 255, 255, 0.2);
+  text-shadow: 0 0 60px var(--card-glow-shadow, rgba(245, 230, 200, 0.3));
+}
+
+.card-platform {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  font-size: 10px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  padding: 4px 10px;
+  border-radius: 20px;
+  background: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(8px);
+  color: var(--text-secondary);
+  border: 1px solid rgba(245, 230, 200, 0.08);
+  z-index: 2;
+}
+
+.card-body {
+  flex: 1;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.card-title {
+  font-family: 'Instrument Serif', serif;
+  font-size: 22px;
+  color: var(--text-primary);
+  font-weight: 400;
+  line-height: 1.2;
+}
+
+.card-dates {
+  font-size: 12px;
+  color: var(--text-secondary);
+  font-weight: 400;
+}
+
+.card-stars {
+  color: var(--star-gold);
+  font-size: 14px;
+  letter-spacing: 2px;
+  margin-top: auto;
+}
+
+.card-description {
+  font-size: 12px;
+  color: var(--text-muted);
+  line-height: 1.5;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  margin-top: 4px;
+}
+
+/* ============================
+   DETAIL DRAWER
+   ============================ */
+.drawer-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(5, 5, 16, 0.7);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  z-index: 500;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.4s var(--transition-smooth);
+}
+
+.drawer-overlay.active {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.detail-drawer {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: var(--drawer-h);
+  background: linear-gradient(180deg, #0c0c24 0%, #080818 100%);
+  border-top: 1px solid rgba(245, 230, 200, 0.1);
+  border-radius: 24px 24px 0 0;
+  z-index: 600;
+  transform: translateY(100%);
+  transition: transform 0.5s var(--transition-smooth);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.detail-drawer.active {
+  transform: translateY(0);
+}
+
+.drawer-handle-bar {
+  display: flex;
+  justify-content: center;
+  padding: 12px 0 0;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+.drawer-handle {
+  width: 40px;
+  height: 4px;
+  border-radius: 2px;
+  background: rgba(245, 230, 200, 0.2);
+}
+
+.drawer-content {
+  flex: 1;
+  padding: 32px 60px 40px;
+  display: grid;
+  grid-template-columns: 200px 1fr;
+  gap: 48px;
+  overflow-y: auto;
+}
+
+.drawer-poster {
+  width: 200px;
+  height: 280px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.drawer-poster-initial {
+  font-family: 'Instrument Serif', serif;
+  font-size: 120px;
+  color: rgba(255, 255, 255, 0.1);
+  position: relative;
+  z-index: 1;
+}
+
+.drawer-info {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding-top: 8px;
+}
+
+.drawer-title {
+  font-family: 'Instrument Serif', serif;
+  font-size: 42px;
+  color: var(--text-primary);
+  font-weight: 400;
+  line-height: 1.1;
+}
+
+.drawer-meta {
+  display: flex;
+  gap: 24px;
+  align-items: center;
+}
+
+.drawer-meta-item {
+  font-size: 13px;
+  color: var(--text-secondary);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.drawer-meta-item .label {
+  color: var(--text-muted);
+  text-transform: uppercase;
+  font-size: 10px;
+  letter-spacing: 0.1em;
+}
+
+.drawer-stars {
+  color: var(--star-gold);
+  font-size: 18px;
+  letter-spacing: 3px;
+}
+
+.drawer-description {
+  font-size: 16px;
+  color: var(--text-secondary);
+  line-height: 1.7;
+  max-width: 600px;
+}
+
+.drawer-close {
+  position: absolute;
+  top: 20px;
+  right: 28px;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  border: 1px solid rgba(245, 230, 200, 0.1);
+  background: rgba(245, 230, 200, 0.04);
+  color: var(--text-secondary);
+  font-size: 18px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s;
+}
+
+.drawer-close:hover {
+  background: rgba(245, 230, 200, 0.1);
+  color: var(--text-primary);
+}
+
+/* ============================
+   ANIMATIONS
+   ============================ */
+@keyframes twinkle {
+  0%, 100% { opacity: 0.3; }
+  50% { opacity: 1; }
+}
+
+@keyframes float-up {
+  from { opacity: 0; transform: translateY(30px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.era-section.visible .era-header {
+  animation: float-up 0.6s var(--transition-smooth) forwards;
+}
+
+.era-section.visible .show-card {
+  animation: float-up 0.6s var(--transition-smooth) forwards;
+  opacity: 0;
+}
+
+.era-section.visible .show-card:nth-child(1) { animation-delay: 0.1s; }
+.era-section.visible .show-card:nth-child(2) { animation-delay: 0.2s; }
+.era-section.visible .show-card:nth-child(3) { animation-delay: 0.3s; }
+.era-section.visible .show-card:nth-child(4) { animation-delay: 0.4s; }
+
+/* ============================
+   SCROLLBAR CUSTOM
+   ============================ */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(245, 230, 200, 0.15);
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(245, 230, 200, 0.25);
+}
+</style>
+</head>
+<body>
+
+<!-- Star field canvas -->
+<canvas id="star-field"></canvas>
+
+<!-- Time Ruler -->
+<div class="time-ruler">
+  <div class="ruler-track" id="ruler-track"></div>
+</div>
+
+<!-- Sidebar -->
+<nav class="sidebar">
+  <div class="sidebar-header">
+    <div class="sidebar-logo">Frise <em>Serie</em></div>
+    <div class="sidebar-subtitle">Cartographie temporelle</div>
+  </div>
+  <div class="sidebar-nav" id="sidebar-nav"></div>
+  <div class="sidebar-footer">6 epoques &middot; 17 series</div>
+</nav>
+
+<!-- Main Content -->
+<main class="main-content main-scroll" id="main-content"></main>
+
+<!-- Drawer Overlay -->
+<div class="drawer-overlay" id="drawer-overlay"></div>
+
+<!-- Detail Drawer -->
+<div class="detail-drawer" id="detail-drawer">
+  <div class="drawer-handle-bar" id="drawer-handle">
+    <div class="drawer-handle"></div>
+  </div>
+  <button class="drawer-close" id="drawer-close">&times;</button>
+  <div class="drawer-content" id="drawer-content"></div>
+</div>
+
+<script>
+// ============================
+// DATA
+// ============================
+const ERAS = [
+  { id: 'antiquite', label: 'Antiquite', dateRange: 'VIIIe s. av. J.-C. — Ve s.', color: '#a8783c', hue: 270, shows: [
+    { title: 'Spartacus', dates: '73 av. J.-C.', stars: 3, platform: 'Prime Video', description: "L’histoire de Spartacus, gladiateur thrace qui mena la plus célèbre révolte d’esclaves contre la République romaine." },
+    { title: 'Rome', dates: '52 — 44 av. J.-C.', stars: 4, platform: 'Max', description: "Deux soldats romains ordinaires traversent les événements qui ont transformé la République en Empire." }
+  ]},
+  { id: 'moyen-age', label: 'Moyen Âge', dateRange: 'Ve — XVe s.', color: '#7a6842', hue: 210, shows: [
+    { title: 'Vikings', dates: '793 — 1002', stars: 4, platform: 'Netflix', description: "L’épopée de Ragnar Lothbrok et de ses fils, des premiers raids sur l’Angleterre." },
+    { title: 'The Last Kingdom', dates: '866 — 950', stars: 4, platform: 'Netflix', description: "Uhtred de Bebbanburg, Saxon élevé par les Danois, navigue entre deux mondes." },
+    { title: 'Knightfall', dates: '1306 — 1314', stars: 3, platform: 'Netflix', description: "Les derniers jours de l’ordre des Templiers." },
+    { title: 'Marco Polo', dates: '1271 — 1300', stars: 3, platform: 'Netflix', description: "Le jeune marchand vénitien à la cour de Kublai Khan." }
+  ]},
+  { id: 'renaissance', label: 'Renaissance', dateRange: 'XVe — XVIe s.', color: '#8c3c3c', hue: 340, shows: [
+    { title: 'Les Borgia', dates: '1492 — 1507', stars: 4, platform: 'Canal+', description: "L’ascension de la famille Borgia au sommet de la papauté." },
+    { title: 'Les Tudors', dates: '1509 — 1547', stars: 4, platform: 'Prime Video', description: "Le règne tumultueux d’Henri VIII." },
+    { title: 'Reign', dates: '1557 — 1567', stars: 2, platform: 'Netflix', description: "Marie Stuart, reine d’Écosse, arrive à la cour de France." }
+  ]},
+  { id: 'moderne', label: 'Époque Moderne', dateRange: 'XVIe — XVIIIe s.', color: '#3c5a8c', hue: 160, shows: [
+    { title: 'Shōgun', dates: '1600', stars: 5, platform: 'Disney+', description: "Un navigateur anglais échoue au Japon féodal." },
+    { title: 'Versailles', dates: '1667 — 1715', stars: 4, platform: 'Canal+', description: "Louis XIV impose sa vision absolutiste en bâtissant Versailles." },
+    { title: 'Black Sails', dates: '1715 — 1725', stars: 4, platform: 'Prime Video', description: "Préquel de L’Île au trésor. Le capitaine Flint et ses pirates." }
+  ]},
+  { id: 'revolutions', label: 'Révolutions', dateRange: 'XVIIIe — XIXe s.', color: '#8c3232', hue: 35, shows: [
+    { title: 'Turn', dates: '1776 — 1783', stars: 3, platform: 'Prime Video', description: "L’histoire vraie du Culper Ring, premier réseau d’espionnage américain." },
+    { title: 'Les Misérables', dates: '1815 — 1832', stars: 4, platform: 'Arte', description: "L’adaptation fidèle du roman de Victor Hugo." }
+  ]},
+  { id: 'guerres', label: 'Guerres mondiales', dateRange: 'XXe s.', color: '#5a5a5a', hue: 0, shows: [
+    { title: 'Peaky Blinders', dates: '1919 — 1934', stars: 4, platform: 'Netflix', description: "La famille Shelby, gang de Birmingham, étend son empire criminel." },
+    { title: 'Band of Brothers', dates: '1944', stars: 5, platform: 'Max', description: "L’histoire vraie de la Easy Company, 506e régiment d’infanterie parachutiste." }
+  ]}
+];
+
+const CENTURIES = [
+  'VIIIe av.', 'Ve av.', 'Ier av.', 'Ve', 'Xe', 'XIIIe', 'XVe', 'XVIe', 'XVIIe', 'XVIIIe', 'XIXe', 'XXe'
+];
+
+// ============================
+// STAR FIELD
+// ============================
+function initStarField() {
+  const canvas = document.getElementById('star-field');
+  const ctx = canvas.getContext('2d');
+  let stars = [];
+
+  function resize() {
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+    generateStars();
+  }
+
+  function generateStars() {
+    stars = [];
+    const count = Math.floor((canvas.width * canvas.height) / 3000);
+    for (let i = 0; i < count; i++) {
+      stars.push({
+        x: Math.random() * canvas.width,
+        y: Math.random() * canvas.height,
+        r: Math.random() * 1.2 + 0.2,
+        alpha: Math.random() * 0.6 + 0.1,
+        twinkleSpeed: Math.random() * 0.02 + 0.005,
+        twinklePhase: Math.random() * Math.PI * 2
+      });
+    }
+  }
+
+  function draw(time) {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    stars.forEach(s => {
+      const alpha = s.alpha + Math.sin(time * s.twinkleSpeed + s.twinklePhase) * 0.2;
+      ctx.beginPath();
+      ctx.arc(s.x, s.y, s.r, 0, Math.PI * 2);
+      ctx.fillStyle = `rgba(245, 230, 200, ${Math.max(0.05, Math.min(1, alpha))})`;
+      ctx.fill();
+    });
+    requestAnimationFrame(draw);
+  }
+
+  window.addEventListener('resize', resize);
+  resize();
+  requestAnimationFrame(draw);
+}
+
+// ============================
+// RENDER STARS RATING
+// ============================
+function renderStars(count) {
+  return '★'.repeat(count) + '☆'.repeat(5 - count);
+}
+
+// ============================
+// NEBULA GRADIENT for era
+// ============================
+function getNebulaGradient(hue) {
+  return `
+    radial-gradient(ellipse 80% 60% at 20% 30%, hsla(${hue}, 60%, 15%, 0.5) 0%, transparent 70%),
+    radial-gradient(ellipse 60% 50% at 80% 70%, hsla(${(hue + 40) % 360}, 50%, 12%, 0.4) 0%, transparent 70%),
+    radial-gradient(ellipse 90% 40% at 50% 50%, hsla(${(hue + 20) % 360}, 40%, 8%, 0.3) 0%, transparent 80%)
+  `;
+}
+
+function getPosterGradient(hue) {
+  return `linear-gradient(135deg, hsl(${hue}, 40%, 12%) 0%, hsl(${(hue + 30) % 360}, 35%, 8%) 100%)`;
+}
+
+// ============================
+// BUILD TIME RULER
+// ============================
+function buildRuler() {
+  const track = document.getElementById('ruler-track');
+  track.innerHTML = CENTURIES.map(c =>
+    `<div class="ruler-mark"><span>${c}</span></div>`
+  ).join('');
+}
+
+// ============================
+// BUILD SIDEBAR NAV
+// ============================
+function buildSidebar() {
+  const nav = document.getElementById('sidebar-nav');
+  nav.innerHTML = ERAS.map(era =>
+    `<a href="#${era.id}" class="nav-item" data-era="${era.id}">
+      <div class="nav-star" style="background: ${era.color}; color: ${era.color};"></div>
+      <span class="nav-label">${era.label}</span>
+      <span class="nav-date">${era.shows.length}</span>
+    </a>`
+  ).join('');
+}
+
+// ============================
+// BUILD ERA SECTIONS
+// ============================
+function buildSections() {
+  const main = document.getElementById('main-content');
+  main.innerHTML = ERAS.map(era => {
+    const initial = era.label.charAt(0);
+    const nebula = getNebulaGradient(era.hue);
+    const posterGrad = getPosterGradient(era.hue);
+    const glowColor = `hsla(${era.hue}, 50%, 50%, 0.3)`;
+    const glowBorder = `hsla(${era.hue}, 50%, 60%, 0.4)`;
+
+    const cards = era.shows.map(show => {
+      const cardInitial = show.title.charAt(0);
+      return `
+        <div class="show-card"
+             style="--card-glow: ${glowBorder}; --card-glow-shadow: ${glowColor};"
+             data-show='${JSON.stringify(show).replace(/'/g, '&#39;')}'
+             data-era-hue="${era.hue}">
+          <div class="card-poster">
+            <div class="card-poster-bg" style="background: ${posterGrad};"></div>
+            <div class="card-initial">${cardInitial}</div>
+            <div class="card-platform">${show.platform}</div>
+          </div>
+          <div class="card-body">
+            <div class="card-title">${show.title}</div>
+            <div class="card-dates">${show.dates}</div>
+            <div class="card-description">${show.description}</div>
+            <div class="card-stars">${renderStars(show.stars)}</div>
+          </div>
+        </div>`;
+    }).join('');
+
+    return `
+      <section class="era-section" id="${era.id}" data-era="${era.id}">
+        <div class="era-nebula" style="background: ${nebula};"></div>
+        <svg class="constellation-svg" id="svg-${era.id}"></svg>
+        <div class="era-header">
+          <div class="era-initial" style="--nebula-gradient: linear-gradient(135deg, ${era.color}, hsl(${era.hue}, 60%, 60%)); --era-color-alpha: ${glowColor};">
+            ${initial}
+          </div>
+          <div class="era-title-block">
+            <h2 class="era-title">${era.label}</h2>
+            <div class="era-date-range">${era.dateRange}</div>
+            <div class="era-show-count">${era.shows.length} serie${era.shows.length > 1 ? 's' : ''}</div>
+          </div>
+        </div>
+        <div class="carousel-container">
+          <div class="carousel-row">${cards}</div>
+        </div>
+      </section>`;
+  }).join('');
+}
+
+// ============================
+// CONSTELLATION LINES
+// ============================
+function drawConstellations() {
+  ERAS.forEach(era => {
+    const section = document.getElementById(era.id);
+    const svg = document.getElementById(`svg-${era.id}`);
+    const cards = section.querySelectorAll('.show-card');
+    if (cards.length < 2) return;
+
+    const sectionRect = section.getBoundingClientRect();
+    const svgNS = 'http://www.w3.org/2000/svg';
+    svg.innerHTML = '';
+    svg.setAttribute('viewBox', `0 0 ${section.offsetWidth} ${section.offsetHeight}`);
+
+    const points = [];
+    cards.forEach(card => {
+      const cardRect = card.getBoundingClientRect();
+      const cx = card.offsetLeft + card.offsetWidth / 2;
+      const cy = card.offsetTop + card.offsetHeight / 2 + section.querySelector('.era-header').offsetHeight + 80;
+      points.push({ x: cx, y: cy });
+    });
+
+    // Draw lines
+    for (let i = 0; i < points.length - 1; i++) {
+      const line = document.createElementNS(svgNS, 'line');
+      line.setAttribute('x1', points[i].x);
+      line.setAttribute('y1', points[i].y);
+      line.setAttribute('x2', points[i + 1].x);
+      line.setAttribute('y2', points[i + 1].y);
+      line.setAttribute('class', 'constellation-line');
+      svg.appendChild(line);
+    }
+
+    // Draw dots
+    points.forEach(p => {
+      const circle = document.createElementNS(svgNS, 'circle');
+      circle.setAttribute('cx', p.x);
+      circle.setAttribute('cy', p.y);
+      circle.setAttribute('r', 3);
+      circle.setAttribute('class', 'constellation-dot');
+      svg.appendChild(circle);
+    });
+  });
+}
+
+// ============================
+// INTERSECTION OBSERVER
+// ============================
+function initObserver() {
+  const sections = document.querySelectorAll('.era-section');
+  const navItems = document.querySelectorAll('.nav-item');
+  const rulerMarks = document.querySelectorAll('.ruler-mark');
+
+  // Era-to-ruler mapping
+  const eraToRulerIndices = {
+    'antiquite': [0, 1, 2],
+    'moyen-age': [3, 4, 5],
+    'renaissance': [6],
+    'moderne': [7, 8],
+    'revolutions': [9, 10],
+    'guerres': [11]
+  };
+
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      const eraId = entry.target.getAttribute('data-era');
+
+      if (entry.isIntersecting) {
+        entry.target.classList.add('visible');
+
+        // Update nav
+        navItems.forEach(item => item.classList.remove('active'));
+        const activeNav = document.querySelector(`.nav-item[data-era="${eraId}"]`);
+        if (activeNav) activeNav.classList.add('active');
+
+        // Update ruler
+        rulerMarks.forEach(m => m.classList.remove('active'));
+        const indices = eraToRulerIndices[eraId] || [];
+        indices.forEach(i => {
+          if (rulerMarks[i]) rulerMarks[i].classList.add('active');
+        });
+      }
+    });
+  }, {
+    threshold: 0.3,
+    rootMargin: '-10% 0px -10% 0px'
+  });
+
+  sections.forEach(section => observer.observe(section));
+}
+
+// ============================
+// DETAIL DRAWER
+// ============================
+function initDrawer() {
+  const overlay = document.getElementById('drawer-overlay');
+  const drawer = document.getElementById('detail-drawer');
+  const drawerContent = document.getElementById('drawer-content');
+  const closeBtn = document.getElementById('drawer-close');
+  const handle = document.getElementById('drawer-handle');
+
+  function openDrawer(show, hue) {
+    const posterGrad = getPosterGradient(hue);
+    const initial = show.title.charAt(0);
+
+    drawerContent.innerHTML = `
+      <div class="drawer-poster" style="background: ${posterGrad};">
+        <div class="drawer-poster-initial">${initial}</div>
+      </div>
+      <div class="drawer-info">
+        <h2 class="drawer-title">${show.title}</h2>
+        <div class="drawer-meta">
+          <div class="drawer-meta-item">
+            <span class="label">Periode</span>
+            ${show.dates}
+          </div>
+          <div class="drawer-meta-item">
+            <span class="label">Plateforme</span>
+            ${show.platform}
+          </div>
+        </div>
+        <div class="drawer-stars">${renderStars(show.stars)}</div>
+        <p class="drawer-description">${show.description}</p>
+      </div>`;
+
+    overlay.classList.add('active');
+    drawer.classList.add('active');
+    document.body.style.overflow = 'hidden';
+  }
+
+  function closeDrawer() {
+    overlay.classList.remove('active');
+    drawer.classList.remove('active');
+    document.body.style.overflow = '';
+  }
+
+  // Card clicks
+  document.addEventListener('click', (e) => {
+    const card = e.target.closest('.show-card');
+    if (card) {
+      const show = JSON.parse(card.getAttribute('data-show'));
+      const hue = parseInt(card.getAttribute('data-era-hue'));
+      openDrawer(show, hue);
+    }
+  });
+
+  overlay.addEventListener('click', closeDrawer);
+  closeBtn.addEventListener('click', closeDrawer);
+  handle.addEventListener('click', closeDrawer);
+
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') closeDrawer();
+  });
+}
+
+// ============================
+// SMOOTH NAV SCROLL
+// ============================
+function initNavScroll() {
+  document.querySelectorAll('.nav-item').forEach(item => {
+    item.addEventListener('click', (e) => {
+      e.preventDefault();
+      const target = document.getElementById(item.getAttribute('data-era'));
+      if (target) {
+        target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+    });
+  });
+}
+
+// ============================
+// INIT
+// ============================
+function init() {
+  buildRuler();
+  buildSidebar();
+  buildSections();
+  initStarField();
+  initObserver();
+  initDrawer();
+  initNavScroll();
+
+  // Draw constellations after layout
+  requestAnimationFrame(() => {
+    requestAnimationFrame(drawConstellations);
+  });
+
+  // Redraw constellations on resize
+  window.addEventListener('resize', () => {
+    requestAnimationFrame(drawConstellations);
+  });
+}
+
+document.addEventListener('DOMContentLoaded', init);
+</script>
+</body>
+</html>
