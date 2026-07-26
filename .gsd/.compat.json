@@ -1,0 +1,75 @@
+{
+  "schema": 2,
+  "lastWriter": "gsd-pi",
+  "lastProjectedAt": "2026-07-26T17:02:42.228Z",
+  "projections": {
+    "phases/01-data-foundation-and-yeartopixel/01-ROADMAP.md": {
+      "sha": "af57a8aa03979363",
+      "entities": [
+        "M001"
+      ]
+    },
+    "phases/02-parallax-engine-and-era-backgrounds/02-ROADMAP.md": {
+      "sha": "07906aaebee8460a",
+      "entities": [
+        "M002"
+      ]
+    },
+    "phases/03-show-cards/03-ROADMAP.md": {
+      "sha": "f51c82aac2f08cb8",
+      "entities": [
+        "M003"
+      ]
+    },
+    "phases/04-historical-events-and-flashbacks/04-ROADMAP.md": {
+      "sha": "28af2683a8690393",
+      "entities": [
+        "M004"
+      ]
+    },
+    "phases/05-detail-panel/05-ROADMAP.md": {
+      "sha": "65dee068d5523ac6",
+      "entities": [
+        "M005"
+      ]
+    },
+    "phases/06-filters-search-and-navigation/06-ROADMAP.md": {
+      "sha": "fcec87807a4c0d9f",
+      "entities": [
+        "M006"
+      ]
+    },
+    "phases/07-bilingual-routing-and-i18n/07-ROADMAP.md": {
+      "sha": "276c380745b12eb2",
+      "entities": [
+        "M007"
+      ]
+    },
+    "phases/08-mobile-polish-and-wcag-aa/08-ROADMAP.md": {
+      "sha": "395f6e0d094e6bc1",
+      "entities": [
+        "M008"
+      ]
+    },
+    "phases/09-data-completion-and-seo/09-ROADMAP.md": {
+      "sha": "1d2aca815ab0f6dd",
+      "entities": [
+        "M009"
+      ]
+    },
+    "phases/01-data-foundation-and-yeartopixel/01-01-PLAN.md": {
+      "sha": "8c91d87dd3edbfab",
+      "entities": [
+        "M001",
+        "M001/S01"
+      ]
+    }
+  },
+  "planning": {
+    "active": false,
+    "layout": null,
+    "projections": {},
+    "passthrough": {}
+  },
+  "piVersion": ""
+}

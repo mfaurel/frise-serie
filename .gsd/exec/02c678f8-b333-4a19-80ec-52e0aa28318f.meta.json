@@ -1,0 +1,20 @@
+{
+  "id": "02c678f8-b333-4a19-80ec-52e0aa28318f",
+  "runtime": "bash",
+  "purpose": "Verify Vitest is installed and runnable",
+  "script_chars": 20,
+  "started_at": "2026-07-26T17:02:22.359Z",
+  "finished_at": "2026-07-26T17:02:23.999Z",
+  "exit_code": 0,
+  "signal": null,
+  "timed_out": false,
+  "aborted": false,
+  "force_resolved": false,
+  "duration_ms": 1640,
+  "stdout_bytes": 38,
+  "stderr_bytes": 0,
+  "stdout_truncated": false,
+  "stderr_truncated": false,
+  "stdout_path": "C:\\workspace\\frise-serie\\.gsd\\exec\\02c678f8-b333-4a19-80ec-52e0aa28318f.stdout",
+  "stderr_path": "C:\\workspace\\frise-serie\\.gsd\\exec\\02c678f8-b333-4a19-80ec-52e0aa28318f.stderr"
+}

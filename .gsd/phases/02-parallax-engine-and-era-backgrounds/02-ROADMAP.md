@@ -1,0 +1,28 @@
+# M002: Parallax Engine and Era Backgrounds
+
+**Vision:** Build the horizontal-scroll parallax engine with 3 layers (background 0.3x, axis 0.6x, cards 1.0x) and era-specific nebula gradient backgrounds using the V5-atlas-editorial dark void palette.
+
+## Success Criteria
+
+- Horizontal scroll container renders full timeline width from yearToPixel zones
+- 3 parallax layers scroll at different rates (0.3x, 0.6x, 1.0x) using Motion useScroll/useTransform
+- Era backgrounds show nebula gradients with correct color per era
+- Star field canvas renders behind all layers
+- 60fps maintained during scroll (no layout thrashing, transform-only animations)
+- useReducedMotion disables parallax for accessibility
+- Next.js project initialized with App Router, Tailwind v4, static export
+
+## Slices
+
+- [ ] **S01: Next.js project scaffold with App Router and static export** `[sketch]` `risk:low` `depends:[]`
+  > After this: npm run build produces static HTML in out/, dev server runs at localhost:3000
+
+- [ ] **S02: Horizontal scroll container with yearToPixel width** `[sketch]` `risk:medium` `depends:[S01]`
+  > After this: Timeline container scrolls horizontally, total width matches sum of density zones, year axis labels appear at correct positions
+
+- [ ] **S03: 3-layer parallax with era nebula backgrounds** `[sketch]` `risk:high` `depends:[S02]`
+  > After this: Scrolling shows background layer moving at 0.3x, axis at 0.6x, card layer at 1.0x. Each era has distinct nebula gradient colors.
+
+## Boundary Map
+
+Not provided.

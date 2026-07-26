@@ -1,0 +1,20 @@
+{
+  "id": "a0dae969-daf0-47ec-b70d-8532f5798192",
+  "runtime": "bash",
+  "purpose": "Install project dependencies for T01 bootstrap",
+  "script_chars": 11,
+  "started_at": "2026-07-26T17:01:20.355Z",
+  "finished_at": "2026-07-26T17:02:11.430Z",
+  "exit_code": 0,
+  "signal": null,
+  "timed_out": false,
+  "aborted": false,
+  "force_resolved": false,
+  "duration_ms": 51075,
+  "stdout_bytes": 264,
+  "stderr_bytes": 209,
+  "stdout_truncated": false,
+  "stderr_truncated": false,
+  "stdout_path": "C:\\workspace\\frise-serie\\.gsd\\exec\\a0dae969-daf0-47ec-b70d-8532f5798192.stdout",
+  "stderr_path": "C:\\workspace\\frise-serie\\.gsd\\exec\\a0dae969-daf0-47ec-b70d-8532f5798192.stderr"
+}

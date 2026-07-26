@@ -1,0 +1,20 @@
+{
+  "id": "a6beeb80-2b9d-41f0-aa6e-357b9b6787ed",
+  "runtime": "bash",
+  "purpose": "T01 verification — TypeScript compiles with no errors",
+  "script_chars": 16,
+  "started_at": "2026-07-26T17:02:14.904Z",
+  "finished_at": "2026-07-26T17:02:18.531Z",
+  "exit_code": 0,
+  "signal": null,
+  "timed_out": false,
+  "aborted": false,
+  "force_resolved": false,
+  "duration_ms": 3627,
+  "stdout_bytes": 0,
+  "stderr_bytes": 0,
+  "stdout_truncated": false,
+  "stderr_truncated": false,
+  "stdout_path": "C:\\workspace\\frise-serie\\.gsd\\exec\\a6beeb80-2b9d-41f0-aa6e-357b9b6787ed.stdout",
+  "stderr_path": "C:\\workspace\\frise-serie\\.gsd\\exec\\a6beeb80-2b9d-41f0-aa6e-357b9b6787ed.stderr"
+}

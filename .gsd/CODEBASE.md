@@ -1,7 +1,7 @@
 # Codebase Map
 
-Generated: 2026-07-25T16:49:31Z | Files: 15 | Described: 0/15
-<!-- gsd:codebase-meta {"generatedAt":"2026-07-25T16:49:31Z","fingerprint":"f3154c6e3ce1adf9f18701ae7b8d02d2ce6e0793","fileCount":15,"truncated":false} -->
+Generated: 2026-07-26T14:35:44Z | Files: 17 | Described: 0/17
+<!-- gsd:codebase-meta {"generatedAt":"2026-07-26T14:35:44Z","fingerprint":"abac6bd49e93525588d320787fabcbbb8e19f984","fileCount":17,"truncated":false} -->
 
 ### (root)/
 - `.mcp.json`
@@ -21,3 +21,5 @@ Generated: 2026-07-25T16:49:31Z | Files: 15 | Described: 0/15
 - `designs/V3-stellar-atlas.html`
 - `designs/V4-noir-chronicle.html`
 - `designs/V5-atlas-editorial.html`
+- `designs/V5A-riftlight.html`
+- `designs/V5B-cinema.html`
