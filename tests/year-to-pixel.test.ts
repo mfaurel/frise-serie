@@ -129,6 +129,44 @@ describe("buildDensityZones", () => {
 
     expect(zones.map((z) => z.eraId)).toEqual(["era-a", "era-b"]);
   });
+
+  it("does not count a show whose narrativeYearStart falls in a gap between eras (findEraForYear returns undefined)", () => {
+    const eraA = makeEra("era-a", 0, 100);
+    const eraB = makeEra("era-b", 200, 300);
+    const testShows = [
+      makeShow("gap-show", 150),
+      makeShow("s1", 250),
+      makeShow("s2", 260),
+      makeShow("s3", 270),
+    ];
+
+    const zones = buildDensityZones(testShows, [eraA, eraB], 200);
+    const zoneA = zones.find((z) => z.eraId === "era-a")!;
+    const zoneB = zones.find((z) => z.eraId === "era-b")!;
+
+    // avgShowCount = 4 shows / 2 eras = 2. If the gap-show were (wrongly) counted
+    // into era-b, showCount would be 4 and weight would be 2, not 1.5.
+    expect(zoneA.pxPerYear).toBe(1);
+    expect(zoneB.pxPerYear).toBe(1.5);
+  });
+
+  it("counts a show whose narrativeYearStart lands exactly on the last era's yearEnd (isLast inclusive branch)", () => {
+    const eraA = makeEra("era-a", 0, 100);
+    const eraB = makeEra("era-b", 100, 200);
+    const testShows = [makeShow("on-boundary", 200)];
+
+    const zones = buildDensityZones(testShows, [eraA, eraB], 200);
+    const zoneA = zones.find((z) => z.eraId === "era-a")!;
+    const zoneB = zones.find((z) => z.eraId === "era-b")!;
+
+    // avgShowCount = 1/2 = 0.5; era-b's showCount of 1 gives weight max(1, 1/0.5) = 2
+    expect(zoneA.pxPerYear).toBe(1);
+    expect(zoneB.pxPerYear).toBe(2);
+  });
+
+  it("returns an empty array without dividing by zero when given no eras", () => {
+    expect(buildDensityZones([], [], 100)).toEqual([]);
+  });
 });
 
 describe("yearToPixel", () => {
@@ -219,6 +257,18 @@ describe("yearToPixel", () => {
   it("throws on an empty zones array", () => {
     expect(() => yearToPixel(2000, [])).toThrow();
   });
+
+  it("falls back to the last zone for a year in a gap between non-contiguous zones", () => {
+    const zones: DensityZone[] = [
+      { eraId: "left", yearStart: 0, yearEnd: 100, pxPerYear: 1, pixelStart: 0, pixelEnd: 100 },
+      { eraId: "right", yearStart: 200, yearEnd: 300, pxPerYear: 1, pixelStart: 200, pixelEnd: 300 },
+    ];
+
+    // year 150 matches neither zone's [yearStart, yearEnd) range: falls through
+    // the loop and clamps to the last zone per findZoneIndexForYear's fallback,
+    // extrapolating from that zone's rate (150 is below its yearStart of 200).
+    expect(yearToPixel(150, zones)).toBe(150);
+  });
 });
 
 describe("pixelToYear", () => {
@@ -261,6 +311,17 @@ describe("pixelToYear", () => {
     const year = pixelToYear(25, zones);
     expect(Number.isInteger(year)).toBe(true);
     expect(year).toBe(3);
+  });
+
+  it("falls back to the last zone for a pixel in a gap between non-contiguous zones", () => {
+    const zones: DensityZone[] = [
+      { eraId: "left", yearStart: 0, yearEnd: 100, pxPerYear: 1, pixelStart: 0, pixelEnd: 100 },
+      { eraId: "right", yearStart: 200, yearEnd: 300, pxPerYear: 1, pixelStart: 200, pixelEnd: 300 },
+    ];
+
+    // px 150 matches neither zone's [pixelStart, pixelEnd) range: falls through
+    // the loop and clamps to the last zone per findZoneIndexForPixel's fallback.
+    expect(pixelToYear(150, zones)).toBe(150);
   });
 });
 
