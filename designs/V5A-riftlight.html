@@ -1,0 +1,1200 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Frise Serie — Riftlight</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+/* ============================
+   RESET & BASE
+   ============================ */
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+:root {
+  --void: #030318;
+  --void-light: #06062a;
+  --void-mid: #0a0a2e;
+  --star-silver: #e8eaf0;
+  --star-silver-dim: #e8eaf040;
+  --star-silver-bright: #f0f2ff;
+  --accent-glacier: #7eb8d8;
+  --accent-glacier-dim: #7eb8d830;
+  --text-primary: #dde0ea;
+  --text-secondary: #8a8ea0;
+  --text-muted: #4e5168;
+  --sidebar-w: 260px;
+  --ruler-h: 52px;
+  --transition-smooth: cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+html {
+  scroll-behavior: smooth;
+  scrollbar-width: thin;
+  scrollbar-color: var(--star-silver-dim) var(--void);
+}
+
+body {
+  font-family: 'Space Grotesk', sans-serif;
+  background: var(--void);
+  color: var(--text-primary);
+  overflow-x: hidden;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* ============================
+   SCROLLBAR
+   ============================ */
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: rgba(126, 184, 216, 0.15); border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: rgba(126, 184, 216, 0.25); }
+
+/* ============================
+   STAR FIELD CANVAS
+   ============================ */
+#star-field {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+}
+
+/* ============================
+   SIDEBAR
+   ============================ */
+.sidebar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: var(--sidebar-w);
+  height: 100vh;
+  background: linear-gradient(135deg, #040428 0%, #030320 100%);
+  border-right: 1px solid rgba(126, 184, 216, 0.06);
+  z-index: 200;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.sidebar-header {
+  padding: 28px 24px 20px;
+  border-bottom: 1px solid rgba(126, 184, 216, 0.06);
+}
+
+.sidebar-logo {
+  font-family: 'Instrument Serif', serif;
+  font-size: 22px;
+  color: var(--star-silver);
+  letter-spacing: 0.02em;
+  margin-bottom: 4px;
+}
+
+.sidebar-logo em {
+  font-style: italic;
+  opacity: 0.7;
+}
+
+.sidebar-subtitle {
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+  color: var(--text-muted);
+  font-weight: 500;
+}
+
+.sidebar-nav {
+  flex: 1;
+  padding: 16px 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  overflow-y: auto;
+}
+
+.nav-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 14px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.3s var(--transition-smooth);
+  position: relative;
+  text-decoration: none;
+  color: inherit;
+}
+
+.nav-item:hover {
+  background: rgba(126, 184, 216, 0.04);
+}
+
+.nav-item.active {
+  background: rgba(126, 184, 216, 0.06);
+}
+
+.nav-item.active::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 3px;
+  height: 24px;
+  background: var(--accent-glacier);
+  border-radius: 0 2px 2px 0;
+  box-shadow: 0 0 8px var(--accent-glacier-dim);
+}
+
+.nav-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  flex-shrink: 0;
+  transition: all 0.3s var(--transition-smooth);
+  box-shadow: 0 0 4px currentColor;
+}
+
+.nav-item.active .nav-dot {
+  box-shadow: 0 0 8px currentColor, 0 0 16px currentColor;
+  transform: scale(1.3);
+}
+
+.nav-label {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text-secondary);
+  transition: color 0.3s;
+  flex: 1;
+  min-width: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.nav-item.active .nav-label {
+  color: var(--text-primary);
+}
+
+.nav-count {
+  font-size: 10px;
+  color: var(--text-muted);
+  font-weight: 400;
+  flex-shrink: 0;
+}
+
+.sidebar-footer {
+  padding: 16px 24px;
+  border-top: 1px solid rgba(126, 184, 216, 0.06);
+  font-size: 10px;
+  color: var(--text-muted);
+  text-align: center;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+/* ============================
+   TIME RULER
+   ============================ */
+.time-ruler {
+  position: fixed;
+  top: 0;
+  left: var(--sidebar-w);
+  right: 0;
+  height: var(--ruler-h);
+  background: linear-gradient(180deg, var(--void) 0%, transparent 100%);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  z-index: 100;
+  display: flex;
+  align-items: flex-end;
+  padding: 0 40px 8px;
+  border-bottom: 1px solid rgba(126, 184, 216, 0.06);
+}
+
+.ruler-track {
+  display: flex;
+  width: 100%;
+  justify-content: space-between;
+  position: relative;
+}
+
+.ruler-track::before {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--accent-glacier-dim), transparent);
+}
+
+.ruler-mark {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  position: relative;
+  transition: all 0.3s var(--transition-smooth);
+}
+
+.ruler-mark::after {
+  content: '';
+  width: 1px;
+  height: 8px;
+  background: var(--accent-glacier-dim);
+  transition: all 0.3s var(--transition-smooth);
+}
+
+.ruler-mark span {
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  transition: color 0.3s var(--transition-smooth);
+}
+
+.ruler-mark.active span {
+  color: var(--accent-glacier);
+}
+
+.ruler-mark.active::after {
+  background: var(--accent-glacier);
+  box-shadow: 0 0 6px var(--accent-glacier);
+}
+
+/* ============================
+   MAIN CONTENT
+   ============================ */
+.main-content {
+  margin-left: var(--sidebar-w);
+  padding-top: var(--ruler-h);
+  position: relative;
+  z-index: 1;
+}
+
+/* ============================
+   ERA SECTION
+   ============================ */
+.era-section {
+  min-height: 100vh;
+  position: relative;
+  display: flex;
+  padding: 60px 0;
+  overflow: hidden;
+}
+
+.era-nebula {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  opacity: 0;
+  transition: opacity 0.8s ease;
+}
+
+.era-section.visible .era-nebula {
+  opacity: 0.35;
+}
+
+/* Vignette overlay per era section */
+.era-section::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 1;
+  background: radial-gradient(ellipse 70% 60% at 50% 50%, transparent 40%, rgba(3, 3, 24, 0.55) 100%);
+}
+
+/* Left column: era info */
+.era-info {
+  width: 40%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 40px 40px 40px 60px;
+  position: relative;
+  z-index: 2;
+}
+
+.era-initial {
+  font-family: 'Instrument Serif', serif;
+  font-size: 96px;
+  line-height: 1;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  font-weight: 400;
+  opacity: 0;
+  transform: translateY(30px);
+  transition: all 0.7s var(--transition-smooth);
+}
+
+.era-section.visible .era-initial {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.era-title {
+  font-family: 'Instrument Serif', serif;
+  font-size: 36px;
+  color: var(--text-primary);
+  font-weight: 400;
+  line-height: 1.1;
+  margin-top: 8px;
+  opacity: 0;
+  transform: translateY(20px);
+  transition: all 0.7s var(--transition-smooth) 0.1s;
+}
+
+.era-section.visible .era-title {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.era-date-range {
+  font-size: 13px;
+  color: var(--text-secondary);
+  letter-spacing: 0.08em;
+  font-weight: 400;
+  margin-top: 8px;
+  opacity: 0;
+  transform: translateY(15px);
+  transition: all 0.7s var(--transition-smooth) 0.15s;
+}
+
+.era-section.visible .era-date-range {
+  opacity: 0.7;
+  transform: translateY(0);
+}
+
+.era-divider {
+  width: 60px;
+  height: 1px;
+  margin: 20px 0;
+  opacity: 0;
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: all 0.7s var(--transition-smooth) 0.2s;
+}
+
+.era-section.visible .era-divider {
+  opacity: 1;
+  transform: scaleX(1);
+}
+
+.era-show-count {
+  font-size: 11px;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  font-weight: 500;
+  opacity: 0;
+  transform: translateY(10px);
+  transition: all 0.7s var(--transition-smooth) 0.25s;
+}
+
+.era-section.visible .era-show-count {
+  opacity: 0.5;
+  transform: translateY(0);
+}
+
+/* Right column: constellation area */
+.constellation-area {
+  width: 60%;
+  position: relative;
+  min-height: 500px;
+  z-index: 2;
+}
+
+.constellation-svg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.constellation-line {
+  stroke-dasharray: 6 8;
+  stroke-dashoffset: 1000;
+  transition: stroke-dashoffset 1.8s cubic-bezier(0.25, 0.46, 0.45, 0.94) 0.5s;
+}
+
+.era-section.visible .constellation-line {
+  stroke-dashoffset: 0;
+}
+
+/* ============================
+   STAR NODES
+   ============================ */
+.star-node {
+  position: absolute;
+  z-index: 10;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  cursor: pointer;
+  opacity: 0;
+  transform: translate(-50%, -50%) scale(0.5);
+  transition: opacity 0.6s ease, transform 0.6s ease;
+}
+
+.era-section.visible .star-node {
+  opacity: 1;
+  transform: translate(-50%, -50%) scale(1);
+}
+
+.star-glow {
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  position: relative;
+  transition: all 0.35s ease;
+}
+
+.star-glow::before {
+  content: '';
+  position: absolute;
+  inset: -6px;
+  border-radius: 50%;
+  opacity: 0.25;
+  transition: all 0.35s ease;
+}
+
+.star-glow::after {
+  content: '';
+  position: absolute;
+  inset: -14px;
+  border-radius: 50%;
+  opacity: 0;
+  transition: all 0.35s ease;
+}
+
+.star-node:hover .star-glow {
+  transform: scale(1.3);
+}
+
+.star-node:hover .star-glow::after {
+  opacity: 0.15;
+}
+
+.star-node.expanded .star-glow {
+  transform: scale(1.5);
+}
+
+.star-node.expanded .star-glow::after {
+  opacity: 0.25;
+}
+
+.star-node.highlight .star-glow {
+  transform: scale(1.4);
+}
+
+.star-node.highlight .star-glow::after {
+  opacity: 0.2;
+}
+
+.star-title {
+  margin-top: 10px;
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  white-space: nowrap;
+  text-shadow: 0 1px 8px rgba(3, 3, 24, 0.95);
+  color: var(--text-secondary);
+  transition: color 0.3s;
+}
+
+.star-node:hover .star-title,
+.star-node.highlight .star-title {
+  color: var(--text-primary);
+}
+
+.star-dates {
+  font-size: 10px;
+  font-weight: 300;
+  opacity: 0.45;
+  margin-top: 2px;
+  white-space: nowrap;
+  text-shadow: 0 1px 4px rgba(3, 3, 24, 0.95);
+}
+
+/* ============================
+   DETAIL CARD (near star)
+   ============================ */
+.detail-card {
+  position: absolute;
+  z-index: 50;
+  width: 300px;
+  background: rgba(8, 8, 38, 0.95);
+  border: 1px solid rgba(126, 184, 216, 0.1);
+  border-radius: 12px;
+  padding: 24px;
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  opacity: 0;
+  transform: translateY(10px) scale(0.96);
+  pointer-events: none;
+  transition: all 0.35s var(--transition-smooth);
+  box-shadow: 0 16px 48px rgba(0, 0, 0, 0.6), 0 0 0 1px rgba(126, 184, 216, 0.04);
+}
+
+.detail-card.visible {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+  pointer-events: auto;
+}
+
+.detail-card-header {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  margin-bottom: 14px;
+}
+
+.detail-card-poster {
+  width: 44px;
+  height: 44px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Instrument Serif', serif;
+  font-size: 22px;
+  color: rgba(255, 255, 255, 0.8);
+  flex-shrink: 0;
+}
+
+.detail-card-title-block {
+  flex: 1;
+  min-width: 0;
+}
+
+.detail-card-title {
+  font-family: 'Instrument Serif', serif;
+  font-size: 20px;
+  line-height: 1.2;
+  color: var(--text-primary);
+}
+
+.detail-card-dates {
+  font-size: 12px;
+  font-weight: 300;
+  color: var(--text-secondary);
+  margin-top: 3px;
+}
+
+.detail-card-stars {
+  color: var(--accent-glacier);
+  font-size: 14px;
+  letter-spacing: 2px;
+  margin-bottom: 10px;
+}
+
+.detail-card-platform {
+  display: inline-block;
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding: 4px 10px;
+  border-radius: 4px;
+  background: rgba(126, 184, 216, 0.08);
+  color: var(--accent-glacier);
+  margin-bottom: 12px;
+}
+
+.detail-card-description {
+  font-size: 13px;
+  line-height: 1.6;
+  color: var(--text-secondary);
+  font-weight: 300;
+  margin-bottom: 14px;
+}
+
+.detail-card-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.tag-pill {
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  padding: 3px 10px;
+  border-radius: 20px;
+  border: 1px solid rgba(126, 184, 216, 0.15);
+  color: var(--text-secondary);
+  background: rgba(126, 184, 216, 0.04);
+  transition: all 0.2s;
+}
+
+.tag-pill:hover {
+  border-color: rgba(126, 184, 216, 0.35);
+  color: var(--text-primary);
+}
+
+/* ============================
+   FOOTER
+   ============================ */
+.site-footer {
+  position: relative;
+  z-index: 2;
+  text-align: center;
+  padding: 80px 40px 60px;
+  margin-left: var(--sidebar-w);
+  font-size: 11px;
+  font-weight: 400;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  border-top: 1px solid rgba(126, 184, 216, 0.04);
+}
+
+/* ============================
+   RESPONSIVE
+   ============================ */
+@media (max-width: 900px) {
+  :root {
+    --sidebar-w: 0px;
+    --ruler-h: 0px;
+  }
+
+  .sidebar { display: none; }
+  .time-ruler { display: none; }
+
+  .era-section {
+    flex-direction: column;
+    padding: 40px 0;
+  }
+
+  .era-info {
+    width: 100%;
+    padding: 30px 24px 10px;
+    text-align: center;
+  }
+
+  .era-divider { margin: 16px auto; }
+
+  .constellation-area {
+    width: 100%;
+    min-height: 400px;
+    padding: 0 16px;
+  }
+
+  .site-footer {
+    margin-left: 0;
+    padding: 60px 24px 40px;
+  }
+}
+</style>
+</head>
+<body>
+
+<!-- Star field canvas -->
+<canvas id="star-field"></canvas>
+
+<!-- Sidebar -->
+<nav class="sidebar" id="sidebar">
+  <div class="sidebar-header">
+    <div class="sidebar-logo">Frise <em>Serie</em></div>
+    <div class="sidebar-subtitle">Riftlight</div>
+  </div>
+  <div class="sidebar-nav" id="sidebar-nav"></div>
+  <div class="sidebar-footer">6 epoques &middot; 17 series</div>
+</nav>
+
+<!-- Time Ruler -->
+<div class="time-ruler">
+  <div class="ruler-track" id="ruler-track"></div>
+</div>
+
+<!-- Main Content -->
+<main class="main-content" id="main-content"></main>
+
+<!-- Footer -->
+<footer class="site-footer">
+  Frise Serie &mdash; Riftlight &mdash; 2026
+</footer>
+
+<script>
+// ============================
+// DATA — cold-palette era colors (indigo / teal / blue glacier)
+// ============================
+const ERAS = [
+  { id: 'antiquite', label: 'Antiquite', dateRange: 'VIIIe s. av. J.-C. — Ve s.', color: '#6b8caa', hue: 210, shows: [
+    { title: 'Spartacus', dates: '73 av. J.-C.', stars: 3, platform: 'Prime Video', description: "L'histoire de Spartacus, gladiateur thrace qui mena la plus célèbre révolte d'esclaves contre la République romaine.", x: 25, y: 35, tags: ['rome', 'révolte', 'esclavage'] },
+    { title: 'Rome', dates: '52 — 44 av. J.-C.', stars: 4, platform: 'Max', description: "Deux soldats romains ordinaires traversent les événements qui ont transformé la République en Empire.", x: 65, y: 60, tags: ['rome', 'politique', 'guerre'] }
+  ]},
+  { id: 'moyen-age', label: 'Moyen Âge', dateRange: 'Ve — XVe s.', color: '#5a7a9e', hue: 220, shows: [
+    { title: 'Vikings', dates: '793 — 1002', stars: 4, platform: 'Netflix', description: "L'épopée de Ragnar Lothbrok et de ses fils.", x: 15, y: 25, tags: ['scandinavie', 'angleterre', 'guerre', 'exploration'] },
+    { title: 'The Last Kingdom', dates: '866 — 950', stars: 4, platform: 'Netflix', description: "Uhtred de Bebbanburg, Saxon élevé par les Danois.", x: 45, y: 55, tags: ['angleterre', 'scandinavie', 'guerre', 'identité'] },
+    { title: 'Knightfall', dates: '1306 — 1314', stars: 3, platform: 'Netflix', description: "Les derniers jours de l'ordre des Templiers.", x: 75, y: 30, tags: ['france', 'religion', 'templiers'] },
+    { title: 'Marco Polo', dates: '1271 — 1300', stars: 3, platform: 'Netflix', description: "Le jeune marchand vénitien à la cour de Kublai Khan.", x: 55, y: 75, tags: ['asie', 'exploration', 'italie'] }
+  ]},
+  { id: 'renaissance', label: 'Renaissance', dateRange: 'XVe — XVIe s.', color: '#7a6b9e', hue: 260, shows: [
+    { title: 'Les Borgia', dates: '1492 — 1507', stars: 4, platform: 'Canal+', description: "L'ascension de la famille Borgia au sommet de la papauté.", x: 20, y: 40, tags: ['italie', 'religion', 'politique', 'pouvoir'] },
+    { title: 'Les Tudors', dates: '1509 — 1547', stars: 4, platform: 'Prime Video', description: "Le règne tumultueux d'Henri VIII.", x: 55, y: 25, tags: ['angleterre', 'religion', 'pouvoir', 'monarchie'] },
+    { title: 'Reign', dates: '1557 — 1567', stars: 2, platform: 'Netflix', description: "Marie Stuart, reine d'Écosse, arrive à la cour de France.", x: 70, y: 65, tags: ['france', 'écosse', 'monarchie', 'pouvoir'] }
+  ]},
+  { id: 'moderne', label: 'Époque Moderne', dateRange: 'XVIe — XVIIIe s.', color: '#4a8a8a', hue: 180, shows: [
+    { title: 'Shōgun', dates: '1600', stars: 5, platform: 'Disney+', description: "Un navigateur anglais échoue au Japon féodal.", x: 30, y: 30, tags: ['japon', 'angleterre', 'guerre', 'honneur'] },
+    { title: 'Versailles', dates: '1667 — 1715', stars: 4, platform: 'Canal+', description: "Louis XIV impose sa vision absolutiste en bâtissant Versailles.", x: 60, y: 55, tags: ['france', 'monarchie', 'pouvoir', 'politique'] },
+    { title: 'Black Sails', dates: '1715 — 1725', stars: 4, platform: 'Prime Video', description: "Préquel de L'Île au trésor. Le capitaine Flint et ses pirates.", x: 45, y: 80, tags: ['caraïbes', 'piraterie', 'angleterre', 'révolte'] }
+  ]},
+  { id: 'revolutions', label: 'Révolutions', dateRange: 'XVIIIe — XIXe s.', color: '#5e6eaa', hue: 230, shows: [
+    { title: 'Turn', dates: '1776 — 1783', stars: 3, platform: 'Prime Video', description: "L'histoire vraie du Culper Ring, premier réseau d'espionnage américain.", x: 35, y: 35, tags: ['amérique', 'espionnage', 'guerre', 'révolte'] },
+    { title: 'Les Misérables', dates: '1815 — 1832', stars: 4, platform: 'Arte', description: "L'adaptation fidèle du roman de Victor Hugo.", x: 65, y: 60, tags: ['france', 'révolte', 'justice', 'pauvreté'] }
+  ]},
+  { id: 'guerres', label: 'Guerres mondiales', dateRange: 'XXe s.', color: '#607888', hue: 200, shows: [
+    { title: 'Peaky Blinders', dates: '1919 — 1934', stars: 4, platform: 'Netflix', description: "La famille Shelby, gang de Birmingham, étend son empire criminel.", x: 25, y: 40, tags: ['angleterre', 'crime', 'guerre', 'pouvoir'] },
+    { title: 'Band of Brothers', dates: '1944', stars: 5, platform: 'Max', description: "L'histoire vraie de la Easy Company, 506e régiment d'infanterie parachutiste.", x: 70, y: 55, tags: ['amérique', 'france', 'guerre', 'fraternité'] }
+  ]}
+];
+
+const CENTURIES = [
+  'VIIIe av.', 'Ve av.', 'Ier av.', 'Ve', 'Xe', 'XIIIe', 'XVe', 'XVIe', 'XVIIe', 'XVIIIe', 'XIXe', 'XXe'
+];
+
+const ERA_TO_RULER = {
+  'antiquite': [0, 1, 2],
+  'moyen-age': [3, 4, 5],
+  'renaissance': [6],
+  'moderne': [7, 8],
+  'revolutions': [9, 10],
+  'guerres': [11]
+};
+
+// ============================
+// STAR FIELD — white-blue tint
+// ============================
+function initStarField() {
+  const canvas = document.getElementById('star-field');
+  const ctx = canvas.getContext('2d');
+  let stars = [];
+
+  function resize() {
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+    generateStars();
+  }
+
+  function generateStars() {
+    stars = [];
+    const count = Math.floor((canvas.width * canvas.height) / 3500);
+    for (let i = 0; i < count; i++) {
+      stars.push({
+        x: Math.random() * canvas.width,
+        y: Math.random() * canvas.height,
+        r: Math.random() * 1.2 + 0.2,
+        alpha: Math.random() * 0.5 + 0.1,
+        speed: Math.random() * 0.015 + 0.004,
+        phase: Math.random() * Math.PI * 2
+      });
+    }
+  }
+
+  function draw(time) {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    for (const s of stars) {
+      const a = s.alpha + Math.sin(time * s.speed + s.phase) * 0.2;
+      ctx.beginPath();
+      ctx.arc(s.x, s.y, s.r, 0, Math.PI * 2);
+      ctx.fillStyle = `rgba(200, 215, 240, ${Math.max(0.03, Math.min(1, a))})`;
+      ctx.fill();
+    }
+    requestAnimationFrame(draw);
+  }
+
+  window.addEventListener('resize', resize);
+  resize();
+  requestAnimationFrame(draw);
+}
+
+// ============================
+// HELPERS
+// ============================
+function renderStars(count) {
+  let out = '';
+  for (let i = 1; i <= 5; i++) {
+    out += i <= count ? '★' : '☆';
+  }
+  return out;
+}
+
+// Cold nebula: indigo / teal / blue glacier hues
+function getNebulaGradient(hue) {
+  const h1 = (hue + 180) % 360;
+  const h2 = (hue + 200) % 360;
+  const h3 = (hue + 190) % 360;
+  return `
+    radial-gradient(ellipse 80% 60% at 20% 30%, hsla(${h1}, 50%, 12%, 0.5) 0%, transparent 70%),
+    radial-gradient(ellipse 60% 50% at 80% 70%, hsla(${h2}, 40%, 10%, 0.4) 0%, transparent 70%),
+    radial-gradient(ellipse 90% 40% at 50% 50%, hsla(${h3}, 35%, 8%, 0.3) 0%, transparent 80%)
+  `;
+}
+
+function sharedTags(a, b) {
+  if (!a.tags || !b.tags) return [];
+  return a.tags.filter(t => b.tags.includes(t));
+}
+
+// ============================
+// BUILD RULER
+// ============================
+function buildRuler() {
+  const track = document.getElementById('ruler-track');
+  track.innerHTML = CENTURIES.map(c =>
+    `<div class="ruler-mark"><span>${c}</span></div>`
+  ).join('');
+}
+
+// ============================
+// BUILD SIDEBAR
+// ============================
+function buildSidebar() {
+  const nav = document.getElementById('sidebar-nav');
+  nav.innerHTML = ERAS.map(era =>
+    `<a href="#${era.id}" class="nav-item" data-era="${era.id}">
+      <div class="nav-dot" style="background: ${era.color}; color: ${era.color};"></div>
+      <span class="nav-label">${era.label}</span>
+      <span class="nav-count">${era.shows.length}</span>
+    </a>`
+  ).join('');
+}
+
+// ============================
+// BUILD ERA SECTIONS
+// ============================
+function buildSections() {
+  const main = document.getElementById('main-content');
+
+  main.innerHTML = ERAS.map(era => {
+    const initial = era.label.charAt(0);
+    const nebula = getNebulaGradient(era.hue);
+    const gradientText = `linear-gradient(135deg, ${era.color}, hsl(${era.hue}, 45%, 65%))`;
+
+    return `
+      <section class="era-section" id="${era.id}" data-era="${era.id}">
+        <div class="era-nebula" style="background: ${nebula};"></div>
+        <div class="era-info">
+          <div class="era-initial" style="background: ${gradientText}; -webkit-background-clip: text; background-clip: text; filter: drop-shadow(0 0 20px hsla(${era.hue}, 40%, 35%, 0.3));">${initial}</div>
+          <h2 class="era-title">${era.label}</h2>
+          <div class="era-date-range">${era.dateRange}</div>
+          <div class="era-divider" style="background: ${era.color};"></div>
+          <div class="era-show-count">${era.shows.length} serie${era.shows.length > 1 ? 's' : ''}</div>
+        </div>
+        <div class="constellation-area" id="constellation-${era.id}">
+          <svg class="constellation-svg" id="svg-${era.id}" viewBox="0 0 100 100" preserveAspectRatio="none"></svg>
+        </div>
+      </section>`;
+  }).join('');
+}
+
+// ============================
+// BUILD STAR NODES + CONSTELLATION LINES
+// Constellation lines: gradient indigo → violet
+// ============================
+function buildConstellations() {
+  const svgNS = 'http://www.w3.org/2000/svg';
+
+  ERAS.forEach(era => {
+    const container = document.getElementById(`constellation-${era.id}`);
+    const svg = document.getElementById(`svg-${era.id}`);
+    const defs = document.createElementNS(svgNS, 'defs');
+    svg.appendChild(defs);
+
+    for (let i = 0; i < era.shows.length; i++) {
+      for (let j = i + 1; j < era.shows.length; j++) {
+        const shared = sharedTags(era.shows[i], era.shows[j]);
+        if (shared.length === 0) continue;
+
+        const gradId = `grad-${era.id}-${i}-${j}`;
+        const grad = document.createElementNS(svgNS, 'linearGradient');
+        grad.setAttribute('id', gradId);
+        grad.setAttribute('x1', era.shows[i].x + '%');
+        grad.setAttribute('y1', era.shows[i].y + '%');
+        grad.setAttribute('x2', era.shows[j].x + '%');
+        grad.setAttribute('y2', era.shows[j].y + '%');
+        grad.setAttribute('gradientUnits', 'userSpaceOnUse');
+        const stop1 = document.createElementNS(svgNS, 'stop');
+        stop1.setAttribute('offset', '0%');
+        stop1.setAttribute('stop-color', '#5566bb');
+        const stop2 = document.createElementNS(svgNS, 'stop');
+        stop2.setAttribute('offset', '100%');
+        stop2.setAttribute('stop-color', '#8866aa');
+        grad.appendChild(stop1);
+        grad.appendChild(stop2);
+        defs.appendChild(grad);
+
+        const line = document.createElementNS(svgNS, 'line');
+        line.setAttribute('x1', era.shows[i].x);
+        line.setAttribute('y1', era.shows[i].y);
+        line.setAttribute('x2', era.shows[j].x);
+        line.setAttribute('y2', era.shows[j].y);
+        line.setAttribute('stroke', `url(#${gradId})`);
+        line.setAttribute('stroke-width', String(0.2 + shared.length * 0.15));
+        line.setAttribute('stroke-opacity', String(Math.min(0.15 + shared.length * 0.1, 0.5)));
+        line.setAttribute('class', 'constellation-line');
+        line.dataset.showA = String(i);
+        line.dataset.showB = String(j);
+        line.dataset.tags = shared.join(',');
+
+        const titleEl = document.createElementNS(svgNS, 'title');
+        titleEl.textContent = shared.join(', ');
+        line.appendChild(titleEl);
+
+        svg.appendChild(line);
+      }
+    }
+
+    era.shows.forEach((show, idx) => {
+      const node = document.createElement('div');
+      node.className = 'star-node';
+      node.style.left = show.x + '%';
+      node.style.top = show.y + '%';
+      node.style.transitionDelay = (0.3 + idx * 0.15) + 's';
+      node.dataset.eraId = era.id;
+      node.dataset.showIdx = String(idx);
+
+      const glowColor = era.color;
+      node.innerHTML = `
+        <div class="star-glow" style="
+          background: ${glowColor};
+          box-shadow: 0 0 8px ${glowColor}, 0 0 2px ${glowColor};
+        ">
+          <div style="position:absolute;inset:-6px;border-radius:50%;background:${glowColor};opacity:0.2;"></div>
+          <div style="position:absolute;inset:-14px;border-radius:50%;background:${glowColor};opacity:0;"></div>
+        </div>
+        <div class="star-title">${show.title}</div>
+        <div class="star-dates">${show.dates}</div>
+      `;
+
+      node.addEventListener('mouseenter', () => {
+        highlightConnections(era.id, idx, true);
+      });
+      node.addEventListener('mouseleave', () => {
+        highlightConnections(era.id, idx, false);
+      });
+
+      node.addEventListener('click', (e) => {
+        e.stopPropagation();
+        toggleDetailCard(era, show, idx, node, container);
+      });
+
+      container.appendChild(node);
+    });
+  });
+}
+
+// ============================
+// HIGHLIGHT CONNECTIONS
+// ============================
+function highlightConnections(eraId, showIdx, highlight) {
+  const svg = document.getElementById(`svg-${eraId}`);
+  const lines = svg.querySelectorAll('.constellation-line');
+  const container = document.getElementById(`constellation-${eraId}`);
+  const nodes = container.querySelectorAll('.star-node');
+  const idx = String(showIdx);
+
+  const connectedIndices = new Set();
+
+  lines.forEach(line => {
+    const a = line.dataset.showA;
+    const b = line.dataset.showB;
+    if (a === idx || b === idx) {
+      if (highlight) {
+        line.setAttribute('stroke-opacity', '0.7');
+        line.style.filter = 'drop-shadow(0 0 3px rgba(100, 130, 200, 0.6))';
+      } else {
+        const tagCount = line.dataset.tags.split(',').length;
+        line.setAttribute('stroke-opacity', String(Math.min(0.15 + tagCount * 0.1, 0.5)));
+        line.style.filter = '';
+      }
+      connectedIndices.add(a);
+      connectedIndices.add(b);
+    }
+  });
+
+  nodes.forEach(node => {
+    const nodeIdx = node.dataset.showIdx;
+    if (nodeIdx !== idx && connectedIndices.has(nodeIdx)) {
+      if (highlight) {
+        node.classList.add('highlight');
+      } else {
+        node.classList.remove('highlight');
+      }
+    }
+  });
+}
+
+// ============================
+// DETAIL CARD
+// ============================
+let activeCard = null;
+let activeNode = null;
+
+function toggleDetailCard(era, show, showIdx, node, container) {
+  if (activeCard) {
+    activeCard.classList.remove('visible');
+    if (activeNode) activeNode.classList.remove('expanded');
+    const oldCard = activeCard;
+    setTimeout(() => { if (oldCard.parentNode) oldCard.parentNode.removeChild(oldCard); }, 350);
+    if (activeNode === node) {
+      activeCard = null;
+      activeNode = null;
+      return;
+    }
+  }
+
+  const card = document.createElement('div');
+  card.className = 'detail-card';
+
+  const initial = show.title.charAt(0);
+  const tagsHtml = (show.tags || []).map(t => `<span class="tag-pill">${t}</span>`).join('');
+
+  card.innerHTML = `
+    <div class="detail-card-header">
+      <div class="detail-card-poster" style="background: ${era.color};">${initial}</div>
+      <div class="detail-card-title-block">
+        <div class="detail-card-title">${show.title}</div>
+        <div class="detail-card-dates">${show.dates}</div>
+      </div>
+    </div>
+    <div class="detail-card-stars">${renderStars(show.stars)}</div>
+    <div class="detail-card-platform">${show.platform}</div>
+    <div class="detail-card-description">${show.description}</div>
+    <div class="detail-card-tags">${tagsHtml}</div>
+  `;
+
+  const nodeRect = node.getBoundingClientRect();
+  const containerRect = container.getBoundingClientRect();
+  const nodeRelX = nodeRect.left - containerRect.left + nodeRect.width / 2;
+  const nodeRelY = nodeRect.top - containerRect.top + nodeRect.height / 2;
+
+  let cardLeft, cardTop;
+  if (show.x > 50) {
+    cardLeft = nodeRelX - 320;
+  } else {
+    cardLeft = nodeRelX + 30;
+  }
+  cardTop = nodeRelY - 50;
+
+  if (cardTop < 10) cardTop = 10;
+  if (cardTop + 320 > containerRect.height) cardTop = containerRect.height - 330;
+  if (cardLeft < 10) cardLeft = 10;
+  if (cardLeft + 300 > containerRect.width) cardLeft = containerRect.width - 310;
+
+  card.style.left = cardLeft + 'px';
+  card.style.top = cardTop + 'px';
+
+  container.appendChild(card);
+  node.classList.add('expanded');
+
+  requestAnimationFrame(() => {
+    requestAnimationFrame(() => {
+      card.classList.add('visible');
+    });
+  });
+
+  activeCard = card;
+  activeNode = node;
+}
+
+document.addEventListener('click', (e) => {
+  if (activeCard && !e.target.closest('.detail-card') && !e.target.closest('.star-node')) {
+    activeCard.classList.remove('visible');
+    if (activeNode) activeNode.classList.remove('expanded');
+    const old = activeCard;
+    setTimeout(() => { if (old.parentNode) old.parentNode.removeChild(old); }, 350);
+    activeCard = null;
+    activeNode = null;
+  }
+});
+
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'Escape' && activeCard) {
+    activeCard.classList.remove('visible');
+    if (activeNode) activeNode.classList.remove('expanded');
+    const old = activeCard;
+    setTimeout(() => { if (old.parentNode) old.parentNode.removeChild(old); }, 350);
+    activeCard = null;
+    activeNode = null;
+  }
+});
+
+// ============================
+// INTERSECTION OBSERVER
+// ============================
+function initObserver() {
+  const sections = document.querySelectorAll('.era-section');
+  const navItems = document.querySelectorAll('.nav-item');
+  const rulerMarks = document.querySelectorAll('.ruler-mark');
+
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      const eraId = entry.target.getAttribute('data-era');
+
+      if (entry.isIntersecting) {
+        entry.target.classList.add('visible');
+
+        navItems.forEach(item => item.classList.remove('active'));
+        const activeNav = document.querySelector(`.nav-item[data-era="${eraId}"]`);
+        if (activeNav) activeNav.classList.add('active');
+
+        rulerMarks.forEach(m => m.classList.remove('active'));
+        const indices = ERA_TO_RULER[eraId] || [];
+        indices.forEach(i => {
+          if (rulerMarks[i]) rulerMarks[i].classList.add('active');
+        });
+      }
+    });
+  }, {
+    threshold: 0.25,
+    rootMargin: '-10% 0px -10% 0px'
+  });
+
+  sections.forEach(section => observer.observe(section));
+}
+
+// ============================
+// NAV SCROLL
+// ============================
+function initNavScroll() {
+  document.querySelectorAll('.nav-item').forEach(item => {
+    item.addEventListener('click', (e) => {
+      e.preventDefault();
+      const target = document.getElementById(item.getAttribute('data-era'));
+      if (target) {
+        target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+    });
+  });
+}
+
+// ============================
+// INIT
+// ============================
+function init() {
+  buildRuler();
+  buildSidebar();
+  buildSections();
+  buildConstellations();
+  initStarField();
+  initObserver();
+  initNavScroll();
+}
+
+document.addEventListener('DOMContentLoaded', init);
+</script>
+</body>
+</html>

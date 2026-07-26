@@ -1,0 +1,1252 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Frise Serie — Cinema Noir</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+/* ============================
+   RESET & BASE
+   ============================ */
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+:root {
+  --void: #0a0908;
+  --void-light: #141210;
+  --void-mid: #1a1816;
+  --accent: #d4a853;
+  --accent-dim: #d4a85340;
+  --accent-bright: #f0c96e;
+  --text-primary: #e8e2d8;
+  --text-secondary: #a09585;
+  --text-muted: #5a524a;
+  --sidebar-w: 260px;
+  --ruler-h: 52px;
+  --transition-smooth: cubic-bezier(0.4, 0, 0.2, 1);
+  --grain-opacity: 0.035;
+}
+
+html {
+  scroll-behavior: smooth;
+  scrollbar-width: thin;
+  scrollbar-color: var(--accent-dim) var(--void);
+}
+
+body {
+  font-family: 'Space Grotesk', sans-serif;
+  background: var(--void);
+  color: var(--text-primary);
+  overflow-x: hidden;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Film grain overlay */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  pointer-events: none;
+  opacity: var(--grain-opacity);
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-size: 128px 128px;
+  mix-blend-mode: overlay;
+}
+
+/* ============================
+   SCROLLBAR
+   ============================ */
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: rgba(212, 168, 83, 0.2); border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: rgba(212, 168, 83, 0.35); }
+
+/* ============================
+   STAR FIELD CANVAS (cinema dust particles)
+   ============================ */
+#star-field {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+}
+
+/* ============================
+   PROJECTOR CONE — ambient light from top-right
+   ============================ */
+.projector-cone {
+  position: fixed;
+  top: -20vh;
+  right: -10vw;
+  width: 80vw;
+  height: 80vh;
+  background: radial-gradient(ellipse 60% 70% at 50% 30%, rgba(212, 168, 83, 0.04) 0%, transparent 70%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* ============================
+   SIDEBAR
+   ============================ */
+.sidebar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: var(--sidebar-w);
+  height: 100vh;
+  background: linear-gradient(180deg, #0e0d0b 0%, #0a0908 100%);
+  border-right: 1px solid rgba(212, 168, 83, 0.08);
+  z-index: 200;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.sidebar-header {
+  padding: 28px 24px 20px;
+  border-bottom: 1px solid rgba(212, 168, 83, 0.08);
+}
+
+.sidebar-logo {
+  font-family: 'Instrument Serif', serif;
+  font-size: 22px;
+  color: var(--accent);
+  letter-spacing: 0.06em;
+  margin-bottom: 4px;
+}
+
+.sidebar-logo em {
+  font-style: italic;
+  opacity: 0.7;
+}
+
+.sidebar-subtitle {
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.2em;
+  color: var(--text-muted);
+  font-weight: 500;
+}
+
+.sidebar-nav {
+  flex: 1;
+  padding: 16px 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  overflow-y: auto;
+}
+
+.nav-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 14px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.3s var(--transition-smooth);
+  position: relative;
+  text-decoration: none;
+  color: inherit;
+}
+
+.nav-item:hover {
+  background: rgba(212, 168, 83, 0.05);
+}
+
+.nav-item.active {
+  background: rgba(212, 168, 83, 0.08);
+}
+
+/* Vertical bar accent instead of dot glow */
+.nav-item.active::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 8px;
+  bottom: 8px;
+  width: 2px;
+  background: var(--accent);
+  border-radius: 0 1px 1px 0;
+}
+
+.nav-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  flex-shrink: 0;
+  transition: all 0.3s var(--transition-smooth);
+  box-shadow: 0 0 4px currentColor;
+}
+
+.nav-item.active .nav-dot {
+  box-shadow: 0 0 6px currentColor, 0 0 12px currentColor;
+  transform: scale(1.2);
+}
+
+.nav-label {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text-secondary);
+  transition: color 0.3s;
+  flex: 1;
+  min-width: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.nav-item.active .nav-label {
+  color: var(--text-primary);
+}
+
+.nav-count {
+  font-size: 10px;
+  color: var(--text-muted);
+  font-weight: 400;
+  flex-shrink: 0;
+}
+
+.sidebar-footer {
+  padding: 16px 24px;
+  border-top: 1px solid rgba(212, 168, 83, 0.08);
+  font-size: 10px;
+  color: var(--text-muted);
+  text-align: center;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+/* ============================
+   TIME RULER — film strip perforations
+   ============================ */
+.time-ruler {
+  position: fixed;
+  top: 0;
+  left: var(--sidebar-w);
+  right: 0;
+  height: var(--ruler-h);
+  background: linear-gradient(180deg, var(--void) 60%, transparent 100%);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  z-index: 100;
+  display: flex;
+  align-items: flex-end;
+  padding: 0 40px 8px;
+  border-bottom: 1px solid rgba(212, 168, 83, 0.08);
+}
+
+.ruler-track {
+  display: flex;
+  width: 100%;
+  justify-content: space-between;
+  position: relative;
+}
+
+.ruler-track::before {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--accent-dim), transparent);
+}
+
+.ruler-mark {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  position: relative;
+  transition: all 0.3s var(--transition-smooth);
+}
+
+/* Perforation-style tick */
+.ruler-mark::after {
+  content: '';
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  border: 1px solid var(--accent-dim);
+  background: transparent;
+  transition: all 0.3s var(--transition-smooth);
+}
+
+.ruler-mark span {
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  transition: color 0.3s var(--transition-smooth);
+}
+
+.ruler-mark.active span {
+  color: var(--accent);
+}
+
+.ruler-mark.active::after {
+  background: var(--accent);
+  border-color: var(--accent);
+  box-shadow: 0 0 6px var(--accent);
+}
+
+/* ============================
+   MAIN CONTENT
+   ============================ */
+.main-content {
+  margin-left: var(--sidebar-w);
+  padding-top: var(--ruler-h);
+  position: relative;
+  z-index: 1;
+}
+
+/* ============================
+   ERA SECTION
+   ============================ */
+.era-section {
+  min-height: 100vh;
+  position: relative;
+  display: flex;
+  padding: 60px 0;
+  overflow: hidden;
+}
+
+/* Spotlight vignette per era */
+.era-section::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 1;
+  background: radial-gradient(ellipse 70% 60% at 55% 50%, transparent 30%, rgba(10, 9, 8, 0.6) 100%);
+}
+
+.era-nebula {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  opacity: 0;
+  transition: opacity 1s ease;
+}
+
+.era-section.visible .era-nebula {
+  opacity: 0.25;
+}
+
+/* Left column: era info */
+.era-info {
+  width: 40%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 40px 40px 40px 60px;
+  position: relative;
+  z-index: 2;
+}
+
+.era-initial {
+  font-family: 'Instrument Serif', serif;
+  font-size: 110px;
+  line-height: 1;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  font-weight: 400;
+  opacity: 0;
+  transform: translateY(30px);
+  transition: all 0.8s var(--transition-smooth);
+  /* Cinema: long shadow */
+  filter: drop-shadow(3px 3px 0 rgba(212, 168, 83, 0.08))
+          drop-shadow(6px 6px 0 rgba(212, 168, 83, 0.04));
+}
+
+.era-section.visible .era-initial {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.era-title {
+  font-family: 'Instrument Serif', serif;
+  font-size: 36px;
+  color: var(--text-primary);
+  font-weight: 400;
+  line-height: 1.1;
+  margin-top: 8px;
+  opacity: 0;
+  transform: translateY(20px);
+  transition: all 0.7s var(--transition-smooth) 0.1s;
+}
+
+.era-section.visible .era-title {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.era-date-range {
+  font-size: 13px;
+  color: var(--text-secondary);
+  letter-spacing: 0.1em;
+  font-weight: 400;
+  margin-top: 10px;
+  font-variant-numeric: tabular-nums;
+  opacity: 0;
+  transform: translateY(15px);
+  transition: all 0.7s var(--transition-smooth) 0.15s;
+}
+
+.era-section.visible .era-date-range {
+  opacity: 0.7;
+  transform: translateY(0);
+}
+
+.era-divider {
+  width: 60px;
+  height: 1px;
+  margin: 20px 0;
+  opacity: 0;
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: all 0.7s var(--transition-smooth) 0.2s;
+}
+
+.era-section.visible .era-divider {
+  opacity: 1;
+  transform: scaleX(1);
+}
+
+.era-show-count {
+  font-size: 11px;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  font-weight: 500;
+  opacity: 0;
+  transform: translateY(10px);
+  transition: all 0.7s var(--transition-smooth) 0.25s;
+}
+
+.era-section.visible .era-show-count {
+  opacity: 0.5;
+  transform: translateY(0);
+}
+
+/* Right column: constellation area */
+.constellation-area {
+  width: 60%;
+  position: relative;
+  min-height: 500px;
+  z-index: 2;
+}
+
+.constellation-svg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.constellation-line {
+  stroke-dasharray: 4 10;
+  stroke-dashoffset: 1000;
+  transition: stroke-dashoffset 2s cubic-bezier(0.25, 0.46, 0.45, 0.94) 0.5s;
+}
+
+.era-section.visible .constellation-line {
+  stroke-dashoffset: 0;
+}
+
+/* ============================
+   STAR NODES — cinema: warm amber glow
+   ============================ */
+.star-node {
+  position: absolute;
+  z-index: 10;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  cursor: pointer;
+  opacity: 0;
+  transform: translate(-50%, -50%) scale(0.5);
+  transition: opacity 0.6s ease, transform 0.6s ease;
+}
+
+.era-section.visible .star-node {
+  opacity: 1;
+  transform: translate(-50%, -50%) scale(1);
+}
+
+.star-glow {
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  position: relative;
+  transition: all 0.35s ease;
+}
+
+.star-glow::before {
+  content: '';
+  position: absolute;
+  inset: -6px;
+  border-radius: 50%;
+  opacity: 0.25;
+  transition: all 0.35s ease;
+}
+
+.star-glow::after {
+  content: '';
+  position: absolute;
+  inset: -14px;
+  border-radius: 50%;
+  opacity: 0;
+  transition: all 0.35s ease;
+}
+
+.star-node:hover .star-glow {
+  transform: scale(1.3);
+}
+
+.star-node:hover .star-glow::after {
+  opacity: 0.15;
+}
+
+.star-node.expanded .star-glow {
+  transform: scale(1.5);
+}
+
+.star-node.expanded .star-glow::after {
+  opacity: 0.25;
+}
+
+.star-node.highlight .star-glow {
+  transform: scale(1.4);
+}
+
+.star-node.highlight .star-glow::after {
+  opacity: 0.2;
+}
+
+.star-title {
+  margin-top: 10px;
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  white-space: nowrap;
+  text-shadow: 0 2px 12px rgba(10, 9, 8, 0.98);
+  color: var(--text-secondary);
+  transition: color 0.3s;
+}
+
+.star-node:hover .star-title,
+.star-node.highlight .star-title {
+  color: var(--text-primary);
+}
+
+.star-dates {
+  font-size: 10px;
+  font-weight: 300;
+  opacity: 0.45;
+  margin-top: 2px;
+  white-space: nowrap;
+  font-variant-numeric: tabular-nums;
+  text-shadow: 0 1px 4px rgba(10, 9, 8, 0.95);
+}
+
+/* ============================
+   DETAIL CARD — cinema ticket / screening card
+   ============================ */
+.detail-card {
+  position: absolute;
+  z-index: 50;
+  width: 310px;
+  background: linear-gradient(145deg, rgba(20, 18, 16, 0.97), rgba(14, 13, 11, 0.98));
+  border: 1px solid rgba(212, 168, 83, 0.12);
+  border-radius: 10px;
+  padding: 0;
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  opacity: 0;
+  transform: translateY(10px) scale(0.96);
+  pointer-events: none;
+  transition: all 0.35s var(--transition-smooth);
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.7), 0 0 0 1px rgba(212, 168, 83, 0.05);
+  overflow: hidden;
+}
+
+/* Top accent bar — projector beam */
+.detail-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  z-index: 1;
+}
+
+.detail-card.visible {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+  pointer-events: auto;
+}
+
+.detail-card-inner {
+  padding: 24px;
+}
+
+.detail-card-header {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  margin-bottom: 14px;
+}
+
+.detail-card-poster {
+  width: 48px;
+  height: 48px;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Instrument Serif', serif;
+  font-size: 24px;
+  color: rgba(255, 255, 255, 0.85);
+  flex-shrink: 0;
+  position: relative;
+}
+
+.detail-card-title-block {
+  flex: 1;
+  min-width: 0;
+}
+
+.detail-card-title {
+  font-family: 'Instrument Serif', serif;
+  font-size: 21px;
+  line-height: 1.2;
+  color: var(--text-primary);
+}
+
+.detail-card-dates {
+  font-size: 12px;
+  font-weight: 300;
+  color: var(--text-secondary);
+  margin-top: 3px;
+  font-variant-numeric: tabular-nums;
+}
+
+.detail-card-stars {
+  color: var(--accent);
+  font-size: 15px;
+  letter-spacing: 2px;
+  margin-bottom: 10px;
+}
+
+.detail-card-platform {
+  display: inline-block;
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  padding: 4px 12px;
+  border-radius: 3px;
+  background: rgba(212, 168, 83, 0.1);
+  color: var(--accent);
+  margin-bottom: 12px;
+  border: 1px solid rgba(212, 168, 83, 0.15);
+}
+
+.detail-card-description {
+  font-size: 13px;
+  line-height: 1.65;
+  color: var(--text-secondary);
+  font-weight: 300;
+  margin-bottom: 14px;
+}
+
+.detail-card-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.tag-pill {
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  padding: 3px 10px;
+  border-radius: 3px;
+  border: 1px solid rgba(212, 168, 83, 0.15);
+  color: var(--text-secondary);
+  background: rgba(212, 168, 83, 0.05);
+  transition: all 0.2s;
+}
+
+.tag-pill:hover {
+  border-color: rgba(212, 168, 83, 0.3);
+  color: var(--accent);
+  background: rgba(212, 168, 83, 0.08);
+}
+
+/* ============================
+   FOOTER
+   ============================ */
+.site-footer {
+  position: relative;
+  z-index: 2;
+  text-align: center;
+  padding: 80px 40px 60px;
+  margin-left: var(--sidebar-w);
+  font-size: 11px;
+  font-weight: 400;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  border-top: 1px solid rgba(212, 168, 83, 0.06);
+}
+
+/* ============================
+   RESPONSIVE
+   ============================ */
+@media (max-width: 900px) {
+  :root {
+    --sidebar-w: 0px;
+    --ruler-h: 0px;
+  }
+
+  .sidebar { display: none; }
+  .time-ruler { display: none; }
+
+  .era-section {
+    flex-direction: column;
+    padding: 40px 0;
+  }
+
+  .era-info {
+    width: 100%;
+    padding: 30px 24px 10px;
+    text-align: center;
+  }
+
+  .era-divider { margin: 16px auto; }
+
+  .constellation-area {
+    width: 100%;
+    min-height: 400px;
+    padding: 0 16px;
+  }
+
+  .site-footer {
+    margin-left: 0;
+    padding: 60px 24px 40px;
+  }
+}
+</style>
+</head>
+<body>
+
+<!-- Projector ambient light -->
+<div class="projector-cone"></div>
+
+<!-- Dust particle canvas (replaces star field) -->
+<canvas id="star-field"></canvas>
+
+<!-- Sidebar -->
+<nav class="sidebar" id="sidebar">
+  <div class="sidebar-header">
+    <div class="sidebar-logo">Frise <em>Serie</em></div>
+    <div class="sidebar-subtitle">Cinema Noir</div>
+  </div>
+  <div class="sidebar-nav" id="sidebar-nav"></div>
+  <div class="sidebar-footer">6 epoques &middot; 17 series</div>
+</nav>
+
+<!-- Time Ruler -->
+<div class="time-ruler">
+  <div class="ruler-track" id="ruler-track"></div>
+</div>
+
+<!-- Main Content -->
+<main class="main-content" id="main-content"></main>
+
+<!-- Footer -->
+<footer class="site-footer">
+  Frise Serie &mdash; Cinema Noir &mdash; 2026
+</footer>
+
+<script>
+// ============================
+// DATA
+// ============================
+const ERAS = [
+  { id: 'antiquite', label: 'Antiquité', dateRange: 'VIIIe s. av. J.-C. — Ve s.', color: '#c49a4a', hue: 38, shows: [
+    { title: 'Spartacus', dates: '73 av. J.-C.', stars: 3, platform: 'Prime Video', description: "L'histoire de Spartacus, gladiateur thrace qui mena la plus célèbre révolte d'esclaves contre la République romaine.", x: 25, y: 35, tags: ['rome', 'révolte', 'esclavage'] },
+    { title: 'Rome', dates: '52 — 44 av. J.-C.', stars: 4, platform: 'Max', description: "Deux soldats romains ordinaires traversent les événements qui ont transformé la République en Empire.", x: 65, y: 60, tags: ['rome', 'politique', 'guerre'] }
+  ]},
+  { id: 'moyen-age', label: 'Moyen Âge', dateRange: 'Ve — XVe s.', color: '#8a7a52', hue: 42, shows: [
+    { title: 'Vikings', dates: '793 — 1002', stars: 4, platform: 'Netflix', description: "L'épopée de Ragnar Lothbrok et de ses fils.", x: 15, y: 25, tags: ['scandinavie', 'angleterre', 'guerre', 'exploration'] },
+    { title: 'The Last Kingdom', dates: '866 — 950', stars: 4, platform: 'Netflix', description: "Uhtred de Bebbanburg, Saxon élevé par les Danois.", x: 45, y: 55, tags: ['angleterre', 'scandinavie', 'guerre', 'identité'] },
+    { title: 'Knightfall', dates: '1306 — 1314', stars: 3, platform: 'Netflix', description: "Les derniers jours de l'ordre des Templiers.", x: 75, y: 30, tags: ['france', 'religion', 'templiers'] },
+    { title: 'Marco Polo', dates: '1271 — 1300', stars: 3, platform: 'Netflix', description: "Le jeune marchand vénitien à la cour de Kublai Khan.", x: 55, y: 75, tags: ['asie', 'exploration', 'italie'] }
+  ]},
+  { id: 'renaissance', label: 'Renaissance', dateRange: 'XVe — XVIe s.', color: '#a85c3c', hue: 18, shows: [
+    { title: 'Les Borgia', dates: '1492 — 1507', stars: 4, platform: 'Canal+', description: "L'ascension de la famille Borgia au sommet de la papauté.", x: 20, y: 40, tags: ['italie', 'religion', 'politique', 'pouvoir'] },
+    { title: 'Les Tudors', dates: '1509 — 1547', stars: 4, platform: 'Prime Video', description: "Le règne tumultueux d'Henri VIII.", x: 55, y: 25, tags: ['angleterre', 'religion', 'pouvoir', 'monarchie'] },
+    { title: 'Reign', dates: '1557 — 1567', stars: 2, platform: 'Netflix', description: "Marie Stuart, reine d'Écosse, arrive à la cour de France.", x: 70, y: 65, tags: ['france', 'écosse', 'monarchie', 'pouvoir'] }
+  ]},
+  { id: 'moderne', label: 'Époque Moderne', dateRange: 'XVIe — XVIIIe s.', color: '#6a7a5a', hue: 90, shows: [
+    { title: 'Shōgun', dates: '1600', stars: 5, platform: 'Disney+', description: "Un navigateur anglais échoue au Japon féodal.", x: 30, y: 30, tags: ['japon', 'angleterre', 'guerre', 'honneur'] },
+    { title: 'Versailles', dates: '1667 — 1715', stars: 4, platform: 'Canal+', description: "Louis XIV impose sa vision absolutiste en bâtissant Versailles.", x: 60, y: 55, tags: ['france', 'monarchie', 'pouvoir', 'politique'] },
+    { title: 'Black Sails', dates: '1715 — 1725', stars: 4, platform: 'Prime Video', description: "Préquel de L'Île au trésor. Le capitaine Flint et ses pirates.", x: 45, y: 80, tags: ['caraïbes', 'piraterie', 'angleterre', 'révolte'] }
+  ]},
+  { id: 'revolutions', label: 'Révolutions', dateRange: 'XVIIIe — XIXe s.', color: '#8c5044', hue: 10, shows: [
+    { title: 'Turn', dates: '1776 — 1783', stars: 3, platform: 'Prime Video', description: "L'histoire vraie du Culper Ring, premier réseau d'espionnage américain.", x: 35, y: 35, tags: ['amérique', 'espionnage', 'guerre', 'révolte'] },
+    { title: 'Les Misérables', dates: '1815 — 1832', stars: 4, platform: 'Arte', description: "L'adaptation fidèle du roman de Victor Hugo.", x: 65, y: 60, tags: ['france', 'révolte', 'justice', 'pauvreté'] }
+  ]},
+  { id: 'guerres', label: 'Guerres mondiales', dateRange: 'XXe s.', color: '#6a6a62', hue: 50, shows: [
+    { title: 'Peaky Blinders', dates: '1919 — 1934', stars: 4, platform: 'Netflix', description: "La famille Shelby, gang de Birmingham, étend son empire criminel.", x: 25, y: 40, tags: ['angleterre', 'crime', 'guerre', 'pouvoir'] },
+    { title: 'Band of Brothers', dates: '1944', stars: 5, platform: 'Max', description: "L'histoire vraie de la Easy Company, 506e régiment d'infanterie parachutiste.", x: 70, y: 55, tags: ['amérique', 'france', 'guerre', 'fraternité'] }
+  ]}
+];
+
+const CENTURIES = [
+  'VIIIe av.', 'Ve av.', 'Ier av.', 'Ve', 'Xe', 'XIIIe', 'XVe', 'XVIe', 'XVIIe', 'XVIIIe', 'XIXe', 'XXe'
+];
+
+const ERA_TO_RULER = {
+  'antiquite': [0, 1, 2],
+  'moyen-age': [3, 4, 5],
+  'renaissance': [6],
+  'moderne': [7, 8],
+  'revolutions': [9, 10],
+  'guerres': [11]
+};
+
+// ============================
+// DUST PARTICLES (cinema projector dust)
+// ============================
+function initStarField() {
+  const canvas = document.getElementById('star-field');
+  const ctx = canvas.getContext('2d');
+  let particles = [];
+
+  function resize() {
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+    generateParticles();
+  }
+
+  function generateParticles() {
+    particles = [];
+    const count = Math.floor((canvas.width * canvas.height) / 5000);
+    for (let i = 0; i < count; i++) {
+      particles.push({
+        x: Math.random() * canvas.width,
+        y: Math.random() * canvas.height,
+        r: Math.random() * 1.0 + 0.15,
+        alpha: Math.random() * 0.25 + 0.03,
+        // Slow drift — dust in a projector beam
+        vx: (Math.random() - 0.5) * 0.08,
+        vy: Math.random() * 0.04 + 0.01,
+        speed: Math.random() * 0.008 + 0.003,
+        phase: Math.random() * Math.PI * 2
+      });
+    }
+  }
+
+  function draw(time) {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    for (const p of particles) {
+      // Drift
+      p.x += p.vx;
+      p.y += p.vy;
+      if (p.y > canvas.height + 5) { p.y = -5; p.x = Math.random() * canvas.width; }
+      if (p.x < -5) p.x = canvas.width + 5;
+      if (p.x > canvas.width + 5) p.x = -5;
+
+      const a = p.alpha + Math.sin(time * p.speed + p.phase) * 0.1;
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+      // Warm amber dust
+      ctx.fillStyle = `rgba(212, 180, 120, ${Math.max(0.02, Math.min(0.4, a))})`;
+      ctx.fill();
+    }
+    requestAnimationFrame(draw);
+  }
+
+  window.addEventListener('resize', resize);
+  resize();
+  requestAnimationFrame(draw);
+}
+
+// ============================
+// HELPERS
+// ============================
+function renderStars(count) {
+  let out = '';
+  for (let i = 1; i <= 5; i++) {
+    out += i <= count ? '★' : '☆';
+  }
+  return out;
+}
+
+function getNebulaGradient(hue) {
+  // Cinema: warm smoky gradients, low saturation
+  return `
+    radial-gradient(ellipse 80% 60% at 20% 30%, hsla(${hue}, 30%, 10%, 0.4) 0%, transparent 70%),
+    radial-gradient(ellipse 60% 50% at 80% 70%, hsla(${(hue + 20) % 360}, 25%, 8%, 0.3) 0%, transparent 70%),
+    radial-gradient(ellipse 90% 40% at 50% 50%, hsla(${hue}, 15%, 6%, 0.25) 0%, transparent 80%)
+  `;
+}
+
+function sharedTags(a, b) {
+  if (!a.tags || !b.tags) return [];
+  return a.tags.filter(t => b.tags.includes(t));
+}
+
+// ============================
+// BUILD RULER
+// ============================
+function buildRuler() {
+  const track = document.getElementById('ruler-track');
+  track.innerHTML = CENTURIES.map(c =>
+    `<div class="ruler-mark"><span>${c}</span></div>`
+  ).join('');
+}
+
+// ============================
+// BUILD SIDEBAR
+// ============================
+function buildSidebar() {
+  const nav = document.getElementById('sidebar-nav');
+  nav.innerHTML = ERAS.map(era =>
+    `<a href="#${era.id}" class="nav-item" data-era="${era.id}">
+      <div class="nav-dot" style="background: ${era.color}; color: ${era.color};"></div>
+      <span class="nav-label">${era.label}</span>
+      <span class="nav-count">${era.shows.length}</span>
+    </a>`
+  ).join('');
+}
+
+// ============================
+// BUILD ERA SECTIONS
+// ============================
+function buildSections() {
+  const main = document.getElementById('main-content');
+
+  main.innerHTML = ERAS.map(era => {
+    const initial = era.label.charAt(0);
+    const nebula = getNebulaGradient(era.hue);
+    const gradientText = `linear-gradient(135deg, ${era.color}, hsl(${era.hue}, 40%, 55%))`;
+
+    return `
+      <section class="era-section" id="${era.id}" data-era="${era.id}">
+        <div class="era-nebula" style="background: ${nebula};"></div>
+        <div class="era-info">
+          <div class="era-initial" style="background: ${gradientText}; -webkit-background-clip: text; background-clip: text;">${initial}</div>
+          <h2 class="era-title">${era.label}</h2>
+          <div class="era-date-range">${era.dateRange}</div>
+          <div class="era-divider" style="background: linear-gradient(90deg, ${era.color}, transparent);"></div>
+          <div class="era-show-count">${era.shows.length} serie${era.shows.length > 1 ? 's' : ''}</div>
+        </div>
+        <div class="constellation-area" id="constellation-${era.id}">
+          <svg class="constellation-svg" id="svg-${era.id}" viewBox="0 0 100 100" preserveAspectRatio="none"></svg>
+        </div>
+      </section>`;
+  }).join('');
+}
+
+// ============================
+// BUILD STAR NODES + CONSTELLATION LINES
+// ============================
+function buildConstellations() {
+  const svgNS = 'http://www.w3.org/2000/svg';
+
+  ERAS.forEach(era => {
+    const container = document.getElementById(`constellation-${era.id}`);
+    const svg = document.getElementById(`svg-${era.id}`);
+
+    for (let i = 0; i < era.shows.length; i++) {
+      for (let j = i + 1; j < era.shows.length; j++) {
+        const shared = sharedTags(era.shows[i], era.shows[j]);
+        if (shared.length === 0) continue;
+
+        const line = document.createElementNS(svgNS, 'line');
+        line.setAttribute('x1', era.shows[i].x);
+        line.setAttribute('y1', era.shows[i].y);
+        line.setAttribute('x2', era.shows[j].x);
+        line.setAttribute('y2', era.shows[j].y);
+        // Warm muted strokes
+        line.setAttribute('stroke', era.color);
+        line.setAttribute('stroke-width', String(0.2 + shared.length * 0.12));
+        line.setAttribute('stroke-opacity', String(Math.min(0.12 + shared.length * 0.08, 0.4)));
+        line.setAttribute('class', 'constellation-line');
+        line.dataset.showA = String(i);
+        line.dataset.showB = String(j);
+        line.dataset.tags = shared.join(',');
+
+        const titleEl = document.createElementNS(svgNS, 'title');
+        titleEl.textContent = shared.join(', ');
+        line.appendChild(titleEl);
+
+        svg.appendChild(line);
+      }
+    }
+
+    era.shows.forEach((show, idx) => {
+      const node = document.createElement('div');
+      node.className = 'star-node';
+      node.style.left = show.x + '%';
+      node.style.top = show.y + '%';
+      node.style.transitionDelay = (0.3 + idx * 0.15) + 's';
+      node.dataset.eraId = era.id;
+      node.dataset.showIdx = String(idx);
+
+      const glowColor = era.color;
+      node.innerHTML = `
+        <div class="star-glow" style="
+          background: ${glowColor};
+          box-shadow: 0 0 10px ${glowColor}, 0 0 3px ${glowColor};
+        ">
+          <div style="position:absolute;inset:-6px;border-radius:50%;background:${glowColor};opacity:0.2;"></div>
+          <div style="position:absolute;inset:-14px;border-radius:50%;background:${glowColor};opacity:0;"></div>
+        </div>
+        <div class="star-title">${show.title}</div>
+        <div class="star-dates">${show.dates}</div>
+      `;
+
+      node.addEventListener('mouseenter', () => {
+        highlightConnections(era.id, idx, true);
+      });
+      node.addEventListener('mouseleave', () => {
+        highlightConnections(era.id, idx, false);
+      });
+
+      node.addEventListener('click', (e) => {
+        e.stopPropagation();
+        toggleDetailCard(era, show, idx, node, container);
+      });
+
+      container.appendChild(node);
+    });
+  });
+}
+
+// ============================
+// HIGHLIGHT CONNECTIONS
+// ============================
+function highlightConnections(eraId, showIdx, highlight) {
+  const svg = document.getElementById(`svg-${eraId}`);
+  const lines = svg.querySelectorAll('.constellation-line');
+  const container = document.getElementById(`constellation-${eraId}`);
+  const nodes = container.querySelectorAll('.star-node');
+  const idx = String(showIdx);
+
+  const connectedIndices = new Set();
+
+  lines.forEach(line => {
+    const a = line.dataset.showA;
+    const b = line.dataset.showB;
+    if (a === idx || b === idx) {
+      if (highlight) {
+        line.setAttribute('stroke-opacity', '0.6');
+        line.style.filter = 'drop-shadow(0 0 3px ' + line.getAttribute('stroke') + ')';
+      } else {
+        const tagCount = line.dataset.tags.split(',').length;
+        line.setAttribute('stroke-opacity', String(Math.min(0.12 + tagCount * 0.08, 0.4)));
+        line.style.filter = '';
+      }
+      connectedIndices.add(a);
+      connectedIndices.add(b);
+    }
+  });
+
+  nodes.forEach(node => {
+    const nodeIdx = node.dataset.showIdx;
+    if (nodeIdx !== idx && connectedIndices.has(nodeIdx)) {
+      if (highlight) {
+        node.classList.add('highlight');
+      } else {
+        node.classList.remove('highlight');
+      }
+    }
+  });
+}
+
+// ============================
+// DETAIL CARD
+// ============================
+let activeCard = null;
+let activeNode = null;
+
+function toggleDetailCard(era, show, showIdx, node, container) {
+  if (activeCard) {
+    activeCard.classList.remove('visible');
+    if (activeNode) activeNode.classList.remove('expanded');
+    const oldCard = activeCard;
+    setTimeout(() => { if (oldCard.parentNode) oldCard.parentNode.removeChild(oldCard); }, 350);
+    if (activeNode === node) {
+      activeCard = null;
+      activeNode = null;
+      return;
+    }
+  }
+
+  const card = document.createElement('div');
+  card.className = 'detail-card';
+
+  const initial = show.title.charAt(0);
+  const tagsHtml = (show.tags || []).map(t => `<span class="tag-pill">${t}</span>`).join('');
+
+  // Top accent bar uses era color
+  card.style.setProperty('--card-accent', era.color);
+  card.querySelector?.('::before')?.style;
+
+  card.innerHTML = `
+    <div style="position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg, ${era.color}, transparent);z-index:1;"></div>
+    <div class="detail-card-inner">
+      <div class="detail-card-header">
+        <div class="detail-card-poster" style="background: ${era.color};">${initial}</div>
+        <div class="detail-card-title-block">
+          <div class="detail-card-title">${show.title}</div>
+          <div class="detail-card-dates">${show.dates}</div>
+        </div>
+      </div>
+      <div class="detail-card-stars">${renderStars(show.stars)}</div>
+      <div class="detail-card-platform">${show.platform}</div>
+      <div class="detail-card-description">${show.description}</div>
+      <div class="detail-card-tags">${tagsHtml}</div>
+    </div>
+  `;
+
+  const nodeRect = node.getBoundingClientRect();
+  const containerRect = container.getBoundingClientRect();
+  const nodeRelX = nodeRect.left - containerRect.left + nodeRect.width / 2;
+  const nodeRelY = nodeRect.top - containerRect.top + nodeRect.height / 2;
+
+  let cardLeft, cardTop;
+  if (show.x > 50) {
+    cardLeft = nodeRelX - 330;
+  } else {
+    cardLeft = nodeRelX + 30;
+  }
+  cardTop = nodeRelY - 50;
+
+  if (cardTop < 10) cardTop = 10;
+  if (cardTop + 320 > containerRect.height) cardTop = containerRect.height - 330;
+  if (cardLeft < 10) cardLeft = 10;
+  if (cardLeft + 310 > containerRect.width) cardLeft = containerRect.width - 320;
+
+  card.style.left = cardLeft + 'px';
+  card.style.top = cardTop + 'px';
+
+  container.appendChild(card);
+  node.classList.add('expanded');
+
+  requestAnimationFrame(() => {
+    requestAnimationFrame(() => {
+      card.classList.add('visible');
+    });
+  });
+
+  activeCard = card;
+  activeNode = node;
+}
+
+document.addEventListener('click', (e) => {
+  if (activeCard && !e.target.closest('.detail-card') && !e.target.closest('.star-node')) {
+    activeCard.classList.remove('visible');
+    if (activeNode) activeNode.classList.remove('expanded');
+    const old = activeCard;
+    setTimeout(() => { if (old.parentNode) old.parentNode.removeChild(old); }, 350);
+    activeCard = null;
+    activeNode = null;
+  }
+});
+
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'Escape' && activeCard) {
+    activeCard.classList.remove('visible');
+    if (activeNode) activeNode.classList.remove('expanded');
+    const old = activeCard;
+    setTimeout(() => { if (old.parentNode) old.parentNode.removeChild(old); }, 350);
+    activeCard = null;
+    activeNode = null;
+  }
+});
+
+// ============================
+// INTERSECTION OBSERVER
+// ============================
+function initObserver() {
+  const sections = document.querySelectorAll('.era-section');
+  const navItems = document.querySelectorAll('.nav-item');
+  const rulerMarks = document.querySelectorAll('.ruler-mark');
+
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      const eraId = entry.target.getAttribute('data-era');
+
+      if (entry.isIntersecting) {
+        entry.target.classList.add('visible');
+
+        navItems.forEach(item => item.classList.remove('active'));
+        const activeNav = document.querySelector(`.nav-item[data-era="${eraId}"]`);
+        if (activeNav) activeNav.classList.add('active');
+
+        rulerMarks.forEach(m => m.classList.remove('active'));
+        const indices = ERA_TO_RULER[eraId] || [];
+        indices.forEach(i => {
+          if (rulerMarks[i]) rulerMarks[i].classList.add('active');
+        });
+      }
+    });
+  }, {
+    threshold: 0.25,
+    rootMargin: '-10% 0px -10% 0px'
+  });
+
+  sections.forEach(section => observer.observe(section));
+}
+
+// ============================
+// NAV SCROLL
+// ============================
+function initNavScroll() {
+  document.querySelectorAll('.nav-item').forEach(item => {
+    item.addEventListener('click', (e) => {
+      e.preventDefault();
+      const target = document.getElementById(item.getAttribute('data-era'));
+      if (target) {
+        target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+    });
+  });
+}
+
+// ============================
+// INIT
+// ============================
+function init() {
+  buildRuler();
+  buildSidebar();
+  buildSections();
+  buildConstellations();
+  initStarField();
+  initObserver();
+  initNavScroll();
+}
+
+document.addEventListener('DOMContentLoaded', init);
+</script>
+</body>
+</html>
