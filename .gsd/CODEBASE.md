@@ -1,7 +1,7 @@
 # Codebase Map
 
-Generated: 2026-07-26T20:12:33Z | Files: 29 | Described: 0/29
-<!-- gsd:codebase-meta {"generatedAt":"2026-07-26T20:12:33Z","fingerprint":"e37965a98965cb56e76792c99a8884166aa3dff1","fileCount":29,"truncated":false} -->
+Generated: 2026-07-26T20:40:30Z | Files: 38 | Described: 0/38
+<!-- gsd:codebase-meta {"generatedAt":"2026-07-26T20:40:30Z","fingerprint":"ec91b8f2fe7c4a80c0d413092189d0b9e9f88d93","fileCount":38,"truncated":false} -->
 
 ### (root)/
 - `.gitignore`
@@ -36,8 +36,19 @@ Generated: 2026-07-26T20:12:33Z | Files: 29 | Described: 0/29
 - `designs/V5A-riftlight.html`
 - `designs/V5B-cinema.html`
 
+### lib/
+- `lib/constants.ts`
+- `lib/density.ts`
+- `lib/filters.ts`
+- `lib/pixelToYear.ts`
+- `lib/yearToDisplay.ts`
+- `lib/yearToPixel.ts`
+
 ### tests/
 - `tests/data-integrity.test.ts`
+- `tests/filters.test.ts`
+- `tests/year-to-display.test.ts`
+- `tests/year-to-pixel.test.ts`
 
 ### types/
 - `types/index.ts`

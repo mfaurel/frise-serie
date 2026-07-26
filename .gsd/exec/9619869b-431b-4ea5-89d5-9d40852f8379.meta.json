@@ -1,0 +1,20 @@
+{
+  "id": "9619869b-431b-4ea5-89d5-9d40852f8379",
+  "runtime": "bash",
+  "purpose": "Rerun year-to-pixel Vitest suite plus tsc after fixing BC transition test",
+  "script_chars": 62,
+  "started_at": "2026-07-26T20:31:14.024Z",
+  "finished_at": "2026-07-26T20:31:22.116Z",
+  "exit_code": 0,
+  "signal": null,
+  "timed_out": false,
+  "aborted": false,
+  "force_resolved": false,
+  "duration_ms": 8092,
+  "stdout_bytes": 467,
+  "stderr_bytes": 0,
+  "stdout_truncated": false,
+  "stderr_truncated": false,
+  "stdout_path": "C:\\workspace\\frise-serie\\.gsd\\exec\\9619869b-431b-4ea5-89d5-9d40852f8379.stdout",
+  "stderr_path": "C:\\workspace\\frise-serie\\.gsd\\exec\\9619869b-431b-4ea5-89d5-9d40852f8379.stderr"
+}

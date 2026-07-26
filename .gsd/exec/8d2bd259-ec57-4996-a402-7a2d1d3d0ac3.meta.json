@@ -1,0 +1,20 @@
+{
+  "id": "8d2bd259-ec57-4996-a402-7a2d1d3d0ac3",
+  "runtime": "bash",
+  "purpose": "T02: final typecheck after removing temp script",
+  "script_chars": 35,
+  "started_at": "2026-07-26T20:26:51.468Z",
+  "finished_at": "2026-07-26T20:26:57.462Z",
+  "exit_code": 0,
+  "signal": null,
+  "timed_out": false,
+  "aborted": false,
+  "force_resolved": false,
+  "duration_ms": 5994,
+  "stdout_bytes": 11,
+  "stderr_bytes": 0,
+  "stdout_truncated": false,
+  "stderr_truncated": false,
+  "stdout_path": "C:\\workspace\\frise-serie\\.gsd\\exec\\8d2bd259-ec57-4996-a402-7a2d1d3d0ac3.stdout",
+  "stderr_path": "C:\\workspace\\frise-serie\\.gsd\\exec\\8d2bd259-ec57-4996-a402-7a2d1d3d0ac3.stderr"
+}

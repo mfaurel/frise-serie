@@ -9,13 +9,13 @@
       "sourceFile": "STATE.md"
     },
     {
-      "id": "concept:phase:refining",
-      "label": "Phase: refining",
+      "id": "concept:phase:validating-milestone",
+      "label": "Phase: validating-milestone",
       "type": "concept",
       "confidence": "EXTRACTED",
       "sourceFile": "STATE.md"
     }
   ],
   "edges": [],
-  "builtAt": "2026-07-26T20:14:10.178Z"
+  "builtAt": "2026-07-26T20:42:23.331Z"
 }

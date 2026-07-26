@@ -1,0 +1,20 @@
+{
+  "id": "40c7c194-3d8b-4f58-853a-ed8347637451",
+  "runtime": "bash",
+  "purpose": "Run new year-to-pixel Vitest suite",
+  "script_chars": 42,
+  "started_at": "2026-07-26T20:30:37.853Z",
+  "finished_at": "2026-07-26T20:30:41.199Z",
+  "exit_code": 1,
+  "signal": null,
+  "timed_out": false,
+  "aborted": false,
+  "force_resolved": false,
+  "duration_ms": 3346,
+  "stdout_bytes": 3488,
+  "stderr_bytes": 954,
+  "stdout_truncated": false,
+  "stderr_truncated": false,
+  "stdout_path": "C:\\workspace\\frise-serie\\.gsd\\exec\\40c7c194-3d8b-4f58-853a-ed8347637451.stdout",
+  "stderr_path": "C:\\workspace\\frise-serie\\.gsd\\exec\\40c7c194-3d8b-4f58-853a-ed8347637451.stderr"
+}

@@ -1,0 +1,15 @@
+
+[31m⎯⎯⎯⎯⎯⎯⎯[39m[1m[41m Failed Tests 1 [49m[22m[31m⎯⎯⎯⎯⎯⎯⎯[39m
+
+[41m[1m FAIL [22m[49m tests/year-to-pixel.test.ts[2m > [22myearToPixel[2m > [22mtreats the BC/AD transition as exactly one year (no year zero), not two
+[31m[1mAssertionError[22m: expected 4.055555606570124 to be close to 4.0543888759582245, received difference is 0.0011667306118994247, but expected 5e-10[39m
+[36m [2m❯[22m tests/year-to-pixel.test.ts:[2m165:37[22m[39m
+    [90m163|[39m     [35mconst[39m pixelAt1AD [33m=[39m [34myearToPixel[39m([34m1[39m[33m,[39m realZones)[33m;[39m
+    [90m164|[39m
+    [90m165|[39m     expect(pixelAt1AD - pixelAt1BC).toBeCloseTo(antiquity.pxPerYear, 9…
+    [90m   |[39m                                     [31m^[39m
+    [90m166|[39m   })[33m;[39m
+    [90m167|[39m
+
+[31m[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯[22m[39m
+

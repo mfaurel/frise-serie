@@ -1,0 +1,20 @@
+{
+  "id": "e5ba7f4e-7aed-453a-ac5d-f5c967f58701",
+  "runtime": "bash",
+  "purpose": "Run filters.test.ts and full test suite, then tsc --noEmit",
+  "script_chars": 57,
+  "started_at": "2026-07-26T20:39:45.765Z",
+  "finished_at": "2026-07-26T20:39:49.351Z",
+  "exit_code": 0,
+  "signal": null,
+  "timed_out": false,
+  "aborted": false,
+  "force_resolved": false,
+  "duration_ms": 3586,
+  "stdout_bytes": 466,
+  "stderr_bytes": 0,
+  "stdout_truncated": false,
+  "stderr_truncated": false,
+  "stdout_path": "C:\\workspace\\frise-serie\\.gsd\\exec\\e5ba7f4e-7aed-453a-ac5d-f5c967f58701.stdout",
+  "stderr_path": "C:\\workspace\\frise-serie\\.gsd\\exec\\e5ba7f4e-7aed-453a-ac5d-f5c967f58701.stderr"
+}

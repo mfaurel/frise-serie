@@ -1,0 +1,20 @@
+{
+  "id": "fe3f7f9b-83d5-41ef-89bc-dcf80cb79aef",
+  "runtime": "bash",
+  "purpose": "T02: run sanity script file against real data (BC dates, era boundaries, Vikings demo, round-trip)",
+  "script_chars": 50,
+  "started_at": "2026-07-26T20:26:34.003Z",
+  "finished_at": "2026-07-26T20:26:37.864Z",
+  "exit_code": 0,
+  "signal": null,
+  "timed_out": false,
+  "aborted": false,
+  "force_resolved": false,
+  "duration_ms": 3861,
+  "stdout_bytes": 464,
+  "stderr_bytes": 0,
+  "stdout_truncated": false,
+  "stderr_truncated": false,
+  "stdout_path": "C:\\workspace\\frise-serie\\.gsd\\exec\\fe3f7f9b-83d5-41ef-89bc-dcf80cb79aef.stdout",
+  "stderr_path": "C:\\workspace\\frise-serie\\.gsd\\exec\\fe3f7f9b-83d5-41ef-89bc-dcf80cb79aef.stderr"
+}
