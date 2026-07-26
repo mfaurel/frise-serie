@@ -1,0 +1,20 @@
+{
+  "id": "174b9fe4-c57f-4406-898e-8e34eed4c7ef",
+  "runtime": "node",
+  "purpose": "T01 sanity check: run buildDensityZones logic against real shows/eras data to confirm monotonic contiguous zones within caps",
+  "script_chars": 2674,
+  "started_at": "2026-07-26T20:21:53.712Z",
+  "finished_at": "2026-07-26T20:21:53.951Z",
+  "exit_code": 0,
+  "signal": null,
+  "timed_out": false,
+  "aborted": false,
+  "force_resolved": false,
+  "duration_ms": 239,
+  "stdout_bytes": 1666,
+  "stderr_bytes": 0,
+  "stdout_truncated": false,
+  "stderr_truncated": false,
+  "stdout_path": "C:\\workspace\\frise-serie\\.gsd\\exec\\174b9fe4-c57f-4406-898e-8e34eed4c7ef.stdout",
+  "stderr_path": "C:\\workspace\\frise-serie\\.gsd\\exec\\174b9fe4-c57f-4406-898e-8e34eed4c7ef.stderr"
+}

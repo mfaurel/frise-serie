@@ -1,10 +1,10 @@
 {
   "schema": 2,
   "lastWriter": "gsd-pi",
-  "lastProjectedAt": "2026-07-26T20:10:34.091Z",
+  "lastProjectedAt": "2026-07-26T20:22:10.194Z",
   "projections": {
     "phases/01-data-foundation-and-yeartopixel/01-ROADMAP.md": {
-      "sha": "af57a8aa03979363",
+      "sha": "ac16de4d5985d7c6",
       "entities": [
         "M001"
       ]
@@ -58,10 +58,17 @@
       ]
     },
     "phases/01-data-foundation-and-yeartopixel/01-01-PLAN.md": {
-      "sha": "b43d210610b28272",
+      "sha": "592d9ae5f682752e",
       "entities": [
         "M001",
         "M001/S01"
+      ]
+    },
+    "phases/01-data-foundation-and-yeartopixel/01-02-PLAN.md": {
+      "sha": "9dd0e42eeaf337e5",
+      "entities": [
+        "M001",
+        "M001/S02"
       ]
     }
   },

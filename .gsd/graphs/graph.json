@@ -1,0 +1,21 @@
+{
+  "nodes": [
+    {
+      "id": "milestone:M001",
+      "label": "M001: Data Foundation and yearToPixel",
+      "type": "milestone",
+      "description": "Active milestone: M001",
+      "confidence": "EXTRACTED",
+      "sourceFile": "STATE.md"
+    },
+    {
+      "id": "concept:phase:refining",
+      "label": "Phase: refining",
+      "type": "concept",
+      "confidence": "EXTRACTED",
+      "sourceFile": "STATE.md"
+    }
+  ],
+  "edges": [],
+  "builtAt": "2026-07-26T20:14:10.178Z"
+}

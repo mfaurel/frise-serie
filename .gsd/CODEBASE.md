@@ -1,7 +1,7 @@
 # Codebase Map
 
-Generated: 2026-07-26T17:05:30Z | Files: 25 | Described: 0/25
-<!-- gsd:codebase-meta {"generatedAt":"2026-07-26T17:05:30Z","fingerprint":"1459c0404b8253e2b6d3c1e9ad60f93be7c1804b","fileCount":25,"truncated":false} -->
+Generated: 2026-07-26T20:12:33Z | Files: 29 | Described: 0/29
+<!-- gsd:codebase-meta {"generatedAt":"2026-07-26T20:12:33Z","fingerprint":"e37965a98965cb56e76792c99a8884166aa3dff1","fileCount":29,"truncated":false} -->
 
 ### (root)/
 - `.gitignore`
@@ -18,6 +18,11 @@ Generated: 2026-07-26T17:05:30Z | Files: 25 | Described: 0/25
 - `UX-DESIGN.md`
 - `vitest.config.ts`
 
+### data/
+- `data/eras.ts`
+- `data/events.ts`
+- `data/shows.ts`
+
 ### designs/
 - `designs/A-vertical-editorial.html`
 - `designs/B-constellation-map.html`
@@ -30,6 +35,9 @@ Generated: 2026-07-26T17:05:30Z | Files: 25 | Described: 0/25
 - `designs/V5-atlas-editorial.html`
 - `designs/V5A-riftlight.html`
 - `designs/V5B-cinema.html`
+
+### tests/
+- `tests/data-integrity.test.ts`
 
 ### types/
 - `types/index.ts`
