@@ -1,15 +1,22 @@
 # Codebase Map
 
-Generated: 2026-07-26T14:35:44Z | Files: 17 | Described: 0/17
-<!-- gsd:codebase-meta {"generatedAt":"2026-07-26T14:35:44Z","fingerprint":"abac6bd49e93525588d320787fabcbbb8e19f984","fileCount":17,"truncated":false} -->
+Generated: 2026-07-26T17:05:30Z | Files: 25 | Described: 0/25
+<!-- gsd:codebase-meta {"generatedAt":"2026-07-26T17:05:30Z","fingerprint":"1459c0404b8253e2b6d3c1e9ad60f93be7c1804b","fileCount":25,"truncated":false} -->
 
 ### (root)/
+- `.gitignore`
 - `.mcp.json`
 - `ARCHITECTURE.md`
 - `ERA-ILLUSTRATION-PROMPTS.md`
+- `package-lock.json`
+- `package.json`
 - `PRD.md`
+- `TECHNICAL.md`
 - `todo.md`
+- `tsconfig.json`
+- `tsconfig.tsbuildinfo`
 - `UX-DESIGN.md`
+- `vitest.config.ts`
 
 ### designs/
 - `designs/A-vertical-editorial.html`
@@ -23,3 +30,6 @@ Generated: 2026-07-26T14:35:44Z | Files: 17 | Described: 0/17
 - `designs/V5-atlas-editorial.html`
 - `designs/V5A-riftlight.html`
 - `designs/V5B-cinema.html`
+
+### types/
+- `types/index.ts`
