@@ -1,0 +1,20 @@
+{
+  "id": "5686c4d6-11d3-4a0e-9d0b-7351e210882d",
+  "runtime": "bash",
+  "purpose": "T03 final typecheck after removing temporary verification test",
+  "script_chars": 16,
+  "started_at": "2026-07-26T20:10:15.421Z",
+  "finished_at": "2026-07-26T20:10:19.719Z",
+  "exit_code": 0,
+  "signal": null,
+  "timed_out": false,
+  "aborted": false,
+  "force_resolved": false,
+  "duration_ms": 4298,
+  "stdout_bytes": 0,
+  "stderr_bytes": 0,
+  "stdout_truncated": false,
+  "stderr_truncated": false,
+  "stdout_path": "C:\\workspace\\frise-serie\\.gsd\\exec\\5686c4d6-11d3-4a0e-9d0b-7351e210882d.stdout",
+  "stderr_path": "C:\\workspace\\frise-serie\\.gsd\\exec\\5686c4d6-11d3-4a0e-9d0b-7351e210882d.stderr"
+}

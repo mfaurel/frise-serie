@@ -1,0 +1,20 @@
+{
+  "id": "e19b89d2-9de4-4d0b-b8a7-e91700b6e040",
+  "runtime": "bash",
+  "purpose": "T03 typecheck of data/shows.ts, data/eras.ts, data/events.ts",
+  "script_chars": 16,
+  "started_at": "2026-07-26T20:09:26.126Z",
+  "finished_at": "2026-07-26T20:09:31.925Z",
+  "exit_code": 0,
+  "signal": null,
+  "timed_out": false,
+  "aborted": false,
+  "force_resolved": false,
+  "duration_ms": 5799,
+  "stdout_bytes": 0,
+  "stderr_bytes": 0,
+  "stdout_truncated": false,
+  "stderr_truncated": false,
+  "stdout_path": "C:\\workspace\\frise-serie\\.gsd\\exec\\e19b89d2-9de4-4d0b-b8a7-e91700b6e040.stdout",
+  "stderr_path": "C:\\workspace\\frise-serie\\.gsd\\exec\\e19b89d2-9de4-4d0b-b8a7-e91700b6e040.stderr"
+}
