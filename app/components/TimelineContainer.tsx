@@ -9,10 +9,10 @@ export default function TimelineContainer() {
   const totalWidth = zones[zones.length - 1].pixelEnd;
 
   return (
-    <div data-testid="timeline-scroll" className="overflow-x-auto w-full" style={{ height: 80 }}>
+    <div data-testid="timeline-scroll" className="overflow-y-auto w-full" style={{ height: "100vh" }}>
       <div
         data-testid="timeline-inner"
-        style={{ width: totalWidth, position: "relative", height: "100%" }}
+        style={{ height: totalWidth, width: "100%", position: "relative" }}
       >
         {eras.map((era) => {
           const px = yearToPixel(era.yearStart, zones);
@@ -24,7 +24,7 @@ export default function TimelineContainer() {
             <span
               key={era.id}
               data-testid="year-label"
-              style={{ position: "absolute", left: px, top: 4 }}
+              style={{ position: "absolute", top: px, left: 8 }}
               className="text-xs text-white/70 select-none"
             >
               {label}

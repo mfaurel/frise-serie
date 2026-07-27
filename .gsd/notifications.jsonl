@@ -138,3 +138,4 @@
 {"id":"2f3c3883-184a-4c37-8022-84ad7d68ec57","ts":"2026-07-27T15:48:17.006Z","severity":"error","message":"Safety: task T02 claimed passing verification that failed in recorded execution","source":"notify","read":false}
 {"id":"b128cf4e-f559-4500-b8fd-e965c31f6421","ts":"2026-07-27T15:48:17.063Z","severity":"info","message":"Auto-mode paused (Escape). Type to interact, or /gsd auto to resume.","source":"notify","read":false}
 {"id":"f26a7a94-1540-488e-a66f-59c0419132d8","ts":"2026-07-27T15:52:27.667Z","severity":"info","message":"GSD: backfilled 4 decisions into the memory store.","source":"notify","read":false}
+{"id":"5b0f9d1d-cb33-45a5-9c71-6f76cfbbbdc4","ts":"2026-07-27T20:06:56.200Z","severity":"info","message":"Auto-mode resumed.","source":"notify","read":false}
