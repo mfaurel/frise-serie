@@ -3,16 +3,16 @@
     "gsd-workflow": {
       "command": "C:\\Program Files\\nodejs\\node.exe",
       "args": [
-        "C:\\Users\\Deuskull\\AppData\\Roaming\\npm\\node_modules\\@opengsd\\gsd-pi\\packages\\mcp-server\\dist\\cli.js"
+        "C:\\Users\\mfaurel\\AppData\\Roaming\\npm\\node_modules\\@opengsd\\gsd-pi\\packages\\mcp-server\\dist\\cli.js"
       ],
-      "cwd": "C:\\workspace\\frise-serie",
+      "cwd": "C:\\workspace\\github\\frise-serie",
       "env": {
-        "GSD_CLI_PATH": "C:\\Users\\Deuskull\\AppData\\Roaming\\npm\\node_modules\\@opengsd\\gsd-pi\\dist\\loader.js",
-        "GSD_BIN_PATH": "C:\\Users\\Deuskull\\AppData\\Roaming\\npm\\node_modules\\@opengsd\\gsd-pi\\dist\\loader.js",
-        "GSD_WORKFLOW_EXECUTORS_MODULE": "C:\\Users\\Deuskull\\.gsd\\agent\\extensions\\gsd\\tools\\workflow-tool-executors.js",
-        "GSD_WORKFLOW_WRITE_GATE_MODULE": "C:\\Users\\Deuskull\\.gsd\\agent\\extensions\\gsd\\bootstrap\\write-gate.js",
+        "GSD_CLI_PATH": "C:\\Users\\mfaurel\\AppData\\Roaming\\npm\\node_modules\\@opengsd\\gsd-pi\\dist\\loader.js",
+        "GSD_BIN_PATH": "C:\\Users\\mfaurel\\AppData\\Roaming\\npm\\node_modules\\@opengsd\\gsd-pi\\dist\\loader.js",
+        "GSD_WORKFLOW_EXECUTORS_MODULE": "C:\\Users\\mfaurel\\.gsd\\agent\\extensions\\gsd\\tools\\workflow-tool-executors.js",
+        "GSD_WORKFLOW_WRITE_GATE_MODULE": "C:\\Users\\mfaurel\\.gsd\\agent\\extensions\\gsd\\bootstrap\\write-gate.js",
         "GSD_PERSIST_WRITE_GATE_STATE": "1",
-        "GSD_WORKFLOW_PROJECT_ROOT": "C:\\workspace\\frise-serie"
+        "GSD_WORKFLOW_PROJECT_ROOT": "C:\\workspace\\github\\frise-serie"
       }
     },
     "gsd-browser": {
@@ -20,15 +20,15 @@
       "args": [
         "mcp",
         "--session",
-        "gsd-frise-serie-c96e3ae7",
+        "gsd-frise-serie-8f85fd48",
         "--identity-scope",
         "project",
         "--identity-key",
-        "gsd-frise-serie-c96e3ae7",
+        "gsd-frise-serie-8f85fd48",
         "--identity-project",
-        "gsd-frise-serie-c96e3ae7"
+        "gsd-frise-serie-8f85fd48"
       ],
-      "cwd": "C:\\workspace\\frise-serie"
+      "cwd": "C:\\workspace\\github\\frise-serie"
     }
   }
 }
