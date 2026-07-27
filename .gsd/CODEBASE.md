@@ -1,16 +1,18 @@
 # Codebase Map
 
-Generated: 2026-07-27T15:31:48Z | Files: 43 | Described: 0/43
-<!-- gsd:codebase-meta {"generatedAt":"2026-07-27T15:31:48Z","fingerprint":"b4914a2d7aa649eacefb3837b9987bea49c6091a","fileCount":43,"truncated":false} -->
+Generated: 2026-07-27T15:55:25Z | Files: 48 | Described: 0/48
+<!-- gsd:codebase-meta {"generatedAt":"2026-07-27T15:55:25Z","fingerprint":"3deae9d3ac8d5376e52f8d4daf0df60a2bb85277","fileCount":48,"truncated":false} -->
 
 ### (root)/
 - `.gitignore`
 - `.mcp.json`
 - `ARCHITECTURE.md`
 - `ERA-ILLUSTRATION-PROMPTS.md`
+- `next-env.d.ts`
 - `next.config.ts`
 - `package-lock.json`
 - `package.json`
+- `playwright.config.ts`
 - `postcss.config.mjs`
 - `PRD.md`
 - `TECHNICAL.md`
@@ -24,6 +26,9 @@ Generated: 2026-07-27T15:31:48Z | Files: 43 | Described: 0/43
 - `app/globals.css`
 - `app/layout.tsx`
 - `app/page.tsx`
+
+### app/components/
+- `app/components/TimelineContainer.tsx`
 
 ### data/
 - `data/eras.ts`
@@ -42,6 +47,10 @@ Generated: 2026-07-27T15:31:48Z | Files: 43 | Described: 0/43
 - `designs/V5-atlas-editorial.html`
 - `designs/V5A-riftlight.html`
 - `designs/V5B-cinema.html`
+
+### e2e/
+- `e2e/smoke.spec.ts`
+- `e2e/timeline-s02.spec.ts`
 
 ### lib/
 - `lib/constants.ts`

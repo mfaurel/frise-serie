@@ -61,6 +61,8 @@ tmp/
 .gsd/DISCUSSION-MANIFEST.json
 .gsd/milestones/**/*-CONTINUE.md
 .gsd/milestones/**/continue.md
+.gsd/exec/
+.gsd/last-snapshot.md
 # Playwright
 test-results/
 playwright-report/

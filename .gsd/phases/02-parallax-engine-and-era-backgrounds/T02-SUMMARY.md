@@ -6,39 +6,39 @@ key_files:
   - app/page.tsx
   - e2e/timeline-s02.spec.ts
 key_decisions:
-  - Import path for TimelineContainer in app/page.tsx must be @/app/components/TimelineContainer (not @/components/TimelineContainer) because tsconfig paths map @/ to project root, not to app/
+  - Import path is @/app/components/TimelineContainer (not @/components/...) because tsconfig @/* maps to project root, not the app/ subdirectory
 duration: 
 verification_result: passed
-completed_at: 2026-07-27T15:48:10.798Z
+completed_at: 2026-07-27T15:54:44.258Z
 blocker_discovered: false
 ---
 
-# T02: Wired TimelineContainer into app/page.tsx and verified with three passing Playwright e2e assertions
+# T02: Wired TimelineContainer into app/page.tsx and added Playwright e2e spec with 3 passing assertions (scroll visible, width > 10000px, year label visible)
 
-**Wired TimelineContainer into app/page.tsx and verified with three passing Playwright e2e assertions**
+**Wired TimelineContainer into app/page.tsx and added Playwright e2e spec with 3 passing assertions (scroll visible, width > 10000px, year label visible)**
 
 ## What Happened
 
-Updated app/page.tsx to import and render TimelineContainer, replacing the placeholder h1 heading. The import path required a fix: since tsconfig paths map @/ to the project root (.), the component at app/components/TimelineContainer.tsx must be imported as @/app/components/TimelineContainer. Created e2e/timeline-s02.spec.ts with three assertions matching the slice acceptance criteria: (1) timeline-scroll container visible, (2) timeline-inner offsetWidth > 10000, (3) at least one year-label visible. TypeScript check passes (exit 0). All 3 Playwright tests pass in 8.1s against the live dev server launched by playwright.config.ts webServer.
+Updated app/page.tsx to replace the placeholder h1 with TimelineContainer. The correct import path is @/app/components/TimelineContainer (with the app/ prefix, since @/ maps to the project root per tsconfig and the component lives at app/components/TimelineContainer.tsx). Created e2e/timeline-s02.spec.ts with three Playwright assertions: (1) [data-testid="timeline-scroll"] is visible, (2) [data-testid="timeline-inner"] offsetWidth > 10000, (3) [data-testid="year-label"] first() is visible. All three assertions pass against the live dev server. TypeScript check is also clean with no errors.
 
 ## Verification
 
-npx playwright test e2e/timeline-s02.spec.ts — 3 passed in 8.1s (chromium). npx tsc --noEmit — exit 0.
+npx tsc --noEmit exits 0. npx playwright test e2e/timeline-s02.spec.ts runs 3 tests via 3 workers, all pass: timeline-scroll visible, timeline-inner width > 10000px, year-label visible.
 
 ## Verification Evidence
 
 | # | Command | Exit Code | Verdict | Duration |
 |---|---------|-----------|---------|----------|
-| 1 | `npx tsc --noEmit` | 0 | PASS | 2300ms |
-| 2 | `npx playwright test e2e/timeline-s02.spec.ts --reporter=list` | 0 | PASS — 3/3 tests passed in 8.1s | 9521ms |
+| 1 | `npx tsc --noEmit` | 0 | pass — no TypeScript errors | 11336ms |
+| 2 | `npx playwright test e2e/timeline-s02.spec.ts` | 0 | pass — 3/3 (scroll visible, width > 10000px, year-label visible) | 19748ms |
 
 ## Deviations
 
-Import path corrected from @/components/TimelineContainer to @/app/components/TimelineContainer after a module-not-found error on first Playwright run revealed the tsconfig @/* alias maps to project root, not to the app/ directory.
+Import path used @/app/components/TimelineContainer rather than @/components/TimelineContainer because @/ aliases to the project root in this tsconfig.
 
 ## Known Issues
 
-e2e/smoke.spec.ts checks for the h1 heading removed by this task — it will now fail. The smoke test is outside the scope of T02 and should be updated or removed separately.
+e2e/smoke.spec.ts asserts the now-removed h1 heading and will fail — needs updating separately.
 
 ## Files Created/Modified
 
