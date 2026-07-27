@@ -2,15 +2,6 @@
 
 **Vision:** Establish the core data layer (typed show/era/event data) and the yearToPixel density algorithm that maps historical years to pixel positions — the critical-path blocker for all visual components.
 
-## Success Criteria
-
-- TypeScript interfaces for Show, Era, HistoricalEvent, Genre, Region, Platform match PRD data model
-- Static data files with ~50 shows, 6+ eras, 20+ historical events
-- yearToPixel and pixelToYear functions pass unit tests including BC dates, era boundaries, and density edge cases
-- buildDensityZones produces correct non-linear mapping from show distribution
-- yearToDisplay formats BC dates correctly in FR and EN
-- All pure functions tested with Vitest — 100% branch coverage on yearToPixel
-
 ## Slices
 
 - [x] **S01: TypeScript types and static data files** `risk:low` `depends:[]`

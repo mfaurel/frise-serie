@@ -1,81 +1,190 @@
 {
   "schema": 2,
   "lastWriter": "gsd-pi",
-  "lastProjectedAt": "2026-07-26T20:42:23.275Z",
+  "lastProjectedAt": "2026-07-27T15:48:10.821Z",
   "projections": {
     "phases/01-data-foundation-and-yeartopixel/01-ROADMAP.md": {
-      "sha": "1b910a2625ed29e0",
+      "sha": "48c5d43059e2cb0e",
       "entities": [
         "M001"
       ]
     },
     "phases/02-parallax-engine-and-era-backgrounds/02-ROADMAP.md": {
-      "sha": "07906aaebee8460a",
+      "sha": "316dcf9de15236f2",
       "entities": [
         "M002"
       ]
     },
     "phases/03-show-cards/03-ROADMAP.md": {
-      "sha": "f51c82aac2f08cb8",
+      "sha": "90278cb68bbf54eb",
       "entities": [
         "M003"
       ]
     },
     "phases/04-historical-events-and-flashbacks/04-ROADMAP.md": {
-      "sha": "28af2683a8690393",
+      "sha": "924e6b98cd83f778",
       "entities": [
         "M004"
       ]
     },
     "phases/05-detail-panel/05-ROADMAP.md": {
-      "sha": "65dee068d5523ac6",
+      "sha": "d2544a494920df68",
       "entities": [
         "M005"
       ]
     },
     "phases/06-filters-search-and-navigation/06-ROADMAP.md": {
-      "sha": "fcec87807a4c0d9f",
+      "sha": "9c67677160c31de5",
       "entities": [
         "M006"
       ]
     },
     "phases/07-bilingual-routing-and-i18n/07-ROADMAP.md": {
-      "sha": "276c380745b12eb2",
+      "sha": "3107f74482080ddb",
       "entities": [
         "M007"
       ]
     },
     "phases/08-mobile-polish-and-wcag-aa/08-ROADMAP.md": {
-      "sha": "395f6e0d094e6bc1",
+      "sha": "94383acfba8abf04",
       "entities": [
         "M008"
       ]
     },
     "phases/09-data-completion-and-seo/09-ROADMAP.md": {
-      "sha": "1d2aca815ab0f6dd",
+      "sha": "20bf7348b7d1d2e1",
       "entities": [
         "M009"
       ]
     },
     "phases/01-data-foundation-and-yeartopixel/01-01-PLAN.md": {
-      "sha": "592d9ae5f682752e",
+      "sha": "4712b62263059d67",
       "entities": [
         "M001",
         "M001/S01"
       ]
     },
     "phases/01-data-foundation-and-yeartopixel/01-02-PLAN.md": {
-      "sha": "b249b8169f3b529f",
+      "sha": "b4efdbdbf23651e9",
       "entities": [
         "M001",
         "M001/S02"
       ]
     },
     "phases/01-data-foundation-and-yeartopixel/01-03-PLAN.md": {
-      "sha": "bf0d47f965b96d83",
+      "sha": "567bf39bee5713b9",
       "entities": [
         "M001",
         "M001/S03"
+      ]
+    },
+    "phases/02-parallax-engine-and-era-backgrounds/T01-PLAN.md": {
+      "sha": "256aa1c289840db9",
+      "entities": [
+        "M002",
+        "M002/S01",
+        "M002/S01/T01"
+      ]
+    },
+    "phases/02-parallax-engine-and-era-backgrounds/02-01-PLAN.md": {
+      "sha": "3ad8f8931a2e5695",
+      "entities": [
+        "M002",
+        "M002/S01"
+      ]
+    },
+    "phases/02-parallax-engine-and-era-backgrounds/T02-PLAN.md": {
+      "sha": "695aca836419a133",
+      "entities": [
+        "M002",
+        "M002/S01",
+        "M002/S01/T02"
+      ]
+    },
+    "phases/01-data-foundation-and-yeartopixel/01-01-ASSESSMENT.md": {
+      "sha": "d0e2aa49566e0288",
+      "entities": [
+        "M001",
+        "M001/S01"
+      ]
+    },
+    "phases/01-data-foundation-and-yeartopixel/01-01-SUMMARY.md": {
+      "sha": "572d6dff8ac39da2",
+      "entities": [
+        "M001",
+        "M001/S01"
+      ]
+    },
+    "phases/01-data-foundation-and-yeartopixel/01-01-UAT.md": {
+      "sha": "6ac0ebe91da7e9ae",
+      "entities": [
+        "M001",
+        "M001/S01"
+      ]
+    },
+    "phases/01-data-foundation-and-yeartopixel/01-02-ASSESSMENT.md": {
+      "sha": "500cb74977680bf4",
+      "entities": [
+        "M001",
+        "M001/S02"
+      ]
+    },
+    "phases/01-data-foundation-and-yeartopixel/01-02-SUMMARY.md": {
+      "sha": "a5d57614fa8ca3af",
+      "entities": [
+        "M001",
+        "M001/S02"
+      ]
+    },
+    "phases/01-data-foundation-and-yeartopixel/01-02-UAT.md": {
+      "sha": "a8fcb118e2980497",
+      "entities": [
+        "M001",
+        "M001/S02"
+      ]
+    },
+    "phases/01-data-foundation-and-yeartopixel/01-03-ASSESSMENT.md": {
+      "sha": "aa8b07250047765b",
+      "entities": [
+        "M001",
+        "M001/S03"
+      ]
+    },
+    "phases/01-data-foundation-and-yeartopixel/01-03-SUMMARY.md": {
+      "sha": "f478ecf1dd6db195",
+      "entities": [
+        "M001",
+        "M001/S03"
+      ]
+    },
+    "phases/01-data-foundation-and-yeartopixel/01-03-UAT.md": {
+      "sha": "8a37d0bac1203524",
+      "entities": [
+        "M001",
+        "M001/S03"
+      ]
+    },
+    "phases/02-parallax-engine-and-era-backgrounds/tasks/T01-PLAN.md": {
+      "sha": "1be4fb3701813a51",
+      "entities": [
+        "M002",
+        "M002/S02",
+        "M002/S02/T01"
+      ]
+    },
+    "phases/02-parallax-engine-and-era-backgrounds/tasks/T02-PLAN.md": {
+      "sha": "86c26e24f5ec42e0",
+      "entities": [
+        "M002",
+        "M002/S02",
+        "M002/S02/T02"
+      ]
+    },
+    "phases/02-parallax-engine-and-era-backgrounds/02-02-PLAN.md": {
+      "sha": "07df771bd47bfca7",
+      "entities": [
+        "M002",
+        "M002/S02"
       ]
     }
   },

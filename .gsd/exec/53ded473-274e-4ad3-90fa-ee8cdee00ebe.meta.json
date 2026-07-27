@@ -1,0 +1,20 @@
+{
+  "id": "53ded473-274e-4ad3-90fa-ee8cdee00ebe",
+  "runtime": "node",
+  "purpose": "Check src directory, lib contents, and installed node_modules for Next/Playwright",
+  "script_chars": 1073,
+  "started_at": "2026-07-27T15:25:33.260Z",
+  "finished_at": "2026-07-27T15:25:33.325Z",
+  "exit_code": 0,
+  "signal": null,
+  "timed_out": false,
+  "aborted": false,
+  "force_resolved": false,
+  "duration_ms": 65,
+  "stdout_bytes": 500,
+  "stderr_bytes": 0,
+  "stdout_truncated": false,
+  "stderr_truncated": false,
+  "stdout_path": "C:\\workspace\\github\\frise-serie\\.gsd\\exec\\53ded473-274e-4ad3-90fa-ee8cdee00ebe.stdout",
+  "stderr_path": "C:\\workspace\\github\\frise-serie\\.gsd\\exec\\53ded473-274e-4ad3-90fa-ee8cdee00ebe.stderr"
+}

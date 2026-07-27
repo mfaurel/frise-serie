@@ -1,0 +1,6 @@
+typecheck stdout: 
+> frise-serie@0.1.0 typecheck
+> tsc --noEmit
+
+
+EXIT:0 PASS

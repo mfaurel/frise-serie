@@ -1,0 +1,20 @@
+{
+  "id": "60b12818-fa3e-4157-b465-b0953c73363a",
+  "runtime": "bash",
+  "purpose": "Check out/ directory and node_modules/@playwright status",
+  "script_chars": 202,
+  "started_at": "2026-07-27T15:32:35.189Z",
+  "finished_at": "2026-07-27T15:32:35.191Z",
+  "exit_code": -4058,
+  "signal": null,
+  "timed_out": false,
+  "aborted": false,
+  "force_resolved": false,
+  "duration_ms": 2,
+  "stdout_bytes": 0,
+  "stderr_bytes": 31,
+  "stdout_truncated": false,
+  "stderr_truncated": false,
+  "stdout_path": "C:\\workspace\\github\\frise-serie\\.gsd\\exec\\60b12818-fa3e-4157-b465-b0953c73363a.stdout",
+  "stderr_path": "C:\\workspace\\github\\frise-serie\\.gsd\\exec\\60b12818-fa3e-4157-b465-b0953c73363a.stderr"
+}

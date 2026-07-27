@@ -1,21 +1,21 @@
 {
   "nodes": [
     {
-      "id": "milestone:M001",
-      "label": "M001: Data Foundation and yearToPixel",
+      "id": "milestone:M002",
+      "label": "M002: Parallax Engine and Era Backgrounds",
       "type": "milestone",
-      "description": "Active milestone: M001",
+      "description": "Active milestone: M002",
       "confidence": "EXTRACTED",
       "sourceFile": "STATE.md"
     },
     {
-      "id": "concept:phase:validating-milestone",
-      "label": "Phase: validating-milestone",
+      "id": "concept:phase:refining",
+      "label": "Phase: refining",
       "type": "concept",
       "confidence": "EXTRACTED",
       "sourceFile": "STATE.md"
     }
   ],
   "edges": [],
-  "builtAt": "2026-07-26T20:42:23.331Z"
+  "builtAt": "2026-07-27T15:37:47.463Z"
 }

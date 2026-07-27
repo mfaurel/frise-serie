@@ -1,0 +1,20 @@
+{
+  "id": "0b575aeb-ff15-4d7a-a4bf-3c067eadb85d",
+  "runtime": "node",
+  "purpose": "Scout project root structure on Windows",
+  "script_chars": 1062,
+  "started_at": "2026-07-27T15:25:18.304Z",
+  "finished_at": "2026-07-27T15:25:18.402Z",
+  "exit_code": 0,
+  "signal": null,
+  "timed_out": false,
+  "aborted": false,
+  "force_resolved": false,
+  "duration_ms": 98,
+  "stdout_bytes": 1171,
+  "stderr_bytes": 0,
+  "stdout_truncated": false,
+  "stderr_truncated": false,
+  "stdout_path": "C:\\workspace\\github\\frise-serie\\.gsd\\exec\\0b575aeb-ff15-4d7a-a4bf-3c067eadb85d.stdout",
+  "stderr_path": "C:\\workspace\\github\\frise-serie\\.gsd\\exec\\0b575aeb-ff15-4d7a-a4bf-3c067eadb85d.stderr"
+}

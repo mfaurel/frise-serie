@@ -1,15 +1,17 @@
 # Codebase Map
 
-Generated: 2026-07-26T20:40:30Z | Files: 38 | Described: 0/38
-<!-- gsd:codebase-meta {"generatedAt":"2026-07-26T20:40:30Z","fingerprint":"ec91b8f2fe7c4a80c0d413092189d0b9e9f88d93","fileCount":38,"truncated":false} -->
+Generated: 2026-07-27T15:31:48Z | Files: 43 | Described: 0/43
+<!-- gsd:codebase-meta {"generatedAt":"2026-07-27T15:31:48Z","fingerprint":"b4914a2d7aa649eacefb3837b9987bea49c6091a","fileCount":43,"truncated":false} -->
 
 ### (root)/
 - `.gitignore`
 - `.mcp.json`
 - `ARCHITECTURE.md`
 - `ERA-ILLUSTRATION-PROMPTS.md`
+- `next.config.ts`
 - `package-lock.json`
 - `package.json`
+- `postcss.config.mjs`
 - `PRD.md`
 - `TECHNICAL.md`
 - `todo.md`
@@ -17,6 +19,11 @@ Generated: 2026-07-26T20:40:30Z | Files: 38 | Described: 0/38
 - `tsconfig.tsbuildinfo`
 - `UX-DESIGN.md`
 - `vitest.config.ts`
+
+### app/
+- `app/globals.css`
+- `app/layout.tsx`
+- `app/page.tsx`
 
 ### data/
 - `data/eras.ts`

@@ -1,0 +1,7 @@
+src/ exists: false
+lib contents: constants.ts, density.ts, filters.ts, pixelToYear.ts, yearToDisplay.ts, yearToPixel.ts
+types contents: index.ts
+next installed: false
+playwright installed: false
+node_modules exists: false
+designs contents: A-vertical-editorial.html, B-constellation-map.html, C-film-strip.html, D-geological-strata.html, V1-celestial-editorial.html, V2-cosmic-magazine.html, V3-stellar-atlas.html, V4-noir-chronicle.html, V5-atlas-editorial.html, V5A-riftlight.html, V5B-cinema.html

@@ -1,0 +1,28 @@
+{
+  "id": "0b082019-54a8-4d7d-81f4-6b9abae3d31a",
+  "runtime": "node",
+  "purpose": "UAT M002/S01/TC2-playwright-smoke (uat-runtime-check)",
+  "metadata": {
+    "kind": "uat_exec",
+    "milestoneId": "M002",
+    "sliceId": "S01",
+    "checkId": "TC2-playwright-smoke",
+    "intent": "uat-runtime-check",
+    "expected": "Playwright auto-starts dev server, navigates to /, title Frise Serie and h1 visible. Exit 0, 1 passed."
+  },
+  "script_chars": 447,
+  "started_at": "2026-07-27T15:38:43.726Z",
+  "finished_at": "2026-07-27T15:38:57.524Z",
+  "exit_code": 1,
+  "signal": null,
+  "timed_out": false,
+  "aborted": false,
+  "force_resolved": false,
+  "duration_ms": 13798,
+  "stdout_bytes": 1607,
+  "stderr_bytes": 0,
+  "stdout_truncated": false,
+  "stderr_truncated": false,
+  "stdout_path": "C:\\workspace\\github\\frise-serie\\.gsd\\exec\\0b082019-54a8-4d7d-81f4-6b9abae3d31a.stdout",
+  "stderr_path": "C:\\workspace\\github\\frise-serie\\.gsd\\exec\\0b082019-54a8-4d7d-81f4-6b9abae3d31a.stderr"
+}

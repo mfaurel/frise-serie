@@ -1,0 +1,11 @@
+[PASS] out/index.html exists
+[INFO] out/ directory files: 404, 404.html, index.html, index.txt, _next, _not-found, __next._full.txt, __next._head.txt, __next._index.txt, __next._tree.txt
+[PASS] playwright.config.ts exists
+[PASS] e2e/smoke.spec.ts exists
+[PASS] next.config.ts has output: export
+[PASS] app/layout.tsx exists
+[PASS] app/page.tsx exists
+[PASS] package.json has build script: next build
+[PASS] package.json has typecheck script: tsc --noEmit
+
+Total: 8 pass, 0 fail

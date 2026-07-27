@@ -1,6 +1,5 @@
 # Queue
 
-- 🔄 **M001: Data Foundation and yearToPixel**
 - 🔄 **M002: Parallax Engine and Era Backgrounds**
 - 🔄 **M003: Show Cards**
 - 🔄 **M004: Historical Events and Flashbacks**

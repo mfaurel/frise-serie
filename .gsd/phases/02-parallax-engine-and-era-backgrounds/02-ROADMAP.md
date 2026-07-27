@@ -4,10 +4,10 @@
 
 ## Slices
 
-- [ ] **S01: Next.js project scaffold with App Router and static export** `[sketch]` `risk:low` `depends:[]`
+- [x] **S01: Next.js project scaffold with App Router and static export** `risk:low` `depends:[]`
   > After this: npm run build produces static HTML in out/, dev server runs at localhost:3000
 
-- [ ] **S02: Horizontal scroll container with yearToPixel width** `[sketch]` `risk:medium` `depends:[S01]`
+- [ ] **S02: Horizontal scroll container with yearToPixel width** `risk:medium` `depends:[S01]`
   > After this: Timeline container scrolls horizontally, total width matches sum of density zones, year axis labels appear at correct positions
 
 - [ ] **S03: 3-layer parallax with era nebula backgrounds** `[sketch]` `risk:high` `depends:[S02]`

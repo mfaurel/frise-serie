@@ -1,0 +1,20 @@
+{
+  "id": "b6d7b5c5-7e92-4de2-ab7a-a214785a5156",
+  "runtime": "node",
+  "purpose": "Verify out/index.html produced by static build",
+  "script_chars": 635,
+  "started_at": "2026-07-27T15:34:28.386Z",
+  "finished_at": "2026-07-27T15:34:28.433Z",
+  "exit_code": 0,
+  "signal": null,
+  "timed_out": false,
+  "aborted": false,
+  "force_resolved": false,
+  "duration_ms": 47,
+  "stdout_bytes": 298,
+  "stderr_bytes": 0,
+  "stdout_truncated": false,
+  "stderr_truncated": false,
+  "stdout_path": "C:\\workspace\\github\\frise-serie\\.gsd\\exec\\b6d7b5c5-7e92-4de2-ab7a-a214785a5156.stdout",
+  "stderr_path": "C:\\workspace\\github\\frise-serie\\.gsd\\exec\\b6d7b5c5-7e92-4de2-ab7a-a214785a5156.stderr"
+}

@@ -1,8 +1,8 @@
-# GSD context snapshot (2026-07-26T22:24:47.768Z)
+# GSD context snapshot (2026-07-27T15:35:14.209Z)
 
-## Top project memories
-- [MEM006] (architecture) yearToPixel/pixelToYear handle TECHNICAL.md's "no year zero" convention by converting historical years to a continuous astronomical scale internally (year>0 ? year-1 : year, and its inverse) only for the interpolation fraction within a zone — zone lookup and buildDensityZones' stored pxPerYear/pixelStart/pixelEnd stay on raw historical years. Only the "antiquity" era zone crosses the BC/AD boundary in this dataset, so this only perturbs that one zone's effective px/year by ~0.03% (3475 vs 3476 elapsed years) while keeping era-boundary pixel continuity and exact pixelToYear(yearToPixel(y)) === y round-trips.
-- [MEM007] (gotcha) When testing yearToPixel/pixelToYear across the BC/AD boundary zone, the expected pixel rate must be computed from the zone's effective px-per-astronomical-year (pixelSpan/astroSpan via toAstronomicalYear), not the zone's stored raw pxPerYear — those differ by ~0.03% for the one zone (antiquity era) that straddles year 0, since buildDensityZones keeps raw historical-year spans while yearToPixel's interpolation fraction uses the no-year-zero astronomical scale internally.
-- [MEM004] (architecture) Where does data/density.ts (precomputed zones) get built, and when in the roadmap? Chose: S02 implements only the pure lib functions (lib/constants.ts, lib/density.ts, lib/yearToPixel.ts, lib/pixelToYear.ts) parameterized by an explicit totalWidth argument. data/density.ts (a precomputed …. Rationale: totalWidth is a layout/viewport concern that no slice has established yet (no Timeline component exists). Precomputing zones against a guessed width now would bake in a number no consumer confirmed; ….
-- [MEM005] (architecture) Which Show field feeds density placement (show count per era) in buildDensityZones? Chose: Use Show.narrativeYearStart (the year the show's story is set in) to bucket a show into an era, not broadcastYearStart (the year it aired).. Rationale: The timeline 
-…[truncated]
+## Recent gsd_exec runs
+- [b6d7b5c5-7e92-4de2-ab7a-a214785a5156] node exit:0 — Verify out/index.html produced by static build
+- [b9324366-cc34-43da-a2ae-57a3b3f44ba5] node exit:0 — Check out/ directory and playwright install status on Windows
+- [60b12818-fa3e-4157-b465-b0953c73363a] bash exit:-4058 — Check out/ directory and node_modules/@playwright status
+- [e854206b-94e7-4c95-a689-3eb16bfa3dd0] node exit:0 — T01 verification — npm run typecheck exits 0
+- [cdf588ea-65a3-4340-822e-6358978c9d1b] bash exit:-4058 — Install project dependencies via npm install

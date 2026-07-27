@@ -1,0 +1,131 @@
+{
+  "runId": "uat:M002:S01:attempt-1",
+  "attempt": 1,
+  "milestoneId": "M002",
+  "sliceId": "S01",
+  "uatType": "runtime-executable",
+  "verdict": "PASS",
+  "gateVerdict": "pass",
+  "evaluatedAt": "2026-07-27T15:41:03.218Z",
+  "worktreeRoot": "C:\\workspace\\github\\frise-serie",
+  "browserToolsPresented": false,
+  "modePolicy": {
+    "browserTools": false,
+    "partialEligible": false,
+    "passWithHumanFollowUp": false,
+    "requiredAnyModes": [
+      "runtime"
+    ]
+  },
+  "checks": [
+    {
+      "id": "TC1-static-export-artifact",
+      "description": "Static export artifact check: out/index.html present and non-empty; out/404.html present; out/_next/ present",
+      "mode": "artifact",
+      "result": "PASS",
+      "evidence": [
+        {
+          "kind": "gsd_uat_exec",
+          "ref": "02e33a27-884c-42e4-af63-1447a866154a"
+        }
+      ],
+      "notes": "out/index.html 5306 bytes, out/404.html 7642 bytes, out/_next present with 2 entries. Top-level out/ contains: 404, 404.html, index.html, index.txt, _next, _not-found and Next.js tree/head txt files."
+    },
+    {
+      "id": "TC2-playwright-smoke",
+      "description": "Playwright smoke test — dev server render: npx playwright test e2e/smoke.spec.ts exits 0 with 1 passed; page title Frise Serie and h1 visible",
+      "mode": "runtime",
+      "result": "PASS",
+      "evidence": [
+        {
+          "kind": "gsd_uat_exec",
+          "ref": "091299ba-7528-4131-8b03-d118123b8f74",
+          "note": "npx playwright install chromium — binaries installed (precondition)"
+        },
+        {
+          "kind": "gsd_uat_exec",
+          "ref": "0b082019-54a8-4d7d-81f4-6b9abae3d31a",
+          "note": "First run failed: missing binaries (documented edge case — expected first-run setup)"
+        },
+        {
+          "kind": "gsd_uat_exec",
+          "ref": "084e5295-3796-4b8d-b11c-7d73dca7893a",
+          "note": "After install: 1 passed (22.9s) — smoke test confirmed"
+        }
+      ],
+      "notes": "After installing Chromium binaries (npx playwright install chromium), the smoke test ran successfully: 1 passed (22.9s). Dev server auto-started via webServer block. Title and h1 assertions passed."
+    },
+    {
+      "id": "TC3-typecheck",
+      "description": "TypeScript type-check: npm run typecheck (tsc --noEmit) exits 0 with no diagnostic output",
+      "mode": "runtime",
+      "result": "PASS",
+      "evidence": [
+        {
+          "kind": "gsd_uat_exec",
+          "ref": "b13bacb2-b48b-4688-8ea6-d6dce2d4f3e2"
+        }
+      ],
+      "notes": "npm run typecheck (tsc --noEmit) exited 0 with no diagnostic output. TypeScript baseline is clean."
+    }
+  ],
+  "presentation": {
+    "surface": "mcp",
+    "presentedTools": [
+      "gsd_uat_exec",
+      "gsd_uat_result_save",
+      "gsd_resume",
+      "gsd_milestone_status",
+      "gsd_journal_query",
+      "find",
+      "glob",
+      "grep",
+      "ls",
+      "read"
+    ],
+    "blockedTools": [
+      {
+        "name": "edit",
+        "reason": "forbidden during run-uat"
+      },
+      {
+        "name": "write",
+        "reason": "forbidden during run-uat"
+      },
+      {
+        "name": "gsd_exec",
+        "reason": "forbidden during run-uat"
+      },
+      {
+        "name": "gsd_summary_save",
+        "reason": "forbidden during run-uat"
+      },
+      {
+        "name": "gsd_save_gate_result",
+        "reason": "forbidden during run-uat"
+      },
+      {
+        "name": "search-the-web",
+        "reason": "forbidden during run-uat"
+      },
+      {
+        "name": "WebSearch",
+        "reason": "forbidden during run-uat"
+      },
+      {
+        "name": "Bash",
+        "reason": "forbidden during run-uat"
+      },
+      {
+        "name": "Write",
+        "reason": "forbidden during run-uat"
+      },
+      {
+        "name": "Edit",
+        "reason": "forbidden during run-uat"
+      }
+    ],
+    "toolPresentationPlanId": "run-uat/default-v1"
+  },
+  "notes": "All three automatable checks passed: static export artifacts present and non-empty, TypeScript type-check exits 0, and Playwright smoke test (1 passed, 22.9s) confirmed dev server renders page title and h1 heading correctly after installing Chromium binaries."
+}

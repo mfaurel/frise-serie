@@ -1,0 +1,28 @@
+{
+  "id": "b13bacb2-b48b-4688-8ea6-d6dce2d4f3e2",
+  "runtime": "node",
+  "purpose": "UAT M002/S01/TC3-typecheck (uat-runtime-check)",
+  "metadata": {
+    "kind": "uat_exec",
+    "milestoneId": "M002",
+    "sliceId": "S01",
+    "checkId": "TC3-typecheck",
+    "intent": "uat-runtime-check",
+    "expected": "tsc --noEmit exits 0 with no diagnostic output"
+  },
+  "script_chars": 381,
+  "started_at": "2026-07-27T15:38:32.781Z",
+  "finished_at": "2026-07-27T15:38:34.648Z",
+  "exit_code": 0,
+  "signal": null,
+  "timed_out": false,
+  "aborted": false,
+  "force_resolved": false,
+  "duration_ms": 1867,
+  "stdout_bytes": 79,
+  "stderr_bytes": 0,
+  "stdout_truncated": false,
+  "stderr_truncated": false,
+  "stdout_path": "C:\\workspace\\github\\frise-serie\\.gsd\\exec\\b13bacb2-b48b-4688-8ea6-d6dce2d4f3e2.stdout",
+  "stderr_path": "C:\\workspace\\github\\frise-serie\\.gsd\\exec\\b13bacb2-b48b-4688-8ea6-d6dce2d4f3e2.stderr"
+}
