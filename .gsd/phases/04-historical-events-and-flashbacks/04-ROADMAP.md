@@ -2,14 +2,6 @@
 
 **Vision:** Add historical event markers on the timeline axis (Fall of Rome, French Revolution, etc.) and flashback badges on shows that span multiple eras, creating contextual anchors that connect fiction to real history.
 
-## Success Criteria
-
-- Historical event markers appear at correct yearToPixel positions on the axis layer
-- Event tooltips show name and year in current locale
-- Flashback badges on shows link to secondary time positions
-- Events use distinct visual style (pin/diamond) vs show cards (star nodes)
-- Events integrate with the parallax axis layer (0.6x speed)
-
 ## Slices
 
 - [ ] **S01: Historical event markers on axis layer** `[sketch]` `risk:low` `depends:[]`

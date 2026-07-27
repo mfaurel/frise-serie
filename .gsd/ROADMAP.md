@@ -2,7 +2,7 @@
 
 ## Milestones
 
-- 🔄 **M001: Data Foundation and yearToPixel** (`depends:[—]`)
+- ✅ **M001: Data Foundation and yearToPixel** (`depends:[—]`)
 - 🔄 **M002: Parallax Engine and Era Backgrounds** (`depends:[—]`)
 - 🔄 **M003: Show Cards** (`depends:[—]`)
 - 🔄 **M004: Historical Events and Flashbacks** (`depends:[—]`)

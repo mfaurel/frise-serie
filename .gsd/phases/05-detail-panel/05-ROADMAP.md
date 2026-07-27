@@ -1,15 +1,6 @@
 # M005: Detail Panel
 
-**Vision:** Build the show detail panel with two modes: bottom sheet (click from timeline) and modal popin (deep link via URL), displaying historical synopsis, streaming links, accuracy score, similar shows, and Wikipedia link.
-
-## Success Criteria
-
-- Bottom sheet slides up on card click with show details
-- Modal popin opens on direct URL navigation (e.g., /fr/show/vikings)
-- Detail panel shows: poster, title, dates, historical synopsis, accuracy stars, platform links, Wikipedia link, similar shows
-- Escape key and overlay click close the panel
-- Focus is trapped in panel when open, returns to card on close
-- Panel content is bilingual (FR/EN based on locale)
+**Vision:** Build the show detail panel driven by a nuqs ?panel= query param — bottom sheet on card click, deep-linkable via URL — displaying historical synopsis, accuracy stars, streaming links, similar shows, and Wikipedia link.
 
 ## Slices
 

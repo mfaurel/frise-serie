@@ -2,16 +2,6 @@
 
 **Vision:** Expand the show dataset to 100+ series, add SEO metadata (Open Graph, structured data, sitemap), and deploy to GitHub Pages with the CI/CD pipeline.
 
-## Success Criteria
-
-- 100+ shows in the static dataset with balanced era coverage
-- Open Graph meta tags on all pages (title, description, image)
-- JSON-LD structured data for shows (schema.org/TVSeries)
-- Sitemap.xml generated at build time
-- GitHub Actions CI/CD pipeline deploys to GitHub Pages on push to main
-- Lighthouse SEO score 90+
-- All shows have bilingual historicalContext entries
-
 ## Slices
 
 - [ ] **S01: Expand dataset to 100+ shows** `[sketch]` `risk:medium` `depends:[]`
