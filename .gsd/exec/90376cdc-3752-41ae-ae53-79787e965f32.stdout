@@ -1,4 +1,0 @@
-5:  it("formats the roadmap demo year (-73) in French", () => {
-6:    expect(yearToDisplay(-73, "fr")).toBe("73 av. J.-C.");
-9:  it("formats the roadmap demo year (-73) in English", () => {
-10:    expect(yearToDisplay(-73, "en")).toBe("73 BC");

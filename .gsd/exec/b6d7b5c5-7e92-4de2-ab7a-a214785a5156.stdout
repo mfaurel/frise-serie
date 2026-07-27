@@ -1,5 +1,0 @@
-out/index.html exists: true
-out/ contents: 404, 404.html, index.html, index.txt, _next, _not-found, __next._full.txt, __next._head.txt, __next._index.txt, __next._tree.txt, __next.__PAGE__.txt
-playwright.config.ts exists: true
-e2e/smoke.spec.ts exists: true
-.gitignore has playwright entries: true

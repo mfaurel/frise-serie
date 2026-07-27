@@ -1,7 +1,0 @@
-STDOUT:           |  70% of 114.5 MiB
-|■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■                |  80% of 114.5 MiB
-|■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■        |  90% of 114.5 MiB
-|■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■| 100% of 114.5 MiB
-Chrome Headless Shell 151.0.7922.34 (playwright chromium-headless-shell v1234) downloaded to C:\Users\mfaurel\AppData\Local\ms-playwright\chromium_headless_shell-1234
-
-PASS: playwright install chromium completed

@@ -1,9 +1,0 @@
-
-Running 3 tests using 3 workers
-
-  ok 2 [chromium] › e2e\timeline-s02.spec.ts:3:1 › timeline-scroll container is visible (1.7s)
-  ok 3 [chromium] › e2e\timeline-s02.spec.ts:14:1 › at least one year-label is visible (1.6s)
-  ok 1 [chromium] › e2e\timeline-s02.spec.ts:8:1 › timeline-inner width is greater than 10000px (1.8s)
-
-  3 passed (17.4s)
-

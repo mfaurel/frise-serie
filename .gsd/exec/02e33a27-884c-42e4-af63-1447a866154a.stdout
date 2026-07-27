@@ -1,4 +1,0 @@
-PASS: out/index.html 5306 bytes
-PASS: out/404.html 7642 bytes
-PASS: out/_next present, entries: 2
-out/ top-level: 404, 404.html, index.html, index.txt, _next, _not-found, __next._full.txt, __next._head.txt, __next._index.txt, __next._tree.txt, __next.__PAGE__.txt

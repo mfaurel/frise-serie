@@ -1,3 +1,0 @@
-out/ exists: false
-out/index.html exists: false
-@playwright/test installed: false
