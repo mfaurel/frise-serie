@@ -1,46 +1,46 @@
 ---
 id: T02
-parent: S02
+parent: S03
 milestone: M002
 key_files:
-  - app/page.tsx
-  - e2e/timeline-s02.spec.ts
+  - e2e/timeline-s03.spec.ts
+  - e2e/smoke.spec.ts
 key_decisions:
-  - Import path is @/app/components/TimelineContainer (not @/components/...) because tsconfig @/* maps to project root, not the app/ subdirectory
+  - Scroll transform test dispatches native Event('scroll') after setting scrollLeft — React attaches onScroll directly to the element (not delegated), so the handler fires synchronously and the transform is readable in the same evaluate call
+  - smoke.spec.ts retains the title assertion (toHaveTitle(/Frise Série/)) which still passes; only the broken heading role check is replaced
 duration: 
 verification_result: passed
-completed_at: 2026-07-27T15:54:44.258Z
+completed_at: 2026-07-27T20:22:23.314Z
 blocker_discovered: false
 ---
 
-# T02: Wired TimelineContainer into app/page.tsx and added Playwright e2e spec with 3 passing assertions (scroll visible, width > 10000px, year label visible)
+# T02: Created e2e/timeline-s03.spec.ts with 5 passing parallax assertions and fixed stale smoke.spec.ts heading check
 
-**Wired TimelineContainer into app/page.tsx and added Playwright e2e spec with 3 passing assertions (scroll visible, width > 10000px, year label visible)**
+**Created e2e/timeline-s03.spec.ts with 5 passing parallax assertions and fixed stale smoke.spec.ts heading check**
 
 ## What Happened
 
-Updated app/page.tsx to replace the placeholder h1 with TimelineContainer. The correct import path is @/app/components/TimelineContainer (with the app/ prefix, since @/ maps to the project root per tsconfig and the component lives at app/components/TimelineContainer.tsx). Created e2e/timeline-s02.spec.ts with three Playwright assertions: (1) [data-testid="timeline-scroll"] is visible, (2) [data-testid="timeline-inner"] offsetWidth > 10000, (3) [data-testid="year-label"] first() is visible. All three assertions pass against the live dev server. TypeScript check is also clean with no errors.
+Created `e2e/timeline-s03.spec.ts` with 5 assertions covering all three parallax layers (parallax-bg, parallax-axis, parallax-cards visibility), era-bg count (9), and scroll-driven transform behavior (scrollLeft=500 → `translateX(350px)` matching the 0.7x multiplier in handleScroll). Updated `e2e/smoke.spec.ts` to replace the broken heading assertion (`getByRole('heading', { name: 'Frise Série' })`) with a `[data-testid="timeline-scroll"]` visibility check, renamed to "page loads without error". All 5 new spec assertions passed on first run (chromium, 10.8s).
 
 ## Verification
 
-npx tsc --noEmit exits 0. npx playwright test e2e/timeline-s02.spec.ts runs 3 tests via 3 workers, all pass: timeline-scroll visible, timeline-inner width > 10000px, year-label visible.
+npx playwright test e2e/timeline-s03.spec.ts --reporter=line — 5 passed in 10.8s, exit 0
 
 ## Verification Evidence
 
 | # | Command | Exit Code | Verdict | Duration |
 |---|---------|-----------|---------|----------|
-| 1 | `npx tsc --noEmit` | 0 | pass — no TypeScript errors | 11336ms |
-| 2 | `npx playwright test e2e/timeline-s02.spec.ts` | 0 | pass — 3/3 (scroll visible, width > 10000px, year-label visible) | 19748ms |
+| 1 | `npx playwright test e2e/timeline-s03.spec.ts --reporter=line` | 0 | 5 passed (parallax-bg visible, parallax-axis visible, parallax-cards visible, era-bg count=9, scroll transform=translateX(350px)) | 12478ms |
 
 ## Deviations
 
-Import path used @/app/components/TimelineContainer rather than @/components/TimelineContainer because @/ aliases to the project root in this tsconfig.
+none
 
 ## Known Issues
 
-e2e/smoke.spec.ts asserts the now-removed h1 heading and will fail — needs updating separately.
+none
 
 ## Files Created/Modified
 
-- `app/page.tsx`
-- `e2e/timeline-s02.spec.ts`
+- `e2e/timeline-s03.spec.ts`
+- `e2e/smoke.spec.ts`

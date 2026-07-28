@@ -1,0 +1,151 @@
+{
+  "runId": "uat:M002:S03:attempt-1",
+  "attempt": 1,
+  "milestoneId": "M002",
+  "sliceId": "S03",
+  "uatType": "runtime-executable",
+  "verdict": "PASS",
+  "gateVerdict": "pass",
+  "evaluatedAt": "2026-07-27T20:29:19.007Z",
+  "worktreeRoot": "C:\\workspace\\github\\frise-serie",
+  "browserToolsPresented": false,
+  "modePolicy": {
+    "browserTools": false,
+    "partialEligible": false,
+    "passWithHumanFollowUp": false,
+    "requiredAnyModes": [
+      "runtime"
+    ]
+  },
+  "checks": [
+    {
+      "id": "s03-layers-visible",
+      "description": "Three parallax layers (parallax-bg, parallax-axis, parallax-cards) present and visible in the DOM",
+      "mode": "runtime",
+      "result": "PASS",
+      "evidence": [
+        {
+          "kind": "gsd_uat_exec",
+          "ref": "bbc02f02-8276-4148-b760-ade95ba2fcae",
+          "note": "Tests [1/5],[2/5],[3/5] all passed — parallax-bg, parallax-axis, parallax-cards each visible"
+        }
+      ],
+      "notes": "e2e/timeline-s03.spec.ts:3:1, :8:1, :13:1 — all 3 layer-visibility assertions passed (5 passed total in 6.6s)"
+    },
+    {
+      "id": "s03-era-bg-count",
+      "description": "Era backgrounds — exactly 9 distinct [data-testid=\"era-bg\"] gradient elements",
+      "mode": "runtime",
+      "result": "PASS",
+      "evidence": [
+        {
+          "kind": "gsd_uat_exec",
+          "ref": "bbc02f02-8276-4148-b760-ade95ba2fcae",
+          "note": "Test [4/5] passed — era-bg count equals 9"
+        }
+      ],
+      "notes": "e2e/timeline-s03.spec.ts:18:1 — era-bg count assertion passed"
+    },
+    {
+      "id": "s03-scroll-transform",
+      "description": "Scroll drives parallax-bg transform at 0.7× offset — scrollLeft=500 yields translateX(350px)",
+      "mode": "runtime",
+      "result": "PASS",
+      "evidence": [
+        {
+          "kind": "gsd_uat_exec",
+          "ref": "bbc02f02-8276-4148-b760-ade95ba2fcae",
+          "note": "Test [5/5] passed — scroll drives parallax-bg transform"
+        }
+      ],
+      "notes": "e2e/timeline-s03.spec.ts:24:1 — scroll transform assertion passed with workers=1"
+    },
+    {
+      "id": "s03-s02-regression",
+      "description": "S02 regression — timeline-scroll visible, timeline-inner width >10000px, year-label visible (3 tests)",
+      "mode": "runtime",
+      "result": "PASS",
+      "evidence": [
+        {
+          "kind": "gsd_uat_exec",
+          "ref": "b4049771-9b2c-4249-8585-80a2314d07c6",
+          "note": "3 passed (6.2s)"
+        }
+      ],
+      "notes": "e2e/timeline-s02.spec.ts — all 3 S02 regression tests passed"
+    },
+    {
+      "id": "s03-smoke-regression",
+      "description": "Smoke regression — page loads without error, title matches /Frise Série/, timeline-scroll visible",
+      "mode": "runtime",
+      "result": "PASS",
+      "evidence": [
+        {
+          "kind": "gsd_uat_exec",
+          "ref": "f233093c-4d39-4245-8b32-be93a8e17a61",
+          "note": "1 passed (4.3s)"
+        }
+      ],
+      "notes": "e2e/smoke.spec.ts — smoke test passed"
+    }
+  ],
+  "presentation": {
+    "surface": "mcp",
+    "presentedTools": [
+      "gsd_uat_exec",
+      "gsd_uat_result_save",
+      "gsd_resume",
+      "gsd_milestone_status",
+      "gsd_journal_query",
+      "find",
+      "glob",
+      "grep",
+      "ls",
+      "read"
+    ],
+    "blockedTools": [
+      {
+        "name": "edit",
+        "reason": "forbidden during run-uat"
+      },
+      {
+        "name": "write",
+        "reason": "forbidden during run-uat"
+      },
+      {
+        "name": "gsd_exec",
+        "reason": "forbidden during run-uat"
+      },
+      {
+        "name": "gsd_summary_save",
+        "reason": "forbidden during run-uat"
+      },
+      {
+        "name": "gsd_save_gate_result",
+        "reason": "forbidden during run-uat"
+      },
+      {
+        "name": "search-the-web",
+        "reason": "forbidden during run-uat"
+      },
+      {
+        "name": "WebSearch",
+        "reason": "forbidden during run-uat"
+      },
+      {
+        "name": "Bash",
+        "reason": "forbidden during run-uat"
+      },
+      {
+        "name": "Write",
+        "reason": "forbidden during run-uat"
+      },
+      {
+        "name": "Edit",
+        "reason": "forbidden during run-uat"
+      }
+    ],
+    "toolPresentationPlanId": "run-uat/default-v1"
+  },
+  "notes": "All 9 Playwright assertions passed (5 S03 parallax checks + 3 S02 regression checks + 1 smoke check); no failures or flakiness observed at workers=1."
+}

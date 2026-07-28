@@ -1,0 +1,133 @@
+{
+  "runId": "uat:M002:S02:attempt-1",
+  "attempt": 1,
+  "milestoneId": "M002",
+  "sliceId": "S02",
+  "uatType": "runtime-executable",
+  "verdict": "PASS",
+  "gateVerdict": "pass",
+  "evaluatedAt": "2026-07-27T20:15:04.914Z",
+  "worktreeRoot": "C:\\workspace\\github\\frise-serie",
+  "browserToolsPresented": false,
+  "modePolicy": {
+    "browserTools": false,
+    "partialEligible": false,
+    "passWithHumanFollowUp": false,
+    "requiredAnyModes": [
+      "runtime"
+    ]
+  },
+  "checks": [
+    {
+      "id": "scroll-container-visible",
+      "description": "timeline-scroll container is rendered and visible in the DOM",
+      "mode": "runtime",
+      "result": "PASS",
+      "evidence": [
+        {
+          "kind": "gsd_uat_exec",
+          "ref": "ea54f55e-679f-4c77-8fa5-0721710f9197"
+        }
+      ],
+      "notes": "Playwright test '[chromium] › e2e/timeline-s02.spec.ts:3:1 › timeline-scroll container is visible' passed. All 3 tests passed in 6.9s."
+    },
+    {
+      "id": "inner-div-width-gt-10000",
+      "description": "Inner div offsetWidth is greater than 10000 (matches density-zone total)",
+      "mode": "runtime",
+      "result": "PASS",
+      "evidence": [
+        {
+          "kind": "gsd_uat_exec",
+          "ref": "ea54f55e-679f-4c77-8fa5-0721710f9197"
+        }
+      ],
+      "notes": "Playwright test '[chromium] › e2e/timeline-s02.spec.ts:8:1 › timeline-inner width is greater than 10000px' passed."
+    },
+    {
+      "id": "year-label-present",
+      "description": "At least one [data-testid='year-label'] element is visible in the scroll container",
+      "mode": "runtime",
+      "result": "PASS",
+      "evidence": [
+        {
+          "kind": "gsd_uat_exec",
+          "ref": "ea54f55e-679f-4c77-8fa5-0721710f9197"
+        }
+      ],
+      "notes": "Playwright test '[chromium] › e2e/timeline-s02.spec.ts:14:1 › at least one year-label is visible' passed."
+    },
+    {
+      "id": "typecheck-clean",
+      "description": "npm run typecheck exits 0 with zero diagnostics — confirms Server Component wiring is type-safe",
+      "mode": "runtime",
+      "result": "PASS",
+      "evidence": [
+        {
+          "kind": "gsd_uat_exec",
+          "ref": "6e0ac333-4086-4a9e-b32e-b4f50463eade"
+        }
+      ],
+      "notes": "tsc --noEmit exited 0 with no output — zero TypeScript diagnostics."
+    }
+  ],
+  "presentation": {
+    "surface": "mcp",
+    "presentedTools": [
+      "gsd_uat_exec",
+      "gsd_uat_result_save",
+      "gsd_resume",
+      "gsd_milestone_status",
+      "gsd_journal_query",
+      "find",
+      "glob",
+      "grep",
+      "ls",
+      "read"
+    ],
+    "blockedTools": [
+      {
+        "name": "edit",
+        "reason": "forbidden during run-uat"
+      },
+      {
+        "name": "write",
+        "reason": "forbidden during run-uat"
+      },
+      {
+        "name": "gsd_exec",
+        "reason": "forbidden during run-uat"
+      },
+      {
+        "name": "gsd_summary_save",
+        "reason": "forbidden during run-uat"
+      },
+      {
+        "name": "gsd_save_gate_result",
+        "reason": "forbidden during run-uat"
+      },
+      {
+        "name": "search-the-web",
+        "reason": "forbidden during run-uat"
+      },
+      {
+        "name": "WebSearch",
+        "reason": "forbidden during run-uat"
+      },
+      {
+        "name": "Bash",
+        "reason": "forbidden during run-uat"
+      },
+      {
+        "name": "Write",
+        "reason": "forbidden during run-uat"
+      },
+      {
+        "name": "Edit",
+        "reason": "forbidden during run-uat"
+      }
+    ],
+    "toolPresentationPlanId": "run-uat/default-v1"
+  },
+  "notes": "All 3 Playwright assertions passed (scroll container visible, inner width > 10000px, year label present) and tsc --noEmit exited 0 with zero diagnostics."
+}
