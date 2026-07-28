@@ -1,13 +1,14 @@
 # Codebase Map
 
-Generated: 2026-07-27T15:55:25Z | Files: 48 | Described: 0/48
-<!-- gsd:codebase-meta {"generatedAt":"2026-07-27T15:55:25Z","fingerprint":"3deae9d3ac8d5376e52f8d4daf0df60a2bb85277","fileCount":48,"truncated":false} -->
+Generated: 2026-07-28T08:27:56Z | Files: 51 | Described: 0/51
+<!-- gsd:codebase-meta {"generatedAt":"2026-07-28T08:27:56Z","fingerprint":"40373438a419cdb128250524656b4b5fa37c70fd","fileCount":51,"truncated":false} -->
 
 ### (root)/
 - `.gitignore`
 - `.mcp.json`
 - `ARCHITECTURE.md`
 - `ERA-ILLUSTRATION-PROMPTS.md`
+- `install.md`
 - `next-env.d.ts`
 - `next.config.ts`
 - `package-lock.json`
@@ -40,6 +41,7 @@ Generated: 2026-07-27T15:55:25Z | Files: 48 | Described: 0/48
 - `designs/B-constellation-map.html`
 - `designs/C-film-strip.html`
 - `designs/D-geological-strata.html`
+- `designs/V0-best.html`
 - `designs/V1-celestial-editorial.html`
 - `designs/V2-cosmic-magazine.html`
 - `designs/V3-stellar-atlas.html`
@@ -51,6 +53,7 @@ Generated: 2026-07-27T15:55:25Z | Files: 48 | Described: 0/48
 ### e2e/
 - `e2e/smoke.spec.ts`
 - `e2e/timeline-s02.spec.ts`
+- `e2e/timeline-s03.spec.ts`
 
 ### lib/
 - `lib/constants.ts`
