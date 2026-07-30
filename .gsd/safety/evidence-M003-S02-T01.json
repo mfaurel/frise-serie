@@ -1,0 +1,46 @@
+[
+  {
+    "kind": "write",
+    "toolCallId": "toolu_01Cxgy4V63Twp46N8FBrdT27",
+    "path": "C:\\workspace\\github\\frise-serie\\lib\\swimLane.ts",
+    "timestamp": 1785444799302
+  },
+  {
+    "kind": "write",
+    "toolCallId": "toolu_01LMLhBv7hp15FvT7oQWvh8d",
+    "path": "C:\\workspace\\github\\frise-serie\\tests\\swim-lane.test.ts",
+    "timestamp": 1785444799304
+  },
+  {
+    "kind": "bash",
+    "toolCallId": "toolu_017STFBdETf5gjT9S8AxjtTM",
+    "command": "npm test -- --reporter=verbose tests/swim-lane.test.ts 2>&1",
+    "exitCode": 1,
+    "outputSnippet": "gsd_exec[86b52909-3e2b-48e7-9d6f-35eaa3cc36cd] runtime=bash exit=-4058 duration=2ms\n  stdout: 0B → C:\\workspace\\github\\frise-serie\\.gsd\\exec\\86b52909-3e2b-48e7-9d6f-35eaa3cc36cd.stdout\n  stderr: 31B → C:\\workspace\\github\\frise-serie\\.gsd\\exec\\86b52909-3e2b-48e7-9d6f-35eaa3cc36cd.stderr\n--- digest ---\n[no stdout — tail of stderr]\nchild error: spawn bash ENOENT",
+    "timestamp": 1785444799305
+  },
+  {
+    "kind": "bash",
+    "toolCallId": "toolu_01BrEnozK1i5kKXECJtpHWb6",
+    "command": "npm test -- --reporter=verbose tests/swim-lane.test.ts",
+    "exitCode": 1,
+    "outputSnippet": "gsd_exec[376266cc-0650-47e4-bf65-1800932d4f9a] runtime=node exit=1 duration=85ms\n  stdout: 0B → C:\\workspace\\github\\frise-serie\\.gsd\\exec\\376266cc-0650-47e4-bf65-1800932d4f9a.stdout\n  stderr: 395B → C:\\workspace\\github\\frise-serie\\.gsd\\exec\\376266cc-0650-47e4-bf65-1800932d4f9a.stderr\n--- digest ---\n[no stdout — tail of stderr]\nr <eof>\r\n\r\nSyntaxError: Unexpected identifier 'test'\r\n    at makeContextifyScript (node:internal/vm:185:14)\r\n    at compileScript (node:internal/process/execution:383:10)\r",
+    "timestamp": 1785444799308
+  },
+  {
+    "kind": "bash",
+    "toolCallId": "toolu_01HaVxaVwm263iNTVEncrVca",
+    "command": "cd C:\\workspace\\github\\frise-serie; npm test -- --reporter=verbose tests/swim-lane.test.ts 2>&1",
+    "exitCode": 0,
+    "outputSnippet": "> frise-serie@0.1.0 test\n> vitest run --reporter=verbose tests/swim-lane.test.ts\n\n\n RUN  v4.1.10 C:/workspace/github/frise-serie\n\n ✓ tests/swim-lane.test.ts > computeSwimLaneLayout > integration smoke: runs against real shows without throwing 2ms\n ✓ tests/swim-lane.test.ts > computeSwimLaneLayout > non-overlapping shows all go to lane 0 0ms\n ✓ tests/swim-lane.test.ts > computeSwimLaneLayout > two overlapping shows use lanes 0 and 1 0ms\n ✓ tests/swim-lane.test.ts > computeSwimLaneLayout > third s",
+    "timestamp": 1785444799310
+  },
+  {
+    "kind": "bash",
+    "toolCallId": "toolu_01NMMeUM2QX6sftLiuf73C9f",
+    "command": "npm test -- --reporter=verbose tests/swim-lane.test.ts",
+    "exitCode": 1,
+    "outputSnippet": "gsd_exec[e373d99e-38f6-4669-981e-e0a1739cde23] runtime=bash exit=-4058 duration=2ms\n  stdout: 0B → C:\\workspace\\github\\frise-serie\\.gsd\\exec\\e373d99e-38f6-4669-981e-e0a1739cde23.stdout\n  stderr: 31B → C:\\workspace\\github\\frise-serie\\.gsd\\exec\\e373d99e-38f6-4669-981e-e0a1739cde23.stderr\n--- digest ---\n[no stdout — tail of stderr]\nchild error: spawn bash ENOENT",
+    "timestamp": 1785444799313
+  }
+]
