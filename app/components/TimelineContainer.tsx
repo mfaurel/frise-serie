@@ -1,15 +1,23 @@
 'use client';
 
-import { useRef, useCallback } from 'react';
+import { useRef, useCallback, useState } from 'react';
 import { shows } from "@/data/shows";
 import { eras } from "@/data/eras";
 import { buildDensityZones } from "@/lib/density";
 import { yearToPixel } from "@/lib/yearToPixel";
 import { VIRTUAL_CANVAS_WIDTH } from "@/lib/constants";
+import { computeSwimLaneLayout } from "@/lib/swimLane";
+import { computeRelatedShows } from "@/lib/constellationLines";
+import ShowCard from "@/app/components/ShowCard";
+import ConstellationLayer from "@/app/components/ConstellationLayer";
 
 export default function TimelineContainer() {
   const zones = buildDensityZones(shows, eras, VIRTUAL_CANVAS_WIDTH);
   const totalWidth = zones[zones.length - 1].pixelEnd;
+  const layout = computeSwimLaneLayout(shows, zones);
+  const relatedShows = computeRelatedShows(shows);
+
+  const [hoveredShowId, setHoveredShowId] = useState<string | null>(null);
 
   const scrollRef = useRef<HTMLDivElement>(null);
   const bgLayerRef = useRef<HTMLDivElement>(null);
@@ -85,11 +93,44 @@ export default function TimelineContainer() {
           })}
         </div>
 
-        {/* Layer 3: Cards (1.0x visible speed, placeholder for M003) */}
+        {/* Layer 3: Constellation layer (SVG span bars + lines) */}
+        <div style={{ position: 'absolute', inset: 0, pointerEvents: 'none' }}>
+          <ConstellationLayer
+            layout={layout}
+            zones={zones}
+            eras={eras}
+            relatedShows={relatedShows}
+            hoveredShowId={hoveredShowId}
+            totalWidth={totalWidth}
+          />
+        </div>
+
+        {/* Layer 4: Cards (1.0x visible speed) */}
         <div
           data-testid="parallax-cards"
           style={{ position: 'absolute', inset: 0 }}
-        />
+        >
+          {layout.map(({ show, left, top, lane: _lane }) => {
+            const era = eras.find(
+              (e) => show.narrativeYearStart >= e.yearStart && show.narrativeYearStart <= e.yearEnd
+            ) ?? eras[0];
+            return (
+              <div
+                key={show.id}
+                style={{
+                  position: 'absolute',
+                  left,
+                  top,
+                  transform: 'translateX(-44px)',
+                }}
+                onMouseEnter={() => setHoveredShowId(show.id)}
+                onMouseLeave={() => setHoveredShowId(null)}
+              >
+                <ShowCard show={show} era={era} />
+              </div>
+            );
+          })}
+        </div>
       </div>
     </div>
   );

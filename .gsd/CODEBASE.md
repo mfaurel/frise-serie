@@ -1,7 +1,7 @@
 # Codebase Map
 
-Generated: 2026-07-28T08:27:56Z | Files: 51 | Described: 0/51
-<!-- gsd:codebase-meta {"generatedAt":"2026-07-28T08:27:56Z","fingerprint":"40373438a419cdb128250524656b4b5fa37c70fd","fileCount":51,"truncated":false} -->
+Generated: 2026-07-30T15:35:17Z | Files: 52 | Described: 0/52
+<!-- gsd:codebase-meta {"generatedAt":"2026-07-30T15:35:17Z","fingerprint":"e9703fea95a7e77e33deba6f829afb8b07a93393","fileCount":52,"truncated":false} -->
 
 ### (root)/
 - `.gitignore`
@@ -29,6 +29,7 @@ Generated: 2026-07-28T08:27:56Z | Files: 51 | Described: 0/51
 - `app/page.tsx`
 
 ### app/components/
+- `app/components/ShowCard.tsx`
 - `app/components/TimelineContainer.tsx`
 
 ### data/

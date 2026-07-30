@@ -1,57 +1,91 @@
 ---
-id: M002
-title: "Parallax Engine and Era Backgrounds"
-status: complete
-completed_at: 2026-07-30T15:07:26.838Z
-key_decisions:
-  - Switched scroll axis from horizontal to vertical (overflow-y) to match V5-atlas-editorial design reference
-  - Parallax layers driven by direct DOM mutation (useRef + style.transform) rather than useState to avoid 60fps re-render overhead
-  - TimelineContainer converted to Client Component in S03 when scroll event listeners and DOM refs became necessary
-  - next.config.ts uses output: 'export' + images.unoptimized for fully static HTML output
+id: S02
+parent: M002
+milestone: M002
+provides:
+  - Horizontally-scrollable timeline container with pixel width from buildDensityZones
+  - Era year labels absolutely positioned via yearToPixel
+  - Playwright-verified horizontal scroll contract for downstream parallax work
+requires:
+  - slice: S01
+    provides: Next.js App Router scaffold with static export — home route serves app/page.tsx
+affects:
+  - S03
 key_files:
   - app/components/TimelineContainer.tsx
   - app/page.tsx
-  - lib/yearToPixel.ts
-  - lib/density.ts
-  - lib/constants.ts
-  - next.config.ts
-  - postcss.config.mjs
-  - playwright.config.ts
-lessons_learned:
-  - Direct DOM mutation via useRef is the correct pattern for scroll-driven animation — setState on the scroll path causes layout thrash at 60fps
-  - Tailwind v4 uses @tailwindcss/postcss in postcss.config.mjs and @import 'tailwindcss' in globals.css — no tailwind.config file needed
+  - e2e/timeline-s02.spec.ts
+key_decisions:
+  - TimelineContainer is a Server Component — no browser APIs needed, all data imports are synchronous
+  - Year labels use era.yearStart (era boundary start) not yearEnd, matching the slice spec
+  - BC/AD label format: negative years show absolute value + ' BC', positive years show value + ' AD'
+  - Scroll axis corrected in T02: overflow-x-auto on outer div, width: totalWidth on inner div, left: px for year labels
+patterns_established:
+  - Server Component pattern for data-driven timeline container — import data synchronously, no 'use client' needed
+  - data-testid attributes on scroll container (timeline-scroll), inner sizing div (timeline-inner), and labels (year-label) as Playwright assertion targets
+observability_surfaces:
+  - none
+drill_down_paths:
+  - .gsd/phases/02-parallax-engine-and-era-backgrounds/T01-SUMMARY.md
+  - .gsd/phases/02-parallax-engine-and-era-backgrounds/T02-SUMMARY.md
+duration: ""
+verification_result: passed
+completed_at: 2026-07-27T20:13:45.247Z
+blocker_discovered: false
 ---
 
-# M002: Parallax Engine and Era Backgrounds
+# S02: Horizontal scroll container with yearToPixel width
 
-**Built the Next.js scaffold, vertical-scroll timeline container with yearToPixel width, and 3-layer parallax with era nebula backgrounds.**
+**Horizontally-scrollable timeline container whose pixel width is derived from buildDensityZones and era year labels are absolutely positioned via yearToPixel, validated by 3-assertion Playwright spec**
 
 ## What Happened
 
-M002 delivered the full visual foundation for the Frise Série timeline in three sequential slices.
+T01 created `app/components/TimelineContainer.tsx` as a Next.js Server Component that calls `buildDensityZones(shows, eras, VIRTUAL_CANVAS_WIDTH)`, derives `totalWidth` from the last zone's `pixelEnd`, and renders an outer scroll div containing an inner div sized to `totalWidth` with era year labels absolutely positioned via `yearToPixel(era.yearStart, zones)`. Labels are formatted "N BC" / "N AD". TypeScript typecheck passed with zero diagnostics.
 
-S01 bootstrapped the Next.js 16 App Router project with static export (out/index.html), Tailwind v4 via @tailwindcss/postcss, and Playwright smoke test infrastructure. `npm run build` and `npm run typecheck` both exit clean.
+T02 discovered and fixed a scroll-axis bug introduced in T01: the component had been wired as a vertical scroller (`overflow-y-auto`, `height: totalWidth`, `top: px` labels) instead of horizontal. The fix changed the outer div to `overflow-x-auto`, the inner div to `width: totalWidth`, and year labels from `top: px` to `left: px` so they appear at correct horizontal offsets. The existing Playwright spec was also checking `offsetHeight` — corrected to `offsetWidth` per the horizontal layout contract. `app/page.tsx` was already importing and rendering `TimelineContainer`. All three Playwright assertions now pass: scroll container visible, inner div offsetWidth > 10000px, and at least one year-label visible.
 
-S02 introduced the timeline container with a horizontally (later revised to vertically per design decision) scrolling inner div whose height is derived from the sum of yearToPixel density zones. Year-axis labels are positioned at correct pixel offsets. The design alignment decision switched scroll axis to vertical (overflow-y) matching V5-atlas-editorial.
+## Verification
 
-S03 converted TimelineContainer to a Client Component ('use client') to enable scroll event listeners, added three composited layers (background 0.3×, axis 0.6×, cards 1.0×) driven by direct DOM mutation via useRef to avoid React re-render overhead on every scroll frame, and applied era-specific nebula gradient backgrounds using the V5-atlas-editorial dark void palette.
+1. `npm run typecheck` — exit 0, zero TypeScript diagnostics (gsd_exec 5f6de3bd, duration 1935ms).
+2. `npx playwright test e2e/timeline-s02.spec.ts --reporter=line` — 3 passed in 5.3s (gsd_exec b5a64651, duration 6874ms):
+   - [chromium] timeline-scroll container is visible ✓
+   - [chromium] timeline-inner width is greater than 10000px ✓
+   - [chromium] at least one year-label is visible ✓
 
-## Success Criteria Results
+## Requirements Advanced
 
-Not provided.
+None.
 
-## Definition of Done Results
+## Requirements Validated
 
-Not provided.
+None.
 
-## Requirement Outcomes
+## New Requirements Surfaced
 
-Not provided.
+None.
+
+## Requirements Invalidated or Re-scoped
+
+None.
+
+## Operational Readiness
+
+None.
 
 ## Deviations
 
-None.
+T01 built the scroll axis as vertical (overflow-y-auto, height: totalWidth, top: px labels). T02 corrected this to horizontal (overflow-x-auto, width: totalWidth, left: px labels) and updated the Playwright spec to assert offsetWidth. This was an implementation defect caught by the automated test, not a plan change.
+
+## Known Limitations
+
+e2e/smoke.spec.ts expects a "Frise Série" heading that was removed when app/page.tsx was updated to render TimelineContainer. That smoke test will fail if run as part of the full suite — it should be updated in S03 or as a separate quick task. The timeline-s02 spec is unaffected.
 
 ## Follow-ups
 
-None.
+Update or remove the stale `e2e/smoke.spec.ts` heading assertion before the full Playwright suite is run in milestone validation.
+
+## Files Created/Modified
+
+- `app/components/TimelineContainer.tsx` — Server Component: horizontally-scrollable outer div + inner div sized to density-zone totalWidth + era year labels positioned via yearToPixel
+- `app/page.tsx` — Renders TimelineContainer on the home route
+- `e2e/timeline-s02.spec.ts` — 3-assertion Playwright spec: scroll container visible, inner offsetWidth > 10000, year-label present

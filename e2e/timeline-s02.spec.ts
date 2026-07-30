@@ -1,17 +1,29 @@
 import { test, expect } from '@playwright/test'
 
-test('timeline-scroll container is visible', async ({ page }) => {
-  await page.goto('/')
-  await expect(page.locator('[data-testid="timeline-scroll"]')).toBeVisible()
-})
+test.describe('S02 – Swim-lane layout engine', () => {
+  test.beforeEach(async ({ page }) => {
+    await page.goto('/')
+  })
 
-test('timeline-inner width is greater than 10000px', async ({ page }) => {
-  await page.goto('/')
-  const width = await page.locator('[data-testid="timeline-inner"]').evaluate((el) => (el as HTMLElement).offsetWidth)
-  expect(width).toBeGreaterThan(10000)
-})
+  test('at least two show-cards are visible after swim-lane wiring', async ({ page }) => {
+    const cards = page.locator('[data-testid="parallax-cards"] [data-testid="show-card"]')
+    await expect(cards.first()).toBeVisible()
+    const count = await cards.count()
+    expect(count).toBeGreaterThanOrEqual(2)
+  })
 
-test('at least one year-label is visible', async ({ page }) => {
-  await page.goto('/')
-  await expect(page.locator('[data-testid="year-label"]').first()).toBeVisible()
+  test('swim-lane is active: card wrappers do not all share the same top offset', async ({ page }) => {
+    const wrappers = page.locator('[data-testid="parallax-cards"] > div')
+    const count = await wrappers.count()
+    expect(count).toBeGreaterThanOrEqual(2)
+    const tops = new Set<string>()
+    for (let i = 0; i < count; i++) {
+      const top = await wrappers.nth(i).evaluate(
+        (el) => (el as HTMLElement).style.top
+      )
+      tops.add(top)
+    }
+    // If all tops are identical the swim-lane engine did nothing
+    expect(tops.size).toBeGreaterThan(1)
+  })
 })

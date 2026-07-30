@@ -1,10 +1,10 @@
 {
   "nodes": [
     {
-      "id": "milestone:M002",
-      "label": "M002: Parallax Engine and Era Backgrounds",
+      "id": "milestone:M003",
+      "label": "M003: Show Cards",
       "type": "milestone",
-      "description": "Active milestone: M002",
+      "description": "Active milestone: M003",
       "confidence": "EXTRACTED",
       "sourceFile": "STATE.md"
     },
@@ -17,5 +17,5 @@
     }
   ],
   "edges": [],
-  "builtAt": "2026-07-27T20:27:35.748Z"
+  "builtAt": "2026-07-30T21:49:39.608Z"
 }

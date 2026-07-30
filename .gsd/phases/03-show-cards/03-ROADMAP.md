@@ -4,13 +4,13 @@
 
 ## Slices
 
-- [ ] **S01: ShowCard component with star-node glow and positioning** `[sketch]` `risk:medium` `depends:[]`
+- [x] **S01: ShowCard component with star-node glow and positioning** `risk:medium` `depends:[]`
   > After this: Show cards appear at correct yearToPixel positions with era-colored star glow, poster placeholder, title, and dates
 
-- [ ] **S02: Swim-lane layout engine** `[sketch]` `risk:high` `depends:[S01]`
+- [x] **S02: Swim-lane layout engine** `risk:high` `depends:[S01]`
   > After this: Cards in dense eras arrange in swim lanes without overlap. Sparse eras center cards.
 
-- [ ] **S03: Narrative span bars and constellation lines** `[sketch]` `risk:medium` `depends:[S01]`
+- [x] **S03: Narrative span bars and constellation lines** `risk:medium` `depends:[S01]`
   > After this: Vikings shows a span bar from 793 to 1002. Lines connect tag-related shows. Hover highlights connections.
 
 ## Boundary Map

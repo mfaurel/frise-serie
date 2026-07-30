@@ -1,7 +1,7 @@
 {
   "schema": 2,
   "lastWriter": "gsd-pi",
-  "lastProjectedAt": "2026-07-30T15:07:26.854Z",
+  "lastProjectedAt": "2026-07-30T21:49:39.539Z",
   "projections": {
     "phases/01-data-foundation-and-yeartopixel/01-ROADMAP.md": {
       "sha": "48c5d43059e2cb0e",
@@ -16,7 +16,7 @@
       ]
     },
     "phases/03-show-cards/03-ROADMAP.md": {
-      "sha": "90278cb68bbf54eb",
+      "sha": "c2bf10e7b9de5c1a",
       "entities": [
         "M003"
       ]
@@ -87,7 +87,7 @@
       ]
     },
     "phases/02-parallax-engine-and-era-backgrounds/02-01-PLAN.md": {
-      "sha": "3ad8f8931a2e5695",
+      "sha": "c69a90b64512590b",
       "entities": [
         "M002",
         "M002/S01"
@@ -181,17 +181,148 @@
       ]
     },
     "phases/02-parallax-engine-and-era-backgrounds/02-02-PLAN.md": {
-      "sha": "b55e4186da912989",
+      "sha": "e7ed9829315da624",
       "entities": [
         "M002",
         "M002/S02"
       ]
     },
     "phases/02-parallax-engine-and-era-backgrounds/02-03-PLAN.md": {
-      "sha": "fb989a7427a56c40",
+      "sha": "83a763b5456b07b5",
       "entities": [
         "M002",
         "M002/S03"
+      ]
+    },
+    "phases/03-show-cards/T01-PLAN.md": {
+      "sha": "801138bdb83d9bbf",
+      "entities": [
+        "M003",
+        "M003/S01",
+        "M003/S01/T01"
+      ]
+    },
+    "phases/03-show-cards/03-01-PLAN.md": {
+      "sha": "767d37b36212fa24",
+      "entities": [
+        "M003",
+        "M003/S01"
+      ]
+    },
+    "phases/03-show-cards/T02-PLAN.md": {
+      "sha": "9b525a1b82fa85ac",
+      "entities": [
+        "M003",
+        "M003/S01",
+        "M003/S01/T02"
+      ]
+    },
+    "phases/02-parallax-engine-and-era-backgrounds/02-01-ASSESSMENT.md": {
+      "sha": "c3f615ff482fb204",
+      "entities": [
+        "M002",
+        "M002/S01"
+      ]
+    },
+    "phases/02-parallax-engine-and-era-backgrounds/02-01-SUMMARY.md": {
+      "sha": "3142eec6cb08fcd1",
+      "entities": [
+        "M002",
+        "M002/S01"
+      ]
+    },
+    "phases/02-parallax-engine-and-era-backgrounds/02-01-UAT.md": {
+      "sha": "3d786b0f277fc4d2",
+      "entities": [
+        "M002",
+        "M002/S01"
+      ]
+    },
+    "phases/02-parallax-engine-and-era-backgrounds/02-02-ASSESSMENT.md": {
+      "sha": "754d4ae604d5f577",
+      "entities": [
+        "M002",
+        "M002/S02"
+      ]
+    },
+    "phases/02-parallax-engine-and-era-backgrounds/02-SUMMARY.md": {
+      "sha": "d059745fcbe1c45c",
+      "entities": [
+        "M002",
+        "M002/S02"
+      ]
+    },
+    "phases/02-parallax-engine-and-era-backgrounds/02-02-UAT.md": {
+      "sha": "312e87bdd6ca7af5",
+      "entities": [
+        "M002",
+        "M002/S02"
+      ]
+    },
+    "phases/02-parallax-engine-and-era-backgrounds/02-02-SUMMARY.md": {
+      "sha": "d059745fcbe1c45c",
+      "entities": [
+        "M002",
+        "M002/S02"
+      ]
+    },
+    "phases/02-parallax-engine-and-era-backgrounds/02-03-ASSESSMENT.md": {
+      "sha": "54aa6313524d36ae",
+      "entities": [
+        "M002",
+        "M002/S03"
+      ]
+    },
+    "phases/02-parallax-engine-and-era-backgrounds/02-03-SUMMARY.md": {
+      "sha": "b48bff781d2af28d",
+      "entities": [
+        "M002",
+        "M002/S03"
+      ]
+    },
+    "phases/02-parallax-engine-and-era-backgrounds/02-03-UAT.md": {
+      "sha": "2bb7f62c104cad04",
+      "entities": [
+        "M002",
+        "M002/S03"
+      ]
+    },
+    "phases/03-show-cards/tasks/T01-PLAN.md": {
+      "sha": "cc120bce44a6a9ba",
+      "entities": [
+        "M003",
+        "M003/S03",
+        "M003/S03/T01"
+      ]
+    },
+    "phases/03-show-cards/tasks/T02-PLAN.md": {
+      "sha": "25232ba35c8ab431",
+      "entities": [
+        "M003",
+        "M003/S03",
+        "M003/S03/T02"
+      ]
+    },
+    "phases/03-show-cards/03-02-PLAN.md": {
+      "sha": "b1287a849ed1dc1d",
+      "entities": [
+        "M003",
+        "M003/S02"
+      ]
+    },
+    "phases/03-show-cards/tasks/T03-PLAN.md": {
+      "sha": "4922e348cdc63863",
+      "entities": [
+        "M003",
+        "M003/S03",
+        "M003/S03/T03"
+      ]
+    },
+    "phases/03-show-cards/03-03-PLAN.md": {
+      "sha": "57748131a5b57fda",
+      "entities": [
+        "M003",
+        "M003/S03"
       ]
     }
   },
