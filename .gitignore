@@ -44,6 +44,8 @@ coverage/
 .cache/
 tmp/
 .gsd/activity/
+.gsd/.compat.json
+.gsd/notifications.jsonl
 .gsd/audit/
 .gsd/forensics/
 .gsd/runtime/
