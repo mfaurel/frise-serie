@@ -195,3 +195,7 @@
 {"id":"1aa0bf12-2e34-4d90-bde1-09edc5179071","ts":"2026-07-30T15:01:55.562Z","severity":"info","message":"Resume: applied 4 fix(es) to state.","source":"notify","read":false}
 {"id":"078f164a-fe68-453f-a170-f034f92ee104","ts":"2026-07-30T15:01:55.563Z","severity":"info","message":"Paused session had no recorded unit identity. Skipping tool-call replay and resuming from disk state.","source":"notify","read":false}
 {"id":"c8542718-891e-48c7-b07a-26baed79caba","ts":"2026-07-30T15:01:58.571Z","severity":"info","message":"Auto-mode paused: Cannot complete milestone M002: uncommitted changes remain after the pre-completion commit. Commit or stash before closing.","source":"notify","read":false}
+{"id":"d47b9dac-9bea-44dc-897c-05769a47d74c","ts":"2026-07-30T15:03:01.484Z","severity":"info","message":"Auto-mode resumed.","source":"notify","read":false}
+{"id":"7c56adf9-2f94-4f0d-a173-a644136b1cf0","ts":"2026-07-30T15:03:03.166Z","severity":"info","message":"Resume: applied 4 fix(es) to state.","source":"notify","read":false}
+{"id":"e8af6c67-ded9-4811-a1d8-ce51bff1d70f","ts":"2026-07-30T15:03:03.168Z","severity":"info","message":"Paused session had no recorded unit identity. Skipping tool-call replay and resuming from disk state.","source":"notify","read":false}
+{"id":"8d2054a0-77e6-48f4-a429-ae90969f52d3","ts":"2026-07-30T15:03:05.590Z","severity":"info","message":"Auto-mode paused: Cannot complete milestone M002: uncommitted changes remain after the pre-completion commit. Commit or stash before closing.","source":"notify","read":false}
